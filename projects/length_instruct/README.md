@@ -2,6 +2,8 @@
 
 Arxiv link: [Yuan et al. (2024)](https://arxiv.org/abs/2406.17744).
 
+<p align="center"><img width="90%" src="fig.png" /></p>
+
 ## Abstract
 
 Aligned instruction following models can better fulfill user requests than their unaligned counterparts. However, it has been shown that there is a length bias in evaluation of such models, and that training algorithms tend to exploit this bias by learning longer responses. In this work we show how to train models that can be controlled at inference time with instructions containing desired length constraints. Such models are superior in length instructed evaluations, outperforming standard instruction following models such as GPT4, Llama 3 and Mixtral.
