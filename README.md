@@ -1,6 +1,6 @@
 # RAM
 ## Introduction
-This repository focuses on developing advanced NLP algorithms and methods for RAM (Reasoning, Alignment, Memory).
+This repository focuses on developing advanced algorithms and methods for RAM (Reasoning, Alignment, Memory).
 
 <!---
 - [System 2 Attention (is something you might need too)](https://arxiv.org/pdf/2311.11829.pdf)
