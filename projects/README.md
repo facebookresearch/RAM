@@ -15,7 +15,7 @@ Practitioners commonly align large language models using pairwise preferences, i
 
 
 ## Data
-The data needed to run our code is hosted on HuggingFace: 
+The data needed to run our code is hosted on HuggingFace:
 - https://huggingface.co/OpenAssistant
 - https://huggingface.co/datasets/tatsu-lab/alpaca_eval
 

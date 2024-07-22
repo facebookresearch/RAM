@@ -21,7 +21,7 @@ Please go to [Projects](projects/README.md) for a up-to-date list of projects re
 
 <!---
 ## Data
-The data needed to run our code is hosted on HuggingFace: 
+The data needed to run our code is hosted on HuggingFace:
 - https://huggingface.co/OpenAssistant
 - https://huggingface.co/datasets/tatsu-lab/alpaca_eval
 
