@@ -1,0 +1,26 @@
+name: style
+run-name: Style test by ${{ github.actor }}
+
+on: [push, pull_request]
+
+jobs:
+  style-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Black check
+        run: |
+            pip install black==22.12.0
+            black --diff --check projects
+
+      - name: isort check
+        run: |
+            pip install isort==5.13.2
+            isort --profile black --check projects
