@@ -9,7 +9,8 @@ from setuptools import find_packages, setup
 setup(
     name="ram",
     version="0.1",
-    packages=find_packages(),
+    package_dir={"ram": "ram"},
+    packages=find_packages(include=["ram.*"]),
     description="Open source code for projects by the RAM team",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
