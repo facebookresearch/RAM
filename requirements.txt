@@ -1,4 +1,0 @@
-# Comment to bump caches
-alpaca_eval
-datasets
-pre-commit
