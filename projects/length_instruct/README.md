@@ -67,13 +67,12 @@ Command to Run MT-Bench-LI Evaluation: Coming soon.
 If you use the dataset or models in your own work, please cite with the following BibTex entry:
 ```
 @misc{yuan2024followinglengthconstraintsinstructions,
-      title={Following Length Constraints in Instructions}, 
+      title={Following Length Constraints in Instructions},
       author={Weizhe Yuan and Ilia Kulikov and Ping Yu and Kyunghyun Cho and Sainbayar Sukhbaatar and Jason Weston and Jing Xu},
       year={2024},
       eprint={2406.17744},
       archivePrefix={arXiv},
       primaryClass={cs.CL}
-      url={https://arxiv.org/abs/2406.17744}, 
+      url={https://arxiv.org/abs/2406.17744},
 }
 ```
-
