@@ -12,7 +12,7 @@ repos:
     - id: detect-aws-credentials
       args: ['--allow-missing-credentials']
 - repo: https://github.com/psf/black
-  rev: 22.12.0
+  rev: 24.8.0
   hooks:
     - id: black
       language_version: python3.10

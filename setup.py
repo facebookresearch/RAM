@@ -23,7 +23,7 @@ setup(
         "alpaca_eval",
         "datasets",
         "pre-commit",
-        "black",
-        "isort",
+        "black==24.8.0",
+        "isort==5.13.2",
     ],
 )
