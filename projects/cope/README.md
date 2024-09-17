@@ -1,4 +1,4 @@
-## Contextual Position Encoding (CoPE): Learning to Count What's Important
+# Contextual Position Encoding (CoPE): Learning to Count What's Important
 
 - Contextual Position Encoding (CoPE) is a new position encoding method that allows positions to be conditioned on context by incrementing position only on certain tokens determined by the model.
 - CoPE allows more general position addressing such as attending to the i-th particular word, noun, or sentence.
@@ -29,15 +29,25 @@ pip install -r requirements.txt
 
 ## Run model training end evaluation
 
-We created a script that reproduces the results reported in the [paper](https://arxiv.org/pdf/2405.18719) for the Counting Task. Simply run it on a GPU node:
+We created a script that reproduces 3- and 5-variable runs for the Counting Task described in the [paper](https://arxiv.org/pdf/2405.18719). Simply run it on a GPU node:
 
 ```bash
 bash run.sh
 ```
 
-We reported the average of 3 random seeds.
+In the paper we reported the average test error rates of 3 random seeds.
 
 <p align="center"><img width="110%" src="figures/counting_task.png" /></p>
 
 ## Contributors
 Olga Golovneva, Tianlu Wang, Janice Lan, Jason Weston, Sainbayar Sukhbaatar
+
+## Citation
+If you use our model in your own work, please cite with the following BibTex entry:
+```
+@article{golovneva2024contextual,
+  title={Contextual Position Encoding: Learning to Count What's Important},
+  author={Golovneva, Olga and Wang, Tianlu and Weston, Jason and Sukhbaatar, Sainbayar},
+  journal={arXiv preprint arXiv:2405.18719},
+  year={2024}
+}
