@@ -21,7 +21,6 @@ def add_args(parser: ArgumentParser):
     group = parser.add_argument_group("Trainer")
     group.add_argument("--batch-sz", type=int, default=32)
     group.add_argument("--lr", type=float, default=0.0002)
-    # group.add_argument("--weight-decay", type=float, default=0.0)
     group.add_argument("--adam-eps", type=float, default=1e-8)
     group.add_argument("--nepochs", type=int, default=30)
     group.add_argument("--lr-decay", default=None, choices=["none", "cosine"])
@@ -73,7 +72,6 @@ class Trainer:
                 model.parameters(),
                 lr=cfg.lr,
                 eps=cfg.adam_eps,
-                # weight_decay=cfg.weight_decay,
             )
         elif self.cfg.optimizer == "adamw":
             self.optimizer = torch.optim.AdamW(
@@ -81,7 +79,6 @@ class Trainer:
                 lr=cfg.lr,
                 betas=(0.9, 0.95),
                 weight_decay=0.1,
-                # weight_decay=cfg.weight_decay,
             )  # from LIMA paper https://arxiv.org/pdf/2305.11206.pdf
         self.scheduler = None
         if self.cfg.lr_decay == "cosine":
@@ -101,23 +98,20 @@ class Trainer:
         self.logger.setup_metric(
             "npreds", plot=False
         )  # the number of tokens that the model has to predict
-        if self.cfg.task in ["lm", "lm_seq"]:
-            self.logger.setup_metric("ppl", divide_by="npreds")
-        else:
-            self.logger.setup_metric("tokens", plot=False)
-            self.logger.setup_metric("error", divide_by="tokens")
-            self.logger.setup_metric("error/sample", divide_by="nsamples")
-            self.logger.setup_metric("answer/loss", divide_by="answer/npreds")
-            self.logger.setup_metric("answer/npreds", plot=False)
-            # for eval
-            self.logger.setup_metric("answer/tokens", plot=False)
-            self.logger.setup_metric("answer/error", divide_by="answer/tokens")
-            self.logger.setup_metric("answer/error/sample", divide_by="nsamples")
-            self.logger.setup_metric("acc/sample", divide_by="nsamples")
-            self.logger.setup_metric("ngen", plot=False)
-            self.logger.setup_metric("ngen/sample", plot=False)
-            self.logger.setup_metric("gen_error", divide_by="ngen")
-            self.logger.setup_metric("gen_error/sample", divide_by="ngen/sample")
+        self.logger.setup_metric("tokens", plot=False)
+        self.logger.setup_metric("error", divide_by="tokens")
+        self.logger.setup_metric("error/sample", divide_by="nsamples")
+        self.logger.setup_metric("answer/loss", divide_by="answer/npreds")
+        self.logger.setup_metric("answer/npreds", plot=False)
+        # for eval
+        self.logger.setup_metric("answer/tokens", plot=False)
+        self.logger.setup_metric("answer/error", divide_by="answer/tokens")
+        self.logger.setup_metric("answer/error/sample", divide_by="nsamples")
+        self.logger.setup_metric("acc/sample", divide_by="nsamples")
+        self.logger.setup_metric("ngen", plot=False)
+        self.logger.setup_metric("ngen/sample", plot=False)
+        self.logger.setup_metric("gen_error", divide_by="ngen")
+        self.logger.setup_metric("gen_error/sample", divide_by="ngen/sample")
 
         self.world = world.SupervisedWorld(
             cfg, model, self.optimizer, tokenizer, logger
@@ -133,33 +127,20 @@ class Trainer:
         self.logger.record("nsamples", batch.size)
         self.logger.record("total_nsamples", batch.size)
         self.logger.record("nbatches", 1)
-        if self.cfg.task in ["lm", "lm_seq"]:
-            # FIXME: for vae, full_loss also include KL loss
-            if "nll_loss" in metrics:
-                self.logger.record(
-                    "ppl", metrics["nll_loss"]
-                )  # exp is done in the logger
-            else:
-                self.logger.record(
-                    "ppl", metrics["full_loss"]
-                )  # exp is done in the logger
-        elif self.cfg.task == "reward":
-            pass
-        else:
-            token_mask = batch.y_type != TOKEN_TYPE_PAD
-            self.logger.record("tokens", token_mask.sum())
-            answer_mask = batch.y_type == TOKEN_TYPE_ANSWER
-            if "preds" in metrics:
-                err = metrics["preds"].ne(batch.y)
-                err = err * token_mask
-                self.logger.record("error", err.sum())
-                self.logger.record("error/sample", err.any(dim=1).sum())
-                ans_err = err * answer_mask
-                self.logger.record("answer/error", ans_err.sum())
-                self.logger.record("answer/error/sample", ans_err.any(dim=1).sum())
-            self.logger.record("answer/loss", metrics["ans_loss"])
-            self.logger.record("answer/npreds", metrics["ans_npreds"])
-            self.logger.record("answer/tokens", answer_mask.sum())
+        token_mask = batch.y_type != TOKEN_TYPE_PAD
+        self.logger.record("tokens", token_mask.sum())
+        answer_mask = batch.y_type == TOKEN_TYPE_ANSWER
+        if "preds" in metrics:
+            err = metrics["preds"].ne(batch.y)
+            err = err * token_mask
+            self.logger.record("error", err.sum())
+            self.logger.record("error/sample", err.any(dim=1).sum())
+            ans_err = err * answer_mask
+            self.logger.record("answer/error", ans_err.sum())
+            self.logger.record("answer/error/sample", ans_err.any(dim=1).sum())
+        self.logger.record("answer/loss", metrics["ans_loss"])
+        self.logger.record("answer/npreds", metrics["ans_npreds"])
+        self.logger.record("answer/tokens", answer_mask.sum())
 
         if self.cfg.record_loss_per_position:
             # this is hacky and only for eval
@@ -183,38 +164,31 @@ class Trainer:
         if self.cfg.display:
             context = batch.x[0][batch.x_type[0] == TOKEN_TYPE_CONTEXT]
             print('context: "{}"'.format(self.tokenizer.decode(context)))
-            if self.cfg.task not in ["lm", "lm_seq"]:
-                question = batch.x[0][batch.x_type[0] == TOKEN_TYPE_QUESTION]
-                print('question: "{}"'.format(self.tokenizer.decode(question)))
+            question = batch.x[0][batch.x_type[0] == TOKEN_TYPE_QUESTION]
+            print('question: "{}"'.format(self.tokenizer.decode(question)))
 
         with torch.no_grad():
             generation = self.world.generate(batch)  # type: ignore
 
-        if self.cfg.task not in ["lm", "lm_seq"]:
-            # Compute error
-            answer_mask = batch.y_type == TOKEN_TYPE_ANSWER
-            err = generation.ne(batch.y)  # type: ignore
-            err = err * answer_mask
-            self.logger.record("gen_error", err.sum())
-            self.logger.record("gen_error/sample", err.any(dim=1).sum())
-            self.logger.record("ngen", answer_mask.sum())
-            self.logger.record("ngen/sample", batch.size)
+        # Compute error
+        answer_mask = batch.y_type == TOKEN_TYPE_ANSWER
+        err = generation.ne(batch.y)  # type: ignore
+        err = err * answer_mask
+        self.logger.record("gen_error", err.sum())
+        self.logger.record("gen_error/sample", err.any(dim=1).sum())
+        self.logger.record("ngen", answer_mask.sum())
+        self.logger.record("ngen/sample", batch.size)
         self.logger.record("nbatches", 1)
 
         if self.cfg.display:
-            if self.cfg.task in ["lm", "lm_seq"]:
-                print(f'generation: "{self.tokenizer.decode(generation[0])}"')
-            else:
-                answer = batch.y[0][batch.y_type[0] == TOKEN_TYPE_ANSWER]
+            answer = batch.y[0][batch.y_type[0] == TOKEN_TYPE_ANSWER]
 
-                answer_gen = self.get_answer_gen(
-                    generation[0], batch.y[0], batch.y_type[0]
-                )
+            answer_gen = self.get_answer_gen(generation[0], batch.y[0], batch.y_type[0])
 
-                if err[0].any(dim=0).sum() > 0:
-                    print("****** ERR *******")
-                print(f'answer:     "{self.tokenizer.decode(answer)}"')
-                print(f'generation: "{self.tokenizer.decode(answer_gen)}"')
+            if err[0].any(dim=0).sum() > 0:
+                print("****** ERR *******")
+            print(f'answer:     "{self.tokenizer.decode(answer)}"')
+            print(f'generation: "{self.tokenizer.decode(answer_gen)}"')
 
         return generation
 
@@ -232,9 +206,6 @@ class Trainer:
             batch = Batch.from_dict(batch_dict, self.cfg.device)
 
             self.logger.is_example_batch = batch_ind == 0 and split == "val"
-
-            if batch_ind == 0 and self.cfg.task == "lm_seq":
-                self.model.module.init_seq_state(batch.size)  # type: ignore
 
             if eval_only and self.cfg.generate:
                 self.generate(batch)

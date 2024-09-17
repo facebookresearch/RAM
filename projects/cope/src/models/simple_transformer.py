@@ -11,12 +11,6 @@ from .base import Model
 from .relative_position import RelPosEmb
 from .transformer import DecoderCore
 
-# from modules.rotary_positional_embedding import (
-#     RotaryPositionalEmbedding,
-#     apply_rotary_pos_emb,
-#     rotate_half,
-# )
-
 
 def add_args(parser: ArgumentParser):
     parser.add_argument("--nlayers", type=int, default=4)
@@ -87,23 +81,16 @@ class TransformerDecoder(Model):
             "rel",
             "abs+rel",
             "cope+rel",
-        ]:  # todo why is relpos here and cope in transformer.py
-            if self.cfg.task == "lm_seq":
-                rel_pos_emb = RelPosEmb(
-                    cfg.head_dim, cfg.memory_len, cfg.rel_pos_max, cfg.rel_pos_extend
-                )
-            else:
-                rel_pos_emb = RelPosEmb(
-                    cfg.head_dim,
-                    cfg.block_size - 1,
-                    cfg.rel_pos_max,
-                    cfg.rel_pos_extend,
-                )
+        ]:
+            rel_pos_emb = RelPosEmb(
+                cfg.head_dim,
+                cfg.block_size - 1,
+                cfg.rel_pos_max,
+                cfg.rel_pos_extend,
+            )
             for lay in self.core.layers:
                 if hasattr(lay, "attn"):
                     lay.attn.attn.rel_pos_emb = rel_pos_emb
-        # if self.cfg.pos_emb == "rope":
-        #     self.rope_pos_emd = RotaryPositionalEmbedding(dim=cfg.hid_sz)
 
         if not self.cfg.post_norm:
             self.out_norm = nn.LayerNorm(cfg.hid_sz)
@@ -111,12 +98,9 @@ class TransformerDecoder(Model):
         self.dropout = nn.Dropout(cfg.drop)
         self.past_state = None
 
-        if self.cfg.task == "reward":
-            self.reward_head = nn.Linear(cfg.hid_sz, 1)
-        else:
-            self.out_mod = nn.Linear(cfg.hid_sz, cfg.nvocab, bias=False)
-            if cfg.emb_tie:
-                self.out_mod.weight = self.embed_toks.weight
+        self.out_mod = nn.Linear(cfg.hid_sz, cfg.nvocab, bias=False)
+        if cfg.emb_tie:
+            self.out_mod.weight = self.embed_toks.weight
 
     def _build_core(self):
         return DecoderCore(self.cfg)
@@ -132,10 +116,6 @@ class TransformerDecoder(Model):
         if self.cfg.pos_emb in ["abs", "abs+rel"]:
             sta_t = 0 if self.past_state is None else self.past_state.get("sta_t", 0)
             x += self.abs_pos_emb[:, sta_t : sta_t + x.size(1), :]
-        # elif self.cfg.pos_emb == "rope":
-        #     raise NotImplementedError()
-        #     cos, sin = self.rope_pos_emd(x, x.size(1))
-        #     q, k = apply_rotary_pos_emb(x, x, cos, sin)
 
         return x
 
@@ -161,18 +141,7 @@ class TransformerDecoder(Model):
         if not self.cfg.post_norm:
             hidden = self.out_norm(hidden)
 
-        if self.cfg.task == "reward":
-            assert pad_mask is None or (
-                pad_mask.any().item() is False
-            ), "not supported yet"
-            reward = self.reward_head(hidden[:, -1])  # use the last token
-            reward = reward.squeeze(-1)
-            return reward
-
         out = self.out_mod(hidden)
-        # if self.cfg.emb_tie:
-        #     # make sure the initial variance is 1
-        #     out = out / math.sqrt(self.cfg.hid_sz) / 8.
         logprobs = F.log_softmax(out, dim=-1)
 
         return logprobs

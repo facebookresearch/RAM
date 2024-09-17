@@ -10,32 +10,18 @@ The following setup is recommened to reproduce experiments:
 
 ```bash
 conda create --name cope python=3.9
-conda activate
+conda activate cope
 ```
 
-Install torch:
+2. Install dependencies:
 ```bash
 conda install pytorch=2.2 pytorch-cuda=12.1 -y --strict-channel-priority --override-channels -c pytorch -c nvidia -c conda-forge
-```
-
-And additional packages:
-```bash
 pip install -r requirements.txt
 ```
 
-2. Install dependencies
-
-## Generate synthetic data for counting task
-
-```bash
-python scripts/counting_task.py
-```
-
-Be default, it generates ddata for 3-variable case. Adjust number of variables with `--nvars` parameter.
-
 ## Run model training end evaluation
 
-For example runs to reproduce some of the results reported in the paper, run the following command:
+For example runs to reproduce some of the results reported in the paper for the Counting Task, run the following command:
 
 ```bash
 bash run.sh

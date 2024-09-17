@@ -5,7 +5,7 @@
 function gen_data {
     nvars=$1 # number of variables
 
-    cmd="python scripts/counting_task.py --nvars $nvars --out-path count_data/"
+    cmd="python scripts/count_data_gen.py --nvars $nvars --out-path count_data/"
 
     echo $cmd
     $cmd
@@ -21,7 +21,6 @@ function launch_train {
     MODEL_ARGS="--nlayers 4 --hid-sz 256 --nheads 4 --block-size 512"
     GENERAL_ARGS="--model simpledec \
         --tokenizer simple \
-        --task simple \
         --emb-tie \
         --nepochs 100 \
         --drop 0.1 \

@@ -35,11 +35,6 @@ def add_args(parser: ArgumentParser):
         type=int,
         help="the maximum number of tokens that the model can process. Most models have it predefined.",
     )
-    group.add_argument(
-        "--data-block-size",
-        type=int,
-        help="data sample length in LM task. If not set, uses block_size",
-    )
     simple_transformer.add_args(group)  # type: ignore
 
 

@@ -17,11 +17,12 @@ def add_args(parser: ArgumentParser):
     parser.add_argument("--log-group", type=str, help="manually specify log group")
     parser.add_argument("--log-plot", action=BooleanOptionalAction, default=False)
     parser.add_argument("--log-project", type=str, default="cope")
-    parser.add_argument("--log-plot-dir", default="/checkpoint/${USER}/cope/")
+    parser.add_argument("--log-plot-dir", default="/private/home/${USER}/cope/logs/")
     parser.add_argument(
         "--wandb-key-file", default="/private/home/${USER}/wandb/key.txt"
     )
     parser.add_argument("--wandb-id", type=str)
+    parser.add_argument("--wandb-host", type=str)
 
 
 def preprocess_args(args):
@@ -67,7 +68,6 @@ class Metric:
                 self.step_value /= divide_by
 
         if "ppl" in self.name:
-            # FIXME: find less hacky solution
             self.step_value = math.exp(self.step_value)
 
         if self.cumulative:
@@ -108,7 +108,7 @@ class Logger:
                     with open(cfg.wandb_key_file) as f:
                         wandb_key = f.read().strip()
                         wandb.login(
-                            host="https://fairwandb.org/",
+                            host=cfg.wandb_host,
                             key=wandb_key,
                         )
             wandb.init(
@@ -188,7 +188,7 @@ class Logger:
             for i, name in enumerate(self.metrics.keys()):
                 if name == self.step_metric:
                     # no need to sum nepochs
-                    continue  # TODO: this is bit hacky
+                    continue
                 if self.metrics[name].step_value is not None:
                     self.metrics[name].step_value = X[i].item()
 

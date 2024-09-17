@@ -91,7 +91,6 @@ def try_generate_sample(nvars: int):
 def generate_sample(nvars: int):
     for trial in range(1000):
         try:
-            # print(trial)
             return try_generate_sample(nvars)
         except GenerationFail:
             continue

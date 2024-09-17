@@ -39,8 +39,6 @@ class Batch:
     ref_cot_logprobs: Optional[list] = None
     misc = {}
 
-    # FIXME, just save the logprobs, so we don't have include winning_idx and losing_idx
-
     @classmethod
     def from_dict(cls, d: Dict, device=None):
         y_type = d["dec_y_type"].to(device=device) if "dec_y_type" in d else None

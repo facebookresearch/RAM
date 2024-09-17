@@ -9,13 +9,6 @@ from .data_collator import DataCollatorForDecoder
 
 def add_args(parser: argparse.ArgumentParser):
     parser = parser.add_argument_group("data")
-    parser.add_argument(
-        "--task",
-        choices=[
-            "simple",
-        ],
-        default="simple",  # todo remove flag
-    )
     parser.add_argument("--data", required=True)
     parser.add_argument("--train-file", default="train.jsonl", type=str)
     parser.add_argument("--val-file", default="valid.jsonl", type=str)

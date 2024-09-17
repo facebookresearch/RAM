@@ -48,8 +48,6 @@ class World(ABC):
         self.optimizer = optimizer
         self.tokenizer = tokenizer
         self.logger = logger
-        # self.max_gen_len = cfg.max_gen_len
-        # self.max_gen_context_len = cfg.block_size - self.max_gen_len
 
     def set_epoch(self, epoch: int):
         pass
@@ -71,8 +69,6 @@ class World(ABC):
         self.optimizer.step()
 
     def train(self, batch: Batch, is_eval):
-        # TODO: this loop is only used for baseline to match PPO updates
-        # can be removed once not needed.
         for _ in range(self.cfg.updates_per_batch):
             metrics = self.run_episode(batch)
             if not is_eval:
@@ -109,10 +105,7 @@ class SupervisedWorld(World):
         self,
         batch: Batch,
     ):
-        if self.cfg.task == "lm_seq":
-            pad_mask = None  # not supported
-        else:
-            pad_mask = batch.x_type == TOKEN_TYPE_PAD
+        pad_mask = batch.x_type == TOKEN_TYPE_PAD
 
         scores = self.model(batch.x, pad_mask)
 
@@ -182,19 +175,15 @@ class SupervisedWorld(World):
             max_new_tokens=self.max_gen_len,
         )
 
-        if self.cfg.task in ["lm", "lm_seq"]:
-            # output only generated tokens
-            outputs = generations
-        else:
-            outputs = []
-            for i in range(batch.size):
-                out = torch.cat([prompts[i], generations[i]], dim=0)
-                out = out[1:]  # shift by 1
-                out = F.pad(
-                    out,
-                    [0, batch.x.size(1) - out.size(0)],
-                    value=self.tokenizer.pad_ind,
-                )
-                outputs.append(out)
-            outputs = torch.stack(outputs)
+        outputs = []
+        for i in range(batch.size):
+            out = torch.cat([prompts[i], generations[i]], dim=0)
+            out = out[1:]  # shift by 1
+            out = F.pad(
+                out,
+                [0, batch.x.size(1) - out.size(0)],
+                value=self.tokenizer.pad_ind,
+            )
+            outputs.append(out)
+        outputs = torch.stack(outputs)
         return outputs
