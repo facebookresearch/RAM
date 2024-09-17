@@ -38,3 +38,6 @@ bash run.sh
 We reported the average of 3 random seeds.
 
 <p align="center"><img width="110%" src="figures/counting_task.png" /></p>
+
+## Contributors
+Olga Golovneva, Tianlu Wang, Janice Lan, Jason Weston, Sainbayar Sukhbaatar
