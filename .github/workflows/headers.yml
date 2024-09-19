@@ -1,0 +1,13 @@
+name: headers
+run-name: License headers check by ${{ github.actor }}
+
+on: [push, pull_request]
+
+jobs:
+  header-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Check License Header
+        uses: apache/skywalking-eyes/header@main
