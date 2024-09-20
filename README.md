@@ -35,8 +35,8 @@ The library needed to run our code is
 Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests.
 
 ## License
-This project is licensed under the MIT License - see the LICENSE.md file for details. The license applies to the released data as well.
+This project is licensed under the MIT License - see the `LICENSE` file for details. The license applies to the released data as well.
 
 ## Contact
-RAM is currently maintained by Olga Golovneva, Ilia Kulikov, Xian Li, Richard Pang, Sainbayar Sukhbaatar, Tianlu Wang, Jason Weston, Jing Xu, Jane Dwivedi-Yu, Ping Yu, Weizhe Yuan.
+RAM is currently maintained by Olga Golovneva, Ilia Kulikov, Janice Lan, Xian Li, Richard Pang, Sainbayar Sukhbaatar, Tianlu Wang, Jason Weston, Jing Xu, Jane Dwivedi-Yu, Ping Yu, Weizhe Yuan.
 For any queries, please reach out to [Jing Xu](https://github.com/jxmsML).

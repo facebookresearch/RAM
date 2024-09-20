@@ -1,4 +1,9 @@
-"""Checkpointing utils"""
+"""
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+This source code is licensed under the MIT license found in the
+LICENSE file in the root directory of this source tree.
+"""
 
 import logging
 import os
@@ -7,6 +12,8 @@ from argparse import ArgumentParser, BooleanOptionalAction
 import torch
 from torch import distributed
 from torch.distributed.fsdp import FullyShardedDataParallel as FSDP
+
+"""Checkpointing utils"""
 
 
 def add_args(parser: ArgumentParser):
