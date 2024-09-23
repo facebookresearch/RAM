@@ -1,5 +1,6 @@
 # Self-Taught Evaluators
-TODO: insert a figure.
+
+<p align="center"><img width="110%" src="figures/self_taught_sft.png" /></p>
 
 ## Inference and Evaluation
 Coming soon.
@@ -14,6 +15,9 @@ Coming soon.
 
 The experiments in the paper used sampling with temperature=0.7, and top_p=0.9.
 ## Model Training
+### SFT
+Coming soon.
+### DPO
 Coming soon.
 ## Citation
 If you use data, model, or code from this work, please cite with the following BibTex entry:
