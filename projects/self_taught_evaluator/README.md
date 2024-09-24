@@ -1,6 +1,6 @@
 # Self-Taught Evaluators
 
-<p align="center"><img width="90%" src="figures/self_taught_sft.png" /></p>
+<p align="center"><img width="90%" src="figures/self_taught_dpo.png" /></p>
 
 ## Inference and Evaluation
 Coming soon.
