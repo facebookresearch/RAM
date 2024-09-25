@@ -1,8 +1,15 @@
+"""
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+This source code is licensed under the MIT license found in the
+LICENSE file in the root directory of this source tree.
+"""
+
 from pathlib import Path
 from typing import Dict, List
 
 from fire import Fire
-from transformers import AutoTokenizer, LlamaTokenizer
+from transformers import LlamaTokenizer
 from utils import load_from_jsonl, parse_judgement, prepare_vllm_input, save_to_jsonl
 from vllm import LLM, SamplingParams
 
