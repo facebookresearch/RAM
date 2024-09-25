@@ -1,7 +1,12 @@
 name: headers
 run-name: License headers check by ${{ github.actor }}
 
-on: [push, pull_request]
+on:
+  # Trigger the workflow on push to main or any pull request
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   header-checks:
