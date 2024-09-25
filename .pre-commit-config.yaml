@@ -7,7 +7,7 @@ repos:
     - id: no-commit-to-branch
       args: ['--branch', 'main']
     - id: check-added-large-files
-      args: ['--maxkb=2000']
+      args: ['--maxkb=20000']
     - id: check-merge-conflict
     - id: detect-aws-credentials
       args: ['--allow-missing-credentials']
