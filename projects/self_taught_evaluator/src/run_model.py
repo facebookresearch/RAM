@@ -43,7 +43,8 @@ def run(
     results_save_path: str = None,
 ):
     assert Path(inputs_jsonl_path).exists()
-    assert Path(model_dir).exists()
+    if model_dir.startswith("/"):
+        assert Path(model_dir).exists()
 
     input_and_responses = load_from_jsonl(inputs_jsonl_path)
     for input_dict in input_and_responses:

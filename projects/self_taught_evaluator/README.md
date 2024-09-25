@@ -21,7 +21,7 @@ We provide example scripts to use the self-taught evaluator as a judge to choose
 
 1. Prepare your inputs similar to ones found in [example_inputs.jsonl](./src/example_inputs.jsonl)
 
-2. Run the script [run_example.sh](./src/run_example.sh). The generated outputs and parsed judgements will be saved in `example_outputs.jsonl`.
+2. Run the script [run_inference_wvllm.sh](./run_inference_wvllm.sh). The generated outputs and parsed judgements will be saved in `example_outputs.jsonl`.
 
 ### Reproducing rewardbench evaluation score
 
