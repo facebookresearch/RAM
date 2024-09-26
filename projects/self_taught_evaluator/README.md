@@ -2,17 +2,17 @@
 
 <p align="center"><img width="90%" src="figures/self_taught_dpo.png" /></p>
 
-Instructions and materials presented here correspond to the [Self-taught evaluators](https://arxiv.org/abs/2408.02666) research paper.
+Instructions and materials presented here correspond to the [Self-Taught Evaluators](https://arxiv.org/abs/2408.02666) research paper.
 
-# Self-taught evaluator model release
+# Self-Taught Evaluator model release
 
 **2024-09-26**
 
-We release the self-taught evaluator model on hugging-face model repo: https://huggingface.co/facebook/Self-taught-evaluator-llama3.1-70B. This model is trained iteratively with supervised fine-tuning (SFT) and direct preference optimization (DPO).
+We release the Self-Taught Evaluator model via the Hugging-Face model repo: https://huggingface.co/facebook/Self-taught-evaluator-llama3.1-70B. This model is trained iteratively with supervised fine-tuning (SFT) and direct preference optimization (DPO).
 
 ## Inference and Evaluation
 
-We provide example scripts to use the self-taught evaluator as a judge to choose a better response from a pair. We provide set of scripts to reproduce the RewardBench evaluation scores for this model. Please refer to [src/requirements.txt](./src/requirements.txt)
+We provide example scripts to use the Self-Taught Evaluator as a judge to choose a better response from a pair. We provide a set of scripts to reproduce the RewardBench evaluation scores for this model. Please refer to [src/requirements.txt](./src/requirements.txt)
 
 > [!IMPORTANT]
 > This model was trained to judge a pair of responses using the specific prompt format from the RewardBench benchmark. Make sure to adopt the same prompt format when you run the model on your data.
@@ -21,13 +21,13 @@ We provide example scripts to use the self-taught evaluator as a judge to choose
 
 Note: download example eval data here: https://dl.fbaipublicfiles.com/self_taught_evaluator/example_inputs.jsonl
 
-1. Prepare your inputs similar to ones found in [example_inputs.jsonl](https://dl.fbaipublicfiles.com/self_taught_evaluator/example_inputs.jsonl)
+1. Prepare your inputs similar to the ones found in [example_inputs.jsonl](https://dl.fbaipublicfiles.com/self_taught_evaluator/example_inputs.jsonl)
 
 2. Run `bash run_inference_wvllm.sh`. The generated outputs and parsed judgements will be saved in `example_outputs.jsonl`.
 
 ### Reproducing rewardbench evaluation score
 
-Note: download eval data here: https://dl.fbaipublicfiles.com/self_taught_evaluator/rewardbench_inputs.jsonl
+Note: download the evaluation data here: https://dl.fbaipublicfiles.com/self_taught_evaluator/rewardbench_inputs.jsonl
 
 1. Run `bash src/run_rewardbench.sh`.
 
@@ -63,11 +63,11 @@ The experiments in the paper used vllm for generation, with temperature=0.7, and
 
 ### Prepare training data
 
-After generating samples of judgement (e.g. using vllm), run `python src/prepare_sft_data.py` and `python src/prepare_dpo_data.py` to prepare the training data.
+After generating samples of judgements (e.g. using vllm), run `python src/prepare_sft_data.py` and `python src/prepare_dpo_data.py` to prepare the training data.
 
 ## Model training details
 
-Models were trained using the preference optimization recipe using the open-source [fairseq2 library](https://github.com/facebookresearch/fairseq2). Training was executed on SLURM-based cluster using multi-node A100 setup: 3 nodes training for first iteration SFT model and 8 nodes training for the second iteration DPO model that was released. Model selection is done via early stopping based on the pairwise judgement accuracy computed over the helpsteer2 validation set.
+Models were trained using the preference optimization recipe using the open-source [fairseq2 library](https://github.com/facebookresearch/fairseq2). Training was executed on a SLURM-based cluster using multi-node A100 setup: 3 nodes training for first iteration SFT model and 8 nodes training for the second iteration DPO model that was released. Model selection is done via early stopping based on the pairwise judgement accuracy computed over the Helpsteer2 validation set.
 
 **SFT training config and example run command**
 
@@ -82,10 +82,10 @@ Config: [dpo_training.yaml](./training_configs/dpo_training.yaml)
 Run command (within SLURM allocation): `srun fairseq2 lm preference_finetune ${SAVE_DIR} --config-file ./training_configs/dpo_training.yaml`
 
 ## Citation
-If you use data, model, or code from this work, please cite with the following BibTex entry:
+If you use the data, model, or code from this work, please cite with the following BibTex entry:
 ```
 @article{wang2024self,
-  title={Self-taught evaluators},
+  title={Self-Taught Evaluators},
   author={Wang, Tianlu and Kulikov, Ilia and Golovneva, Olga and Yu, Ping and Yuan, Weizhe and Dwivedi-Yu, Jane and Pang, Richard Yuanzhe and Fazel-Zarandi, Maryam and Weston, Jason and Li, Xian},
   journal={arXiv preprint arXiv:2408.02666},
   year={2024}
