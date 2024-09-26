@@ -1,0 +1,66 @@
+dataset: dpo_training_data  # asset name from the card 'training_data.yaml'
+max_seq_len: 2048
+max_num_tokens: 2048
+batch_size: 1
+example_shuffle_window: 10000
+batch_shuffle_window: 1000
+num_prefetch: 4
+mask_source_tokens: true
+model: checkpoint_step_1300  # sft checkpoint
+dtype: bfloat16
+data_parallelism: fsdp
+fsdp_wrap_granularity: layer
+fsdp_reshard_after_forward: true
+tensor_parallel_size: 8
+activation_checkpointing: true
+torch_compile: false
+criterion: dpo
+criterion_config:
+  _type_: fairseq2.recipes.lm.preference_finetune.dpo.DpoConfig
+  reference_model: checkpoint_step_1300
+  reference_dtype: bfloat16
+  reference_tensor_parallel_size: 8
+  beta: 0.1
+  nll_scale: 1.5
+optimizer: adamw
+optimizer_config:
+  _type_: fairseq2.optim.factory.AdamWConfig
+  lr: 5.5e-08
+  betas:
+  - 0.9
+  - 0.95
+  eps: 1.0e-08
+  weight_decay: 0.1
+  amsgrad: false
+  maximize: false
+  capturable: false
+  differentiable: false
+  impl: auto
+  use_fp32: false
+lr_scheduler: cosine-annealing
+lr_scheduler_config:
+  _type_: fairseq2.optim.lr_scheduler.factory.CosineAnnealingLRConfig
+  cycle_len: null
+  num_warmup_steps: 0
+  cycle_mul: 1.0
+  lr_mul: 1.0
+  start_lr: 0.0
+  final_lr: 1.1e-06
+gradient_accumulation: 4
+max_gradient_norm: 1.0
+fp16_loss_scale:
+- 128.0
+- 0.0001
+max_num_steps: 3000
+max_num_data_epochs: 5
+checkpoint_every_n_steps: 100
+checkpoint_every_n_data_epochs: 1
+keep_last_n_checkpoints: 1
+keep_last_n_models: 10
+publish_metrics_every_n_steps: 1
+publish_metrics_every_n_data_epochs: null
+resume_checkpoint_dir: foo # CHANGEME: checkpoints directory from SFT training to initialize from
+seed: 2
+profile: null
+monitored_gang: false
+anomaly_detection: false

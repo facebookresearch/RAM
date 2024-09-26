@@ -1,0 +1,16 @@
+Below is a conversation between an user and an AI Assistant. 
+
+[User Question]
+{input}
+
+[The start of Assistant's Answer]
+{generation}
+[The end of Assistant's Answer]
+
+Please first generate a modified instruction that is highly relevant but not semantically identical to the instruction above from the user. Then write a high-quality answer which is a good response to the modified instruction but not a good response to the original user question. IMPORTANT: Please strictly follow the following format:
+[User Question Modified]
+<provide a modified instruction here>
+
+[The start of Assistant's answer to the modified instruction]
+<provide a high-quality response to the modified instruction>
+[The end of Assistant's answer to the modified instruction]

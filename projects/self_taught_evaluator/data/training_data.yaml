@@ -1,0 +1,5 @@
+# this is a fairseq2 asset card
+
+name: dpo_training_data
+dataset_family: generic_preference_optimization
+data: dpo_training_data.jsonl  # produced by src/load_dpo_data_from_hf.py
