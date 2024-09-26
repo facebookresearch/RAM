@@ -12,7 +12,6 @@ import numpy as np
 from rewardbench import load_eval_dataset
 from rewardbench.constants import EXAMPLE_COUNTS, SUBSET_MAPPING
 
-# from rewardbench.generative import process_judgement
 from rewardbench.utils import calculate_scores_per_section
 from transformers import LlamaTokenizer
 
