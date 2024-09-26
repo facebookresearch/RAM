@@ -51,10 +51,19 @@ Final score: 90.014
 The experiments in the paper used vllm for generation, with temperature=0.7, and top_p=0.9, max_tokens=4096.
 
 ## Model training details
-### SFT
-Coming soon.
+
+Model were trained using the preference optimization recipe from the open-source [fairseq2 library](https://github.com/facebookresearch/fairseq2). Training was executed on SLURM-based cluster using multi-node A100 setup: 3 nodes training for first iteration SFT model and 8 nodes training for the second iteration DPO model that was released. Model selection is done via early stopping based on the pairwise judgement accuracy computed over the helpsteer2 validation set.
+
+**SFT training config and example run command**
+
+
+
 ### DPO
-Coming soon.
+
+Config: [dpo_training.yaml](./training_configs/dpo_training.yaml)
+
+Run command (within SLURM allocation): `srun fairseq2 lm preference_finetune ${SAVE_DIR} --config-file ./training_configs/dpo_training.yaml`
+
 ## Citation
 If you use data, model, or code from this work, please cite with the following BibTex entry:
 ```
