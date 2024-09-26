@@ -1,0 +1,52 @@
+
+dataset: sft_training_data  # asset name from the card 'training_data.yaml'
+max_seq_len: 4096
+max_num_tokens: 8192
+example_shuffle_window: 10000
+batch_shuffle_window: 1000
+num_prefetch: 4
+model: llama3_1_70b_instruct
+dtype: bfloat16
+data_parallelism: fsdp
+fsdp_wrap_granularity: layer
+fsdp_reshard_after_forward: true
+tensor_parallel_size: 8
+activation_checkpointing: true
+torch_compile: false
+optimizer_config:
+    _type_: fairseq2.optim.factory.AdamWConfig
+    lr: 1e-06
+    betas:
+    - 0.9
+    - 0.95
+    weight_decay: 0.1
+    amsgrad: false
+    maximize: false
+    capturable: false
+    differentiable: false
+    impl: auto
+    use_fp32: false
+lr_scheduler: cosine-annealing
+lr_scheduler_config:
+    _type_: fairseq2.optim.lr_scheduler.factory.CosineAnnealingLRConfig
+    cycle_len: null
+    num_warmup_steps: 100
+    cycle_mul: 1.0
+    lr_mul: 1.0
+    start_lr: 0.0
+    final_lr: 1.0e-07
+gradient_accumulation: 1
+max_gradient_norm: null
+fp16_loss_scale:
+- 128.0
+- 0.0001
+max_num_steps: 50000
+max_num_data_epochs: null
+checkpoint_every_n_steps: 500
+keep_last_n_checkpoints: 1
+keep_last_n_models: 100
+publish_metrics_every_n_steps: 10
+seed: 2
+profile: null
+monitored_gang: false
+anomaly_detection: false

@@ -59,9 +59,11 @@ Model were trained using the preference optimization recipe from the open-source
 
 **SFT training config and example run command**
 
+Config: [sft_training.yaml](./training_configs/sft_training.yaml)
 
+Run command (within SLURM allocation): `srun fairseq2 lm instruction_finetune ${SAVE_DIR} --config-file ./training_configs/sft_training.yaml`
 
-### DPO
+**DPO training config and example run command**
 
 Config: [dpo_training.yaml](./training_configs/dpo_training.yaml)
 
