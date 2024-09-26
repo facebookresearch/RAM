@@ -38,6 +38,10 @@ Final score: 90.014
 
 ## Synthetic Preference Data
 
+The pre-processed training data for preference fine-tuning can be downloaded here: https://huggingface.co/datasets/facebook/Self-taught-evaluator-DPO-data
+
+Below you can find instructions on how to replicate our data generation process.
+
 ### Generate worse response
 1. Given pairs of (instruction, baseline response), prepare prompts using the template specified in `data/prompts/worse_response.prompt`.
 2. Run generation on the prompts from step 1, to generate a "worse response" to the instruction.
