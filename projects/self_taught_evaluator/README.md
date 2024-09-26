@@ -49,6 +49,7 @@ Below you can find instructions on how to replicate our data generation process.
 ### Generate worse response
 1. Given pairs of (instruction, baseline response), prepare prompts using the template specified in `data/prompts/worse_response.prompt`.
 2. Run generation on the prompts from step 1, to generate a "worse response" to the instruction.
+
 ### Generate judgement
 1. Given tuples of (instruction, baseline response, worse response), we generate judgement using the prompt template specified in `data/prompts/eval_plan.prompt`. To avoid position bias, we generate evaluation plans for both orders of the responses positions. Specifically, for `0_1` order, we prepare the prompt using (instruction, baseline response, worse response), and for `1_0` order, we prepare the prompt using (instruction, worse response, baseline response).
 2. Run generation on both `0_1` and `1_0` ordered prompts from step 1 to derive evaluation plans for pairwise preference.
