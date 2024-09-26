@@ -92,7 +92,6 @@ def parse_judgement(generation: str):
 def rewardbench_process_judgement(judgment, model_modifier=None):
     if model_modifier == "prometheus":
         if "[RESULT]" in judgment:
-            # after [RESULT] is A or B, else error (mayube spaces)
             # result = judgment.split("[RESULT]")[1].strip()
             if judgment[-1] == "A":
                 return "A"
