@@ -481,7 +481,7 @@ def wrap_text_with_chat_template(
     Args:
         text (str): text of the user prompt
         tokenizer (AutoTokenizer): Instantiated tokenizer.
-            Example: AutoTokenizer.from_pretrained("/fsx-ram/shared/llama2_hf/llama-2-7b-chat-hf/")
+            Example: AutoTokenizer.from_pretrained("<local_path>")
         system_prompt (str): added following the model if tokenizer supports that, otherwise the error will be returned. Default is None.
     """
 
