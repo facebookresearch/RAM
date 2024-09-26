@@ -1,32 +1,85 @@
 
-## Projects
+# RAM Projects
 Here we list projects undertaken in the RAM framework that are shared publicly, either in the form of papers, public tasks and/or shared model code. This directory also contains subfolders for some of the projects which are housed in the RAM repo, others are maintained via external websites.
 
-### [Following Length Constraints in Instructions](https://arxiv.org/abs/2406.17744)
-Aligned instruction following models can better fulfill user requests than their unaligned counterparts. However, it has been shown that there is a length bias in evaluation of such models, and that training algorithms tend to exploit this bias by learning longer responses. In this work we show how to train models that can be controlled at inference time with instructions containing desired length constraints. Such models are superior in length instructed evaluations, outperforming standard instruction following models such as GPT4, Llama 3 and Mixtral.
 
-### [Contextual Position Encoding: Learning to Count What's Important](https://arxiv.org/pdf/2405.18719)
-The attention mechanism is a critical component of Large Language Models (LLMs) that allows tokens in a sequence to interact with each other but is orderinvariant. Incorporating position encoding (PE) makes it possible to address by position, such as attending to the i-th token. However, current PE methods use token counts to derive position, and thus cannot generalize to higher levels of abstraction, such as attending to the i-th sentence. In this paper, we propose a new position encoding method, Contextual Position Encoding (CoPE), that allows positions to be conditioned on context by incrementing position only on certain tokens determined by the model. This allows more general position addressing such as attending to the i-th particular word, noun, or sentence. We show that CoPE can solve the selective copy, counting and Flip-Flop tasks where popular position embeddings fail, and improves perplexity on language modeling and coding tasks.
+## Reasoning
 
-### [Self-Taught Evaluators](https://arxiv.org/abs/2408.02666)
-Model-based evaluation is at the heart of successful model development -- as a reward model for training, and as a replacement for human evaluation. To train such evaluators, the standard approach is to collect a large amount of human preference judgments over model responses, which is costly and the data becomes stale as models improve. In this work, we present an approach that aims to im-prove evaluators without human annotations, using synthetic training data only. Starting from unlabeled instructions, our iterative self-improvement scheme generates contrasting model outputs and trains an LLM-as-a-Judge to produce reasoning traces and final judgments, repeating this training at each new iteration using the improved predictions. Without any labeled preference data, our Self-Taught Evaluator can improve a strong LLM (Llama3-70B-Instruct) from 75.4 to 88.3 (88.7 with majority vote) on RewardBench. This outperforms commonly used LLM judges such as GPT-4 and matches the performance of the top-performing reward models trained with labeled examples.
+- **Backtracking Improves Generation Safety** [[paper]](https://arxiv.org/abs/2409.14586).
+  _Trains LLMs to generate a RESET token if the partial-generation is bad._
 
-<!---
-### [System 2 Attention (is something you might need too)](https://arxiv.org/pdf/2311.11829.pdf)
-Soft attention in Transformer-based Large Language Models (LLMs) is susceptible to incorporating irrelevant information from the context into its latent representations, which adversely affects next token generations. To help rectify these issues, we introduce System 2 Attention (S2A), which leverages the ability of LLMs to reason in natural language and follow instructions in order to decide what to attend to. S2A regenerates the input context to only include the relevant portions, before attending to the regenerated context to elicit the final response. In experiments, S2A outperforms standard attention-based LLMs on three tasks containing opinion or irrelevant information, QA, math word problems and longform generation, where S2A increases factuality and objectivity, and decreases sycophancy.
+- **Self-Taught Evaluators** [[project]](./self_taught_evaluator).
+  _Improving LLM-as-a-Judge using iteratively generated synthetic data only (no human annotation)._
+
+- **Source2Synth** [[paper]](https://arxiv.org/abs/2409.08239).
+  _Generating synthetic data from real sources to improve LLMs on complex reasoning tasks._
+
+- **From decoding to meta-generation** [[paper]](https://arxiv.org/abs/2406.16838).
+  _Survey paper on reasoning methods._
+
+- **System 2 Distillation** [[paper]](https://arxiv.org/abs/2407.06023).
+  _Distilling reasoning traces (System 2) back into the Transformer (System 1)._
+
+- **System 2 Attention** [[paper]](https://arxiv.org/abs/2311.11829).
+  _Make LLM plan what it attends to as a generative process, decreasing bias & increasing factuality._
+
+- **Beyond A*** [[paper]](https://arxiv.org/abs/2402.14083).
+  _Better Planning with Transformers via Search Dynamics Bootstrapping._
+
+- **ToolVerifier** [[paper]](https://arxiv.org/abs/2402.14158).
+  _Generalization to New Tools via Self-Verification._
+
+- **Chain-of-Verification Reduces Hallucination** [[paper]](https://arxiv.org/abs/2309.11495).
+  _Reduces hallucination by LLM self-identifying and verifying generated facts._
+
+- **Branch-Solve-Merge** [[paper]](https://arxiv.org/abs/2310.15123).
+  _Reasoning method to improve LLM Evaluation and Generation._
+
+- **Ask, Refine, Trust** [[paper]](https://arxiv.org/abs/2311.07961).
+  _Technique that uses critical questions to determine if an LLM generation needs refinement._
 
 
-### [Some things are more CRINGE than others: Preference Optimization with the Pairwise Cringe Loss](https://arxiv.org/pdf/2312.16682.pdf)
-Practitioners commonly align large language models using pairwise preferences, i.e., given labels of the type response A is preferred to response B for a given input. Perhaps less commonly, methods have also been developed for binary feedback, i.e. training models given labels of type response A is good or bad. We show how an existing performant binary feedback method, the Cringe Loss (Adolphs et al., 2022), can be generalized to the pairwise preference setting using a simple soft margin extension. Pairwise Cringe Loss is straightforward to implement and efficient to train, and we find it outperforms state-of-the-art preference optimization algorithms such as PPO and DPO on the AlpacaFarm benchmark.
+
+## Alignment
+
+- **Meta-Rewarding LLMs** [[paper]](https://arxiv.org/abs/2407.19594)
+  _LLMs that can judge their own judgments to self-improve both acting & evaluating actions._
+
+- **Iterative Reasoning Preference Optimization** [[paper]](https://arxiv.org/abs/2404.19733)
+  _Shows how to improve reasoning tasks with iterative DPO._
+
+- **Length Following** [[project]](length_instruct)
+  _Method to make LLMs follow length instructions much better & removing length bias in evaluations._
+
+- **Self-Rewarding LLMs** [[paper]](https://arxiv.org/abs/2401.10020)
+  _Shows LLMs can judge themselves to self-improve without human feedback._
+
+- **Iterative DPO & Cringe Loss** [[paper]](https://arxiv.org/abs/2312.16682)
+  _Shows iterative learning improves alignment._
+
+- **Instruction Back-and-Forth Translation** [[paper]](https://arxiv.org/abs/2408.04614)
+  _Improves Instruction Backtranslation by rewriting the web document._
+
+- **Instruction Backtranslation** [[paper]](https://arxiv.org/abs/2308.06259)
+  _Self-Alignment method by predicting instructions for web documents._
+
+- **Leveraging Implicit Feedback** [[paper]](https://arxiv.org/abs/2307.14117)
+  _Method to learn from human feedback in dialogue deployment data to improve LLM._
 
 
-## Data
-The data needed to run our code is hosted on HuggingFace:
-- https://huggingface.co/OpenAssistant
-- https://huggingface.co/datasets/tatsu-lab/alpaca_eval
+## Memory & Architectures
 
-## Model
-The library needed to run our code is
-- [Llama from HuggignFace] (https://huggingface.co/docs/transformers/main/model_doc/llama?fbclid=IwAR2ZRhVnuKqngWTBjhOhuDgQLQ5yzTh573uAA_16bEMX3lerKSHCtdla31w).To run huggingface Llama models, make sure to convert your LLaMA checkpoint and tokenizer into HuggingFace format and store it at <your_path_to_hf_converted_llama_ckpt_and_tokenizer>.
-- [Alpaca Eval](https://github.com/tatsu-lab/alpaca_eval) for any inference only Llama experiments.
--->
+- **Contextual Position Encoding** [[project]](cope)
+  _New attention mechanism that fixes problems in copying & counting for Transformers_
+
+- **Branch-Train-MiX** [[paper]](https://arxiv.org/abs/2403.07816)
+  _Novel MoE architecture that is very efficient during training._
+
+- **Reverse Training** [[paper]](https://arxiv.org/abs/2403.13799)
+  _Method for pretraining that helps the reversal curse & improves performance._
+
+- **MemWalker** [[paper]](https://arxiv.org/abs/2310.05029)
+  _Novel memory architecture: builds & navigates a tree (structured long-term memory) via LLM prompting._
+
+- **Self-Notes** [[paper]](https://arxiv.org/abs/2305.00833)
+  _LLMs generate internal thoughts as they read text, enabling reasoning & memorization._
