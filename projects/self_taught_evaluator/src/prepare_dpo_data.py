@@ -6,18 +6,18 @@ LICENSE file in the root directory of this source tree.
 """
 
 import os
-from typing import Optional
 import random
-import numpy as np
 from collections import Counter, defaultdict
 from glob import glob
+from typing import Optional
 
 import fire
+import numpy as np
 from tqdm import tqdm, trange
+from utils import parse_judgement
 
 from ram.data import Dataset
 from ram.data_utils import load_from_jsonl, map_str_to_uuid
-from utils import parse_judgement
 
 """
 Pipeline to extract and prepare DPO training data:

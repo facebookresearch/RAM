@@ -5,17 +5,18 @@ This source code is licensed under the MIT license found in the
 LICENSE file in the root directory of this source tree.
 """
 
-import fire
-from typing import Optional
-from collections import defaultdict
 import os
 import random
-from ram.data_utils import load_from_jsonl, save_to_jsonl, map_str_to_uuid
-from utils import parse_judgement
-from ram.data import Dataset
-from tqdm import tqdm, trange
+from collections import Counter, defaultdict
 from glob import glob
-from collections import Counter
+from typing import Optional
+
+import fire
+from tqdm import tqdm, trange
+from utils import parse_judgement
+
+from ram.data import Dataset
+from ram.data_utils import load_from_jsonl, map_str_to_uuid, save_to_jsonl
 
 """
 python prepare_sft_data.py --generation_dir=<dir with sampled judgements> --output_dir=<dir to save SFT data> 
