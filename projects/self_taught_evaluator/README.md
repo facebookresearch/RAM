@@ -50,6 +50,9 @@ Final score: 90.014
 
 The experiments in the paper used vllm for generation, with temperature=0.7, and top_p=0.9, max_tokens=4096.
 
+### Prepare training data
+After generating samples of judgement (e.g. using vllm), run `python src/prepare_sft_data.py` and `python src/prepare_dpo_data.py` to prepare the training data.
+
 ## Model training details
 
 Model were trained using the preference optimization recipe from the open-source [fairseq2 library](https://github.com/facebookresearch/fairseq2). Training was executed on SLURM-based cluster using multi-node A100 setup: 3 nodes training for first iteration SFT model and 8 nodes training for the second iteration DPO model that was released. Model selection is done via early stopping based on the pairwise judgement accuracy computed over the helpsteer2 validation set.
