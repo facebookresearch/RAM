@@ -23,7 +23,7 @@ Note: download example eval data here: https://dl.fbaipublicfiles.com/self_taugh
 
 1. Prepare your inputs similar to ones found in [example_inputs.jsonl](./src/example_inputs.jsonl)
 
-2. Run the script [run_inference_wvllm.sh](./run_inference_wvllm.sh). The generated outputs and parsed judgements will be saved in `example_outputs.jsonl`.
+2. Run `bash run_inference_wvllm.sh`. The generated outputs and parsed judgements will be saved in `example_outputs.jsonl`.
 
 ### Reproducing rewardbench evaluation score
 
