@@ -138,7 +138,7 @@ def compute_rewardbench_scores(
     # used to fetch reference winners
     _, subsets = load_eval_dataset(
         core_set=True,
-        conv=None,  # get_conv_template("raw"),  # not used in this script (handled later)
+        conv=None,
         custom_dialogue_formatting=True,  # handle formatting later
         tokenizer=None,
         keep_columns=["text_chosen", "text_rejected", "id"],
