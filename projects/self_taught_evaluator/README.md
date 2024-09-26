@@ -2,7 +2,7 @@
 
 <p align="center"><img width="90%" src="figures/self_taught_dpo.png" /></p>
 
-Instructions and materials presented here correspond to the [Self-taught evaluators](https://arxiv.org/abs/2408.02666) research project.
+Instructions and materials presented here correspond to the [Self-taught evaluators](https://arxiv.org/abs/2408.02666) research paper.
 
 # Self-taught evaluator model release
 
