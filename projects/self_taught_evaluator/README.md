@@ -44,6 +44,8 @@ Final score: 90.014
 
 The pre-processed training data for preference fine-tuning can be downloaded here: https://huggingface.co/datasets/facebook/Self-taught-evaluator-DPO-data
 
+Example script showing how to combine wildchat-1m prompts with DPO training data: [src/load_dpo_data_from_hf.py](./src/load_dpo_data_from_hf.py).
+
 Below you can find instructions on how to replicate our data generation process.
 
 ### Generate worse response
