@@ -16,6 +16,7 @@ python prepare_sft_data.py --generation_dir=<dir with sampled judgements> --outp
 
 random.seed(42)
 
+
 def rejection_sampling(outputs, true_label, majority_voting=None):
     random.shuffle(outputs)
     positives = []

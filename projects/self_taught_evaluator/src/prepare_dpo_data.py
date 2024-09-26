@@ -54,6 +54,7 @@ def get_input_key(response):
     input_key = f"<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n[User Question]{eval_example}"
     return system_prompt, input_key
 
+
 def prepare_dpo_data(
     generation_dir: str,
     output_dir: str,
