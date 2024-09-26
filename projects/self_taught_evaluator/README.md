@@ -21,7 +21,7 @@ We provide example scripts to use the self-taught evaluator as a judge to choose
 
 Note: download example eval data here: https://dl.fbaipublicfiles.com/self_taught_evaluator/example_inputs.jsonl
 
-1. Prepare your inputs similar to ones found in [example_inputs.jsonl](./src/example_inputs.jsonl)
+1. Prepare your inputs similar to ones found in [example_inputs.jsonl](./data/eval_data/example_inputs.jsonl)
 
 2. Run `bash run_inference_wvllm.sh`. The generated outputs and parsed judgements will be saved in `example_outputs.jsonl`.
 
