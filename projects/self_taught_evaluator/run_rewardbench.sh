@@ -7,7 +7,7 @@
 
 RB_INPUT=rewardbench_inputs.jsonl
 RB_OUTPUT=./rewardbench_results.jsonl
-MODEL_DIR=/fsx-ram/shared/Self-taught-evaluator-llama3.1-70B/dpo_model  # CHANGEME
+MODEL_DIR=./Self-taught-evaluator-llama3.1-70B/dpo_model  # CHANGEME
 
 python src/run_model.py --inputs_jsonl_path=$RB_INPUT --model_dir=$MODEL_DIR --prompted_input_jsonl_key="text" --results_save_path=${RB_OUTPUT}
 
