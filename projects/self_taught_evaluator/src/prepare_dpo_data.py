@@ -21,7 +21,7 @@ from ram.data_utils import load_from_jsonl, map_str_to_uuid
 
 """
 Pipeline to extract and prepare DPO training data:
-# 1. load all examples each has N samples
+1. load all examples each has N samples
 # 2. record samples whose judgement agrees with ground truth as positive, no extraction or opposite preference label treated as negative
 # 3. sometimes, there are not enough negatives, so load more samples (usually with higher temperature) to extract more negatives. 
 
