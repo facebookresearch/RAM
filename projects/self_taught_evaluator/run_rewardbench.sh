@@ -5,7 +5,7 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-RB_INPUT=./data/eval_data/rewardbench_inputs.jsonl
+RB_INPUT=rewardbench_inputs.jsonl
 RB_OUTPUT=./rewardbench_results.jsonl
 MODEL_DIR=/fsx-ram/shared/Self-taught-evaluator-llama3.1-70B/dpo_model  # CHANGEME
 

@@ -19,11 +19,15 @@ We provide example scripts to use the self-taught evaluator as a judge to choose
 
 #### Example: running the model with a given set of user inputs & pair of assistant outputs.
 
+Note: download example eval data here: https://dl.fbaipublicfiles.com/self_taught_evaluator/example_inputs.jsonl
+
 1. Prepare your inputs similar to ones found in [example_inputs.jsonl](./src/example_inputs.jsonl)
 
 2. Run the script [run_inference_wvllm.sh](./run_inference_wvllm.sh). The generated outputs and parsed judgements will be saved in `example_outputs.jsonl`.
 
 ### Reproducing rewardbench evaluation score
+
+Note: download eval data here: https://dl.fbaipublicfiles.com/self_taught_evaluator/rewardbench_inputs.jsonl
 
 1. Run `bash src/run_rewardbench.sh`.
 
