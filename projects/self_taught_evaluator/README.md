@@ -60,6 +60,7 @@ Below you can find instructions on how to replicate our data generation process.
 The experiments in the paper used vllm for generation, with temperature=0.7, and top_p=0.9, max_tokens=4096.
 
 ### Prepare training data
+
 After generating samples of judgement (e.g. using vllm), run `python src/prepare_sft_data.py` and `python src/prepare_dpo_data.py` to prepare the training data.
 
 ## Model training details
