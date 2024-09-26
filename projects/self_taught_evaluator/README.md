@@ -12,7 +12,7 @@ We release the self-taught evaluator model on hugging-face model repo: https://h
 
 ## Inference and Evaluation
 
-We provide example scripts to use the self-taught evaluator as a judge to choose a better response from a pair. We provide set of scripts to reproduce the RewardBench evaluation scores for this model. Please refer to [requirements.txt](./src/requirements.txt)
+We provide example scripts to use the self-taught evaluator as a judge to choose a better response from a pair. We provide set of scripts to reproduce the RewardBench evaluation scores for this model. Please refer to [src/requirements.txt](./src/requirements.txt)
 
 > [!IMPORTANT]
 > This model was trained to judge a pair of responses using the specific prompt format from the RewardBench benchmark. Make sure to adopt the same prompt format when you run the model on your data.
