@@ -58,7 +58,10 @@ def pair_sampling(outputs, labels):
 def get_input_key(response):
     input_key = response["text"]
     system_prompt, eval_example = input_key.split("\n\n[User Question]")
-    input_key = f"<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n[User Question]{eval_example}"
+    next_turn_tag = "<|eot_id|><|start_header_id|>user<|end_header_id|>"
+    if system_prompt.endswith(next_turn_tag):
+        system_prompt = system_prompt[: -len(next_turn_tag)]
+    input_key = f"{next_turn_tag}\n\n[User Question]{eval_example}"
     return system_prompt, input_key
 
 
