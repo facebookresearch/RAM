@@ -87,7 +87,7 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 - **MemWalker** [[paper]](https://arxiv.org/abs/2310.05029)
   _Novel memory architecture: builds & navigates a tree (structured long-term memory) via LLM prompting._
 
-- **Self-Notes** [[paper]](https://arxiv.org/abs/2305.00833)
+- **Self-Notes** [[project]](self_notes)
   _LLMs generate internal thoughts as they read text, enabling reasoning & memorization._
   
 #### _architectures_
