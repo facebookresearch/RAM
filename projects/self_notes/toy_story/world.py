@@ -7,23 +7,23 @@ LICENSE file in the root directory of this source tree.
 
 import logging
 import random
-import numpy as np
 from typing import Any, Dict, List, Optional, Tuple, Type
 
-from graph import Edge, Graph
-from relation import IsAtEdge, IsWithEdge, HasEdge, IsInsideEdge, create_rules
-from rules import TriangleInference
+import numpy as np
 from constants import (
-    PEOPLE,
-    SMALL_ITEMS,
     CONTAINER_ITEMS,
-    PLACES,
-    RELATIONS,
-    QUESTION_RELATIONS,
-    MAX_OBS_TRIAL,
     MAX_NUM_SUPPORT,
+    MAX_OBS_TRIAL,
     MAX_QUESTION_TRIAL,
+    PEOPLE,
+    PLACES,
+    QUESTION_RELATIONS,
+    RELATIONS,
+    SMALL_ITEMS,
 )
+from graph import Edge, Graph
+from relation import HasEdge, IsAtEdge, IsInsideEdge, IsWithEdge, create_rules
+from rules import TriangleInference
 
 
 class World:

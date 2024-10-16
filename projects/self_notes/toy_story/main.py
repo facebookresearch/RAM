@@ -5,17 +5,17 @@ This source code is licensed under the MIT license found in the
 LICENSE file in the root directory of this source tree.
 """
 
-import json
-import random
 import argparse
+import json
 import os
+import random
 from os import path
 from typing import Any, Dict, List
-from tqdm import tqdm
-import numpy as np
 
-from world import World
+import numpy as np
 from constants import MAX_SAMPLE_TRIAL
+from tqdm import tqdm
+from world import World
 
 
 def save_json(data: List, file_name: str):

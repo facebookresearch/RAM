@@ -17,7 +17,7 @@ the ball is inside the basket.
 Frank is with John.
 Daniel has the basket.
 Mary is at the museum.
-> 
+>
 > Q: Where is the basket?
 A: the basket is at the museum.
 

@@ -7,14 +7,14 @@ LICENSE file in the root directory of this source tree.
 
 from typing import List, Tuple
 
+from graph import Edge, Node
 from rules import (
     CheckRule,
     InferenceRule,
-    UniqueRule,
     SymmetryInference,
     TriangleInference,
+    UniqueRule,
 )
-from graph import Edge, Node
 
 
 class IsAtEdge(Edge):

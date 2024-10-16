@@ -7,9 +7,8 @@ LICENSE file in the root directory of this source tree.
 
 from typing import List, Type
 
-from relation import IsAtEdge, IsWithEdge, HasEdge, IsInsideEdge, create_rules
 from graph import Edge
-
+from relation import HasEdge, IsAtEdge, IsInsideEdge, IsWithEdge, create_rules
 
 PEOPLE = ["Alice", "Bob", "Charlie", "Daniel", "Frank", "Mary", "John", "Sandra"]
 PLACES = [
