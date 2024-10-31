@@ -5,6 +5,7 @@ This source code is licensed under the MIT license found in the
 LICENSE file in the root directory of this source tree.
 """
 
+from copy import deepcopy
 import json
 from typing import Any, Dict, Iterable, List
 
@@ -58,7 +59,7 @@ def save_to_jsonl(data: List[Dict], filename: str, write_mode="w"):
 def prepare_vllm_input(
     input: str, response_a: str, response_b: str, tokenizer: LlamaTokenizer
 ):
-    conversation = SELF_TAUGHT_WITH_SYSTEM_PROMPT
+    conversation = deepcopy(SELF_TAUGHT_WITH_SYSTEM_PROMPT)
     conversation[-1]["content"] = conversation[-1]["content"].format(
         **{
             "input": input,
