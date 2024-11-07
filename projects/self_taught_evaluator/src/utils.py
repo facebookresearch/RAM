@@ -5,8 +5,8 @@ This source code is licensed under the MIT license found in the
 LICENSE file in the root directory of this source tree.
 """
 
-from copy import deepcopy
 import json
+from copy import deepcopy
 from typing import Any, Dict, Iterable, List
 
 import numpy as np
