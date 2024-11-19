@@ -9,7 +9,7 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 - **Backtracking Improves Generation Safety** [[paper]](https://arxiv.org/abs/2409.14586).
   _Trains LLMs to generate a RESET token if the partial-generation is bad._
-  
+
 - **From decoding to meta-generation** [[paper]](https://arxiv.org/abs/2406.16838).
   _Survey paper on reasoning methods._
 
@@ -35,7 +35,7 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 - **ToolVerifier** [[paper]](https://arxiv.org/abs/2402.14158).
   _Generalization to New Tools via Self-Verification._
-  
+
 #### _evaluation_
 
 - **Self-Taught Evaluators** [[project]](./self_taught_evaluator).
@@ -43,14 +43,17 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 - **Branch-Solve-Merge** [[paper]](https://arxiv.org/abs/2310.15123).
   _Reasoning method to improve LLM Evaluation and Generation._
-  
+
 
 ## (Self-)Alignment
 
-#### _self-alignment optimization techniques_
+#### _(self-)alignment optimization techniques_
 
 - **Self-Consistency Preference Optimization** [[paper]](https://arxiv.org/abs/2411.04109)
   _self-training without human labels that matches supervised training performance._
+
+- **Thinking LLMs** [[paper]](https://arxiv.org/abs/2410.10630).
+  _Train LLMs to write down its internal thoughts before responding to general instructions._
 
 - **Meta-Rewarding LLMs** [[paper]](https://arxiv.org/abs/2407.19594)
   _LLMs that can judge their own judgments to self-improve both acting & evaluating actions._
@@ -67,7 +70,7 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 - **Iterative DPO & Cringe Loss** [[paper]](https://arxiv.org/abs/2312.16682)
   _Shows iterative learning improves alignment._
 
-#### _self-alignment via other methods_
+#### _(self-)alignment via other methods_
 
 - **Instruction Back-and-Forth Translation** [[paper]](https://arxiv.org/abs/2408.04614)
   _Improves Instruction Backtranslation by rewriting the web document._
@@ -86,25 +89,20 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 - **Reverse Training** [[paper]](https://arxiv.org/abs/2403.13799)
   _Method for pretraining that helps the reversal curse & improves performance._
-  
+
 - **MemWalker** [[paper]](https://arxiv.org/abs/2310.05029)
   _Novel memory architecture: builds & navigates a tree (structured long-term memory) via LLM prompting._
 
 - **Self-Notes** [[project]](self_notes)
   _LLMs generate internal thoughts as they read text, enabling reasoning & memorization._
-  
+
 #### _architectures_
 
 - **Adaptive Decoding via Latent Preference Optimization** [[paper]](https://arxiv.org/abs/2411.09661)
   _New layer that selects decoding params automatically *per token*_.
-  
+
 - **Contextual Position Encoding** [[project]](cope)
   _New attention mechanism that fixes problems in copying & counting for Transformers_.
 
 - **Branch-Train-MiX** [[paper]](https://arxiv.org/abs/2403.07816)
   _Novel MoE architecture that is very efficient during training._
-
-
-
-
-
