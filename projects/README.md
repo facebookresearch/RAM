@@ -36,6 +36,14 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 - **ToolVerifier** [[paper]](https://arxiv.org/abs/2402.14158).
   _Generalization to New Tools via Self-Verification._
 
+#### _algorithms_
+
+- **Coconut (Continuous Chain-of-Thought)*** [[paper]](https://arxiv.org/abs/2412.06769).
+  _Training LLMs to reason in continuous latent space (rather than using language)._
+  
+- **Beyond A*** [[paper]](https://arxiv.org/abs/2402.14083).
+  _Better Planning with Transformers via Search Dynamics Bootstrapping._
+
 #### _evaluation_
 
 - **Self-Taught Evaluators** [[project]](./self_taught_evaluator).
@@ -97,6 +105,9 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
   _LLMs generate internal thoughts as they read text, enabling reasoning & memorization._
 
 #### _architectures_
+
+- **Byte Latent Transformer** [[paper]](https://arxiv.org/abs/2412.09871)
+  _New Byte-level LLM architecture that matches tokenization-based LLM performance at scale.
 
 - **Adaptive Decoding via Latent Preference Optimization** [[paper]](https://arxiv.org/abs/2411.09661)
   _New layer that selects decoding params automatically *per token*_.
