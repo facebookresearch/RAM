@@ -5,16 +5,32 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 ## Reasoning
 
-#### _inference_
+#### _via alignment_
+
+- **Thinking LLMs** [[paper]](https://arxiv.org/abs/2410.10630).
+  _Train LLMs to write down its internal thoughts for general instructions (non-verifiable tasks)._
+
+- **Iterative Reasoning Preference Optimization** [[paper]](https://arxiv.org/abs/2404.19733)
+  _Shows how to use iterative optimization to train CoTs on verifiable tasks._
+
+#### _other algorithms_
+
+- **Coconut (Continuous Chain-of-Thought)*** [[paper]](https://arxiv.org/abs/2412.06769).
+  _Training LLMs to reason in continuous latent space (rather than using language)._
 
 - **Backtracking Improves Generation Safety** [[paper]](https://arxiv.org/abs/2409.14586).
   _Trains LLMs to generate a RESET token if the partial-generation is bad._
 
-- **From decoding to meta-generation** [[paper]](https://arxiv.org/abs/2406.16838).
-  _Survey paper on reasoning methods._
-
 - **System 2 Distillation** [[paper]](https://arxiv.org/abs/2407.06023).
   _Distilling reasoning traces (System 2) back into the Transformer (System 1)._
+  
+- **Beyond A*** [[paper]](https://arxiv.org/abs/2402.14083).
+  _Better Planning with Transformers via Search Dynamics Bootstrapping._
+  
+#### _inference_
+
+- **From decoding to meta-generation** [[paper]](https://arxiv.org/abs/2406.16838).
+  _Survey paper on reasoning methods._
 
 - **System 2 Attention** [[paper]](https://arxiv.org/abs/2311.11829).
   _Make LLM plan what it attends to as a generative process, decreasing bias & increasing factuality._
@@ -27,6 +43,30 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 - **Ask, Refine, Trust** [[paper]](https://arxiv.org/abs/2311.07961).
   _Technique that uses critical questions to determine if an LLM generation needs refinement._
+  
+- **ToolVerifier** [[paper]](https://arxiv.org/abs/2402.14158).
+  _Generalization to New Tools via Self-Verification._
+
+## Evaluation
+
+- **Eval-Planner** [[paper]](https://arxiv.org/abs/2501.18099)).
+  _Learning powerful plan+execution CoTs for LLM-as-a-Judge critics, SOTA on RewardBench._
+
+- **Self-Taught Evaluators** [[project]](./self_taught_evaluator).
+  _Improving LLM-as-a-Judge using iteratively generated synthetic data only (no human annotation)._
+
+- **Branch-Solve-Merge** [[paper]](https://arxiv.org/abs/2310.15123).
+  _Reasoning method to improve LLM Evaluation and Generation._
+
+- **Self-Rewarding LLMs** [[paper]](https://arxiv.org/abs/2401.10020)
+  _Shows LLMs can judge themselves to self-improve without human feedback._
+
+## Synthetic Data
+
+#### _synthetic data quality_
+
+- **RIP** [[paper]](https://arxiv.org/abs/2501.18578)
+  _A method to *curate* high quality data, or *create* high quality synthetic data. Gives large improvements._
 
 #### _synthetic data for complex reasoning & tools_
 
@@ -36,26 +76,13 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 - **ToolVerifier** [[paper]](https://arxiv.org/abs/2402.14158).
   _Generalization to New Tools via Self-Verification._
 
-#### _algorithms_
-
-- **Coconut (Continuous Chain-of-Thought)*** [[paper]](https://arxiv.org/abs/2412.06769).
-  _Training LLMs to reason in continuous latent space (rather than using language)._
-  
-- **Beyond A*** [[paper]](https://arxiv.org/abs/2402.14083).
-  _Better Planning with Transformers via Search Dynamics Bootstrapping._
-
-#### _evaluation_
-
-- **Self-Taught Evaluators** [[project]](./self_taught_evaluator).
-  _Improving LLM-as-a-Judge using iteratively generated synthetic data only (no human annotation)._
-
-- **Branch-Solve-Merge** [[paper]](https://arxiv.org/abs/2310.15123).
-  _Reasoning method to improve LLM Evaluation and Generation._
-
 
 ## (Self-)Alignment
 
 #### _(self-)alignment optimization techniques_
+
+- **Diversity Preference Optimization** [[paper]](https://arxiv.org/abs/2501.18101)
+  _SOTA LLMs have model collapse. DivPO training improves diversity with similar quality._
 
 - **Self-Consistency Preference Optimization** [[paper]](https://arxiv.org/abs/2411.04109)
   _self-training without human labels that matches supervised training performance._
@@ -89,7 +116,10 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 - **Leveraging Implicit Feedback** [[paper]](https://arxiv.org/abs/2307.14117)
   _Method to learn from human feedback in dialogue deployment data to improve LLM._
 
+#### _data curation_
 
+- **RIP** [[paper]](https://arxiv.org/abs/2501.18578)
+  _A method to *curate* high quality data, or *create* high quality synthetic data. Gives large improvements._
 
 ## Memory & Architectures
 
