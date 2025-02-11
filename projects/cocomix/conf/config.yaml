@@ -1,0 +1,79 @@
+wandb_log: true
+wandb_entity: null
+wandb_project: null
+wandb_key: null
+
+defaults:
+  - _self_
+  - setup: 'gpt2_69m'
+
+hydra:
+  run:
+    dir: .
+
+mode: 'ntp'
+seed: 22
+rank: 0
+suffix: null
+
+# model
+base_model: 'openai-community/gpt2'
+pretrained_model: 'openai-community/gpt2'
+dataset: openwebtext
+data_dir: './data/openwebtext_preprocess' # set your data path
+n_embd: null 
+n_layer: null 
+n_head: null 
+vocab_size: null 
+
+load_path: null
+port: 9819
+distributed: False
+world_size: 1
+use_torch_compile: True
+compile_dynamo_cache_size_limit: 256
+
+# optimization
+lr: 6e-4
+lr_schedule: 'cosine_with_min_lr'  # 'cosine' 'constant_with_warmup' 'constant', 
+beta1: 0.9
+beta2: 0.95
+grad_clip_thresh: 1.
+warmup_steps: 2000
+min_lr: 6e-5
+eps: 1e-8
+mixed_precision: null
+weight_decay: 0.1
+train_steps: 600000 # 600k steps
+n_epochs: 0
+num_workers: 2
+
+# total batch size = 1024 (context length) * 64 (update_batch_size) * 8 (grad_acc_steps) = 524,288 (~0.5M)
+# total number of tokens = train_steps * total batch size = 600k * 0.5M = 300B tokens
+update_batch_size: 256  # micro batch size is update_batch_size // num_gpus
+grad_acc_steps: 2
+block_size: 1024  # context length
+dropout: 0.0
+bias: False
+
+log_path: null
+use_accelerator: True
+
+# saving/evaluation/logging frequency
+save_step_freq: 10000
+eval_step_freq: 1000
+log_step_freq: 50
+global_step: 0
+val_datasets: ['openwebtext']  # measuring ppl
+batch_size_eval: 256
+eval_limit: 1000
+
+topK_attri: 4  # TopK for concept label
+concept_num: 32 # TopK for SAE activation
+concept_dim: 32768 # SAE concept dimention
+
+# sae
+sae_location: 'resid_post_mlp'
+insert_layer_index: null  # CoCoMix model's layer that predict and insert the concept
+sae_layer_index: null  # SAE layer that is used for concept extraction
+lam_concept: 0.1

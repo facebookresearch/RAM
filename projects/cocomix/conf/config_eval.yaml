@@ -1,0 +1,17 @@
+defaults:
+  - _self_
+
+hydra:
+  run:
+    dir: .
+
+rank: 0
+seed: 42
+base_model: 'openai-community/gpt2'
+data_dir: './data/openwebtext_preprocess' # set your data path
+load_path: null
+batch_size: 64
+eval_freq: 2000
+eval_single_ckpt: False
+eval_tasks: ['lambada_openai','wikitext','hellaswag','piqa','social_iqa','arc_easy','winogrande'] 
+save_result: True
