@@ -2,6 +2,10 @@
 
 Official PyTorch implementation of "LLM Pretraining with Continuous Concepts".
 
+<p align="center">
+    <img src=./cocomix.png width="900"> 
+</p>
+
 ## Environment
 ```
 conda create -n cocomix python=3.10 -y

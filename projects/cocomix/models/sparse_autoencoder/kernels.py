@@ -1,3 +1,10 @@
+"""
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+This source code is licensed under the MIT license found in the
+LICENSE file in the root directory of this source tree.
+"""
+
 import torch
 
 import triton
@@ -46,7 +53,9 @@ def triton_sparse_transpose_dense_matmul(
         ]
     )  # shape (2, A * K)
     coo_values = sparse_values.view(-1)[sorted_indices.indices]  # shape (A * K,)
-    return triton_coo_sparse_dense_matmul(coo_indices, coo_values, dense, N, BLOCK_SIZE_AK)
+    return triton_coo_sparse_dense_matmul(
+        coo_indices, coo_values, dense, N, BLOCK_SIZE_AK
+    )
 
 
 def triton_coo_sparse_dense_matmul(
@@ -163,7 +172,9 @@ def triton_sparse_transpose_dense_matmul_kernel(
                 last_k = k
 
             if v != 0:
-                accum += v * tl.load(dense_ptr + a * stride_da + b_offsets, mask=b_offsets < B)
+                accum += v * tl.load(
+                    dense_ptr + a * stride_da + b_offsets, mask=b_offsets < B
+                )
 
     tl.atomic_add(
         out_ptr + last_k * B + BLOCK_SIZE_B * pid_b + b_offsets,
@@ -276,7 +287,9 @@ def triton_sparse_dense_matmul_kernel(
                 dense_ptr + i * stride_dn + offsets_b * stride_db, mask=offsets_b < B
             )
 
-    tl.store(out_ptr + pid * B + offsets_b, accum.to(sparse_values.dtype), mask=offsets_b < B)
+    tl.store(
+        out_ptr + pid * B + offsets_b, accum.to(sparse_values.dtype), mask=offsets_b < B
+    )
 
 
 def triton_dense_dense_sparseout_matmul(
@@ -361,7 +374,9 @@ def triton_dense_dense_sparseout_matmul_kernel(
     pid = tl.program_id(0)
 
     offsets_k = tl.arange(0, BLOCK_SIZE_K)
-    at_indices = tl.load(at_indices_ptr + pid * K + offsets_k, mask=offsets_k < K)  # shape (K,)
+    at_indices = tl.load(
+        at_indices_ptr + pid * K + offsets_k, mask=offsets_k < K
+    )  # shape (K,)
 
     offsets_b = tl.arange(0, BLOCK_SIZE_B)
     dense1 = tl.load(
@@ -397,13 +412,17 @@ class TritonDecoderAutograd(torch.autograd.Function):
     @staticmethod
     def forward(ctx, sparse_indices, sparse_values, decoder_weight):
         ctx.save_for_backward(sparse_indices, sparse_values, decoder_weight)
-        return triton_sparse_dense_matmul(sparse_indices, sparse_values, decoder_weight.T)
+        return triton_sparse_dense_matmul(
+            sparse_indices, sparse_values, decoder_weight.T
+        )
 
     @staticmethod
     def backward(ctx, grad_output):
         sparse_indices, sparse_values, decoder_weight = ctx.saved_tensors
 
-        assert grad_output.is_contiguous(), "grad_output must be contiguous; this is probably because the subsequent op was a .sum() or something like that, which returns a non contiguous gradient"
+        assert (
+            grad_output.is_contiguous()
+        ), "grad_output must be contiguous; this is probably because the subsequent op was a .sum() or something like that, which returns a non contiguous gradient"
 
         decoder_grad = triton_sparse_transpose_dense_matmul(
             sparse_indices, sparse_values, grad_output, N=decoder_weight.shape[1]
@@ -411,7 +430,9 @@ class TritonDecoderAutograd(torch.autograd.Function):
 
         return (
             None,
-            triton_dense_dense_sparseout_matmul(grad_output, decoder_weight, sparse_indices),
+            triton_dense_dense_sparseout_matmul(
+                grad_output, decoder_weight, sparse_indices
+            ),
             # decoder is contiguous when transposed so this is a matching layout
             decoder_grad,
             None,
@@ -510,7 +531,6 @@ def triton_add_mul_kernel(
         x,
         mask=(offsets_m[:, None] < M) & (offsets_n[None, :] < N),
     )
-
 
 
 def triton_sum_dim0_in_fp32(xs):
@@ -619,9 +639,7 @@ def normalized_mse(recon: torch.Tensor, xs: torch.Tensor) -> torch.Tensor:
         else xs.mean(dim=0)
     )
 
-    loss = mse(recon, xs) / mse(
-        xs_mu[None, :].broadcast_to(xs.shape), xs
-    )
+    loss = mse(recon, xs) / mse(xs_mu[None, :].broadcast_to(xs.shape), xs)
 
     return loss
 

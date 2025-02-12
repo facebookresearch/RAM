@@ -1,3 +1,10 @@
+"""
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+This source code is licensed under the MIT license found in the
+LICENSE file in the root directory of this source tree.
+"""
+
 import os
 import random
 import sys
@@ -14,9 +21,17 @@ import wandb
 class Logger(object):
     """Reference: https://gist.github.com/gyglim/1f8dfb1b5c82627ae3efcfbbadb9f514"""
 
-    def __init__(self, fn, cfg, main_process=True, use_wandb=False, wandb_name=None, log_path=None):
+    def __init__(
+        self,
+        fn,
+        cfg,
+        main_process=True,
+        use_wandb=False,
+        wandb_name=None,
+        log_path=None,
+    ):
         self.main_process = main_process
-        self.log_path = './logs/' if log_path is None else log_path
+        self.log_path = "./logs/" if log_path is None else log_path
         self.logdir = None
         self.cfg = cfg
         self.use_wandb = use_wandb
@@ -31,8 +46,13 @@ class Logger(object):
                 wandb.config = OmegaConf.to_container(
                     cfg, resolve=True, throw_on_missing=True
                 )
-                wandb.init(project=cfg.wandb_project, name=wandb_name, dir=logdir,
-                           entity=cfg.wandb_entity, settings=wandb.Settings(start_method='fork'))
+                wandb.init(
+                    project=cfg.wandb_project,
+                    name=wandb_name,
+                    dir=logdir,
+                    entity=cfg.wandb_entity,
+                    settings=wandb.Settings(start_method="fork"),
+                )
 
         # distribute logdir to other processes
         if torch.distributed.is_initialized():
@@ -43,10 +63,10 @@ class Logger(object):
             dist.broadcast_object_list(object_list, src=0)
             self.logdir = object_list[0]
 
-    def set_dir(self, logdir, log_fn='log.txt'):
+    def set_dir(self, logdir, log_fn="log.txt"):
         os.makedirs(logdir, exist_ok=True)
-        self.log_file = open(os.path.join(logdir, log_fn), 'a')
-        with open(os.path.join(logdir, 'config.yaml'), 'w+') as fp:
+        self.log_file = open(os.path.join(logdir, log_fn), "a")
+        with open(os.path.join(logdir, "config.yaml"), "w+") as fp:
             OmegaConf.save(config=self.cfg, f=fp.name)
 
     def close_writer(self):
@@ -55,18 +75,18 @@ class Logger(object):
 
     def log(self, string):
         if self.main_process:
-            self.log_file.write('[%s] %s' % (datetime.now(), string) + '\n')
+            self.log_file.write("[%s] %s" % (datetime.now(), string) + "\n")
             self.log_file.flush()
 
-            print('[%s] %s' % (datetime.now(), string))
+            print("[%s] %s" % (datetime.now(), string))
             sys.stdout.flush()
 
     def log_dirname(self, string):
         if self.main_process:
-            self.log_file.write('%s (%s)' % (string, self.logdir) + '\n')
+            self.log_file.write("%s (%s)" % (string, self.logdir) + "\n")
             self.log_file.flush()
 
-            print('%s (%s)' % (string, self.logdir))
+            print("%s (%s)" % (string, self.logdir))
             sys.stdout.flush()
 
     def wandb_log(self, log_dict, step=None, commit=None):
@@ -100,7 +120,7 @@ def metric_synchronize_between_processes(metrics, accelerator=None):
     else:
         if is_dist_avail_and_initialized():
             for k, v in metrics.items():
-                t = torch.tensor([v], dtype=torch.float64, device='cuda')
+                t = torch.tensor([v], dtype=torch.float64, device="cuda")
                 dist.barrier()
                 dist.all_reduce(t)
                 t /= dist.get_world_size()
@@ -110,8 +130,9 @@ def metric_synchronize_between_processes(metrics, accelerator=None):
 
 def logging_path_check(cfg):
     from train import setup as train_setup
+
     _, fname, _ = train_setup(cfg.mode, cfg)
-    log_path = './logs/' if cfg.log_path is None else cfg.log_path
+    log_path = "./logs/" if cfg.log_path is None else cfg.log_path
     os.makedirs(log_path, exist_ok=True)
     logdir = log_path + fname
     os.makedirs(logdir, exist_ok=True)
