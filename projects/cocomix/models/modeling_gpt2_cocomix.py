@@ -33,7 +33,6 @@ import torch.utils.checkpoint
 from packaging import version
 from torch import nn
 from torch.nn import CrossEntropyLoss
-
 from transformers.activations import ACT2FN
 from transformers.modeling_attn_mask_utils import (
     _prepare_4d_attention_mask_for_sdpa,
@@ -44,6 +43,7 @@ from transformers.modeling_outputs import (
     CausalLMOutputWithCrossAttentions,
 )
 from transformers.modeling_utils import PreTrainedModel
+from transformers.models.gpt2.configuration_gpt2 import GPT2Config
 from transformers.pytorch_utils import (
     Conv1D,
     find_pruneable_heads_and_indices,
@@ -60,8 +60,6 @@ from transformers.utils import (
     logging,
 )
 from transformers.utils.model_parallel_utils import assert_device_map, get_device_map
-from transformers.models.gpt2.configuration_gpt2 import GPT2Config
-
 
 if is_flash_attn_2_available():
     from transformers.modeling_flash_attention_utils import _flash_attention_forward
@@ -87,6 +85,7 @@ def load_tf_weights_in_gpt2(model, config, gpt2_checkpoint_path):
     """Load tf checkpoints in a pytorch model"""
     try:
         import re
+
         import tensorflow as tf
     except ImportError:
         logger.error(

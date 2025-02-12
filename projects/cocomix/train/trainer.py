@@ -5,18 +5,17 @@ This source code is licensed under the MIT license found in the
 LICENSE file in the root directory of this source tree.
 """
 
-import os
-import time
 import inspect
 import math
+import os
+import time
 from collections import defaultdict
+from functools import partial
+from test import evaluate_ppl
 
 import torch
 from torch.optim.lr_scheduler import LambdaLR
-from functools import partial
 from transformers import get_scheduler
-
-from test import evaluate_ppl
 
 
 def cosine_scheduler(

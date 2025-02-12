@@ -9,10 +9,11 @@ LICENSE file in the root directory of this source tree.
 # https://github.com/HazyResearch/flash-attention/blob/main/training/src/datamodules/language_modeling_hf.py
 
 import os
-from tqdm import tqdm
+
 import numpy as np
 import tiktoken
 from datasets import load_dataset  # huggingface datasets
+from tqdm import tqdm
 
 # number of workers in .map() call
 # good number to use is ~order number of cpu cores // 2

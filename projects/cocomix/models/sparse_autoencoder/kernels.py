@@ -6,10 +6,8 @@ LICENSE file in the root directory of this source tree.
 """
 
 import torch
-
 import triton
 import triton.language as tl
-
 
 ## kernels
 

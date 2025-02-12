@@ -5,17 +5,16 @@ This source code is licensed under the MIT license found in the
 LICENSE file in the root directory of this source tree.
 """
 
-from omegaconf import OmegaConf
 import hydra
-
 import torch
 import torch._dynamo
 import torch.distributed as dist
 from accelerate import Accelerator
+from omegaconf import OmegaConf
 
 from data.data import get_train_dataloader, get_val_dataloaders
-from train.trainer import trainer
 from models import get_base_lm, get_concept_extractor
+from train.trainer import trainer
 from utils import Logger, set_random_seed
 
 

@@ -8,8 +8,8 @@ LICENSE file in the root directory of this source tree.
 import os
 import random
 
-import torch
 import numpy as np
+import torch
 from torch.utils.data import DataLoader, Dataset
 
 

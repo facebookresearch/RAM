@@ -9,13 +9,13 @@ import os
 import random
 import sys
 from datetime import datetime
-from omegaconf import OmegaConf
-from tqdm.auto import tqdm
 
 import numpy as np
 import torch
 import torch.distributed as dist
 import wandb
+from omegaconf import OmegaConf
+from tqdm.auto import tqdm
 
 
 class Logger(object):

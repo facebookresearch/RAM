@@ -16,17 +16,14 @@ https://github.com/huggingface/transformers/blob/main/src/transformers/models/gp
 
 from dataclasses import dataclass
 
-import torch
-import torch.nn as nn
-from torch.nn import CrossEntropyLoss
-import transformer_lens
-
-from transformer_lens import (
-    ActivationCache,
-)
-
 # for the sparse autoencoder
 import blobfile as bf
+import torch
+import torch.nn as nn
+import transformer_lens
+from torch.nn import CrossEntropyLoss
+from transformer_lens import ActivationCache
+
 import models.sparse_autoencoder as sparse_autoencoder
 
 

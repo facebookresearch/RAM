@@ -5,18 +5,18 @@ This source code is licensed under the MIT license found in the
 LICENSE file in the root directory of this source tree.
 """
 
-import os
 import json
 import math
+import os
 import time
-import yaml
 
 import hydra
+import lm_eval
 import numpy as np
 import torch
 import torch.distributed as dist
-from transformers import AutoTokenizer, AutoModelForCausalLM
-import lm_eval
+import yaml
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from models import GPT2CoCoMixLMHeadModel
 from utils import set_random_seed
