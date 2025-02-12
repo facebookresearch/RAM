@@ -1,0 +1,38 @@
+# @package _global_
+
+mode: 'cocomix'
+n_embd: 2048
+n_layer: 24
+n_head: 16
+compile_dynamo_cache_size_limit: 512
+
+# optimization
+lr: 2e-4
+lr_schedule: 'cosine_with_min_lr'  # 'cosine' 'constant_with_warmup' 'constant', 
+beta1: 0.9
+beta2: 0.95
+grad_clip_thresh: 1.
+warmup_steps: 65
+min_lr: 2e-5
+eps: 1e-8
+mixed_precision: null
+weight_decay: 0.1
+train_steps: 20000 # 20k steps ~ 20B
+
+# total batch size = 1024 (context length) * 1024 (update_batch_size) * 1 (grad_acc_steps) = (~1.0M)
+# total number of tokens = train_steps * total batch size = 20k * 1.0M = 20B tokens
+update_batch_size: 1024  # micro batch size is update_batch_size // num_gpus
+grad_acc_steps: 1
+block_size: 1024
+
+# saving/evaluation/logging frequency
+save_step_freq: 1000
+eval_step_freq: 500
+log_step_freq: 50
+val_datasets: ['openwebtext']  # measuring ppl
+batch_size_eval: 256
+eval_limit: 1000
+
+# sae
+insert_layer_index: 5  # CoCoMix model's layer that predict and insert the concept
+sae_layer_index: 5  # SAE layer that is used for concept extraction

@@ -1,0 +1,13 @@
+accelerate==0.34.2
+blobfile==2.1.1
+dataset==1.6.2
+datasets==2.21.0
+einops==0.8.0
+flash-attn==2.5.8
+huggingface-hub==0.24.6
+hydra-core==1.3.2
+-e git+https://github.com/EleutherAI/lm-evaluation-harness@9a092f374bdc6d6032ae2b878b7a49b97801ab69#egg=lm_eval
+transformer-lens==2.4.1
+typeguard==4.4.1
+transformers==4.44.2
+wandb==0.18.7

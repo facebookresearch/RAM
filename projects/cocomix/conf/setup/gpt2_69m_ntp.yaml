@@ -1,0 +1,33 @@
+# @package _global_
+
+mode: 'ntp'
+n_embd: 624
+n_layer: 8
+n_head: 8
+
+# optimization
+lr: 6e-4
+lr_schedule: 'cosine_with_min_lr'  # 'cosine' 'constant_with_warmup' 'constant', 
+beta1: 0.9
+beta2: 0.95
+grad_clip_thresh: 1.
+warmup_steps: 130
+min_lr: 6e-5
+eps: 1e-8
+mixed_precision: null
+weight_decay: 0.1
+train_steps: 40000 # 40k steps ~ 20B
+
+# total batch size = 1024 (context length) * 512 (update_batch_size) * 1 (grad_acc_steps) = (~0.5M)
+# total number of tokens = train_steps * total batch size = 40k * 0.5M = 20B tokens
+update_batch_size: 512  # micro batch size is update_batch_size // num_gpus
+grad_acc_steps: 1
+block_size: 1024
+
+# saving/evaluation/logging frequency
+save_step_freq: 2000
+eval_step_freq: 1000
+log_step_freq: 50
+val_datasets: ['openwebtext']  # measuring ppl
+batch_size_eval: 256
+eval_limit: 1000
