@@ -6,7 +6,6 @@ LICENSE file in the root directory of this source tree.
 """
 
 import numpy as np
-
 from utils import metric_synchronize_between_processes
 
 

@@ -16,9 +16,8 @@ import numpy as np
 import torch
 import torch.distributed as dist
 import yaml
-from transformers import AutoModelForCausalLM, AutoTokenizer
-
 from models import GPT2CoCoMixLMHeadModel
+from transformers import AutoModelForCausalLM, AutoTokenizer
 from utils import set_random_seed
 
 

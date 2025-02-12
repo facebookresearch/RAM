@@ -8,10 +8,9 @@ LICENSE file in the root directory of this source tree.
 import os
 
 import torch
-from transformers import AutoConfig, GPT2LMHeadModel
-
 from models.concept_extractor import TransformerLensSAE
 from models.modeling_gpt2_cocomix import GPT2CoCoMixLMHeadModel
+from transformers import AutoConfig, GPT2LMHeadModel
 
 
 def get_base_lm(cfg, accelerator):
