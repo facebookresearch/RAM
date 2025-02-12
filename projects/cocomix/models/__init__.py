@@ -10,6 +10,7 @@ import os
 import torch
 from transformers import AutoConfig, GPT2LMHeadModel
 
+from models.concept_extractor import TransformerLensSAE
 from models.modeling_gpt2_cocomix import GPT2CoCoMixLMHeadModel
 
 
@@ -48,8 +49,6 @@ def get_concept_extractor(cfg, accelerator):
     concept_extractor = None
     if cfg.mode in ["cocomix"]:
         if "gpt2" in cfg.pretrained_model:
-            from models.concept_extractor import TransformerLensSAE
-
             concept_extractor = TransformerLensSAE(
                 layer_index=cfg.sae_layer_index, location=cfg.sae_location
             )

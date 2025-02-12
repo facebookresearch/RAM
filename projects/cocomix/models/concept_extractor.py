@@ -16,7 +16,6 @@ https://github.com/huggingface/transformers/blob/main/src/transformers/models/gp
 
 from dataclasses import dataclass
 
-# for the sparse autoencoder
 import blobfile as bf
 import torch
 import torch.nn as nn

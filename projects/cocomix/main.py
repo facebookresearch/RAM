@@ -14,6 +14,7 @@ from omegaconf import OmegaConf
 
 from data.data import get_train_dataloader, get_val_dataloaders
 from models import get_base_lm, get_concept_extractor
+from train import setup as train_setup
 from train.trainer import trainer
 from utils import Logger, set_random_seed
 
@@ -53,8 +54,6 @@ def main(cfg):
     base_lm = get_base_lm(cfg, accelerator)
 
     """ define train and test type """
-    from train import setup as train_setup
-
     train_func, fname, wandb_name = train_setup(cfg.mode, cfg)
 
     """ define logger """

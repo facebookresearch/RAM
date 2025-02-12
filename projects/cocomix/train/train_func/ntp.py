@@ -5,12 +5,7 @@ This source code is licensed under the MIT license found in the
 LICENSE file in the root directory of this source tree.
 """
 
-import os
-from collections import defaultdict
-
 import numpy as np
-import torch
-import torch.nn.functional as F
 
 from utils import metric_synchronize_between_processes
 
