@@ -1,0 +1,11 @@
+model:
+  _set_:
+    name: llama3_8b_instruct
+dataset:
+  _set_:
+    name: sdrait
+    path: ra-dit/train
+optimizer:
+  config:
+    _set_:
+      lr: 5.5e-06

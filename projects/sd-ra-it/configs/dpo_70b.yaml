@@ -1,0 +1,71 @@
+model:
+  _set_:
+    name: llama3_70b_instruct
+dataset:
+  _set_:
+    name: sdrait
+    path: data/70b/train/self_demo/dpo
+    max_seq_len: 4096
+    batch_size: 1
+gang:
+  _set_:
+    tensor_parallel_size: 8
+trainer:
+  fsdp:
+    _set_:
+      version: v1
+      granularity: layer
+      hsdp: false
+      reshard_after_forward: true
+      fp32_reduce: true
+  _set_:
+    dtype: bfloat16
+    data_parallelism: fsdp
+    mixed_precision: static
+    gradient_accumulation: 4
+    activation_checkpointing: true
+    max_gradient_norm: null
+    fp16_loss_scale:
+    - 128.0
+    - 0.0001
+    torch_compile: false
+    profile: null
+    gradient_check: false
+    anomaly_detection: false
+criterion:
+  config:
+    reference_model:
+      _set_:
+        name: llama3_70b_instruct
+    _set_:
+      reference_dtype: bfloat16
+      beta: 0.1
+      nll_scale: 0.0
+      length_normalization: false
+  _set_:
+    name: dpo
+optimizer:
+  config:
+    _set_:
+      lr: 5.5e-06
+lr_scheduler:
+  config:
+    _set_:
+      cycle_len: null
+      num_warmup_steps: 0
+      cycle_mul: 1.0
+      lr_mul: 1.0
+      start_lr: 0.0
+      final_lr: 1.1e-06
+      final_lr_scale: null
+  _set_:
+    name: cosine_annealing
+regime:
+  _set_:
+    num_steps: 800
+    num_data_epochs: 5
+    checkpoint_every_n_steps: 1000
+    checkpoint_after_n_data_epochs: 1
+    checkpoint_every_n_data_epochs: null
+    keep_last_n_checkpoints: 1
+    publish_metrics_every_n_steps: 5

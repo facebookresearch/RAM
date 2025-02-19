@@ -1,0 +1,14 @@
+model:
+  _set_:
+    name: llama3_70b_instruct
+dataset:
+  _set_:
+    name: sdrait
+    path: ra-dit/train
+gang:
+  _set_:
+    tensor_parallel_size: 8
+optimizer:
+  config:
+    _set_:
+      lr: 5.5e-06
