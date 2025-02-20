@@ -16,7 +16,8 @@ You may cite our work as
 
 ## Generating self-demos.
 
-1. Obtain training data. We use the training data from the [RA-DIT paper](https://arxiv.org/abs/2310.01352), placed in directories `data/70b/train/tasks.jsonl` and `data/70b/train/oasst.jsonl` (see `data/70b/train/MANIFEST` for training mixture.)
+1. Obtain training data. We use the training data from the [RA-DIT paper](https://arxiv.org/abs/2310.01352), placed in directories `data/70b/train/tasks.jsonl` and `data/70b/train/oasst.jsonl` with subsampling weights of 0.9 and 0.1.
+
 2. Generate prompts. Use `scripts/prompt_optimization.py`, e.g.,
 ```sh
 python scripts/prompt_optimization.py \
@@ -40,7 +41,7 @@ bash scripts/create_self_demo_train_set.sh tasks Meta-Llama-3-70B-Instruct
 bash scripts/create_self_demo_train_set.sh oasst Meta-Llama-3-70B-Instruct
 ```
 
-## DPO training with `fairseq2`
+## SFT and DPO training with `fairseq2`
 
 To train a DPO model on self-demonstrations using fairseq2:
 
@@ -48,6 +49,8 @@ To train a DPO model on self-demonstrations using fairseq2:
 srun fairseq2 lm preference_finetune dpo_checkpoints/fairseq2/self_demo \
   --config-file configs/dpo_70b.yml
 ```
+
+Other configs correspond to SFT and smaller scale (8B) training runs.
 
 Please refer to documentation on the library setup and examples: https://facebookresearch.github.io/fairseq2/stable/
 
