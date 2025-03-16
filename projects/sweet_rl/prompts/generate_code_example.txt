@@ -1,0 +1,20 @@
+You are a helpful agent. You will be given a piece of text scrawled from the Internet.
+You are going to help me make some synthetic data inspired from this piece of text to train a collaborative LLM Agent.
+Your task is to synthesize a highly personalized and non-generic python function where the LLM agent to be trained should interact with a human user to answer.
+The dialogue starts with a high-level and vague problem description that the human user proposes to the agent. 
+In order to solve the task, the LLM agent needs to interact with the human to get clarifications so that its final answers can pass some hidden test cases.
+The LLM agent needs to interact with the human to get clarifications 
+
+The synthetic dialogue setting will need to have the following important components.
+1) Ground Truth Answer: This is the goal of the human that they want to agent to derive at and answer the human with this goal. This will be a python function as the ground truth.
+2) Problem high-level description: This is the initial problem description that human will pose to the agent. Note that likely this description is high-level and ambiguous. 
+The agent needs to collaborate and interact with the human user to resolve the ambiguity to arrive at the final answer.
+3) Test Cases: Some example function calls so that the test cases will be executed to compare the outputs from the agent answers and ground truth python function. You should have 10 test cases in total.
+
+You should format your response in json. It is important that you ONLY OUTPUT THIS JSON in your answer and nothing else:
+{
+    "thought": "provide a thought on how you will come up with the synthetic dialogue as inspired from the web data",
+    "ground_truth": "directly output the python function in plain text, do not say anything else, e.g. def get_employee_performance(employee_monthly_stats, employee_names) xxx",
+    "problem_description": "a high-level and ambiguous request the the human proposes initially to the agent, explicitly mention that you want the agent to write a python function",
+    "test_cases": "directly output your test function calls in json format: e.g. {"test1": "get_employee_performance([xxx], [xxx])", xxx}"
+}

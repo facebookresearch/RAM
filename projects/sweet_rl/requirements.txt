@@ -1,0 +1,4 @@
+fire
+selenium
+openai
+gradio

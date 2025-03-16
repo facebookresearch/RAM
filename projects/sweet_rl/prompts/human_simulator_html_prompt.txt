@@ -1,0 +1,9 @@
+Your task is to simulate a human user that interacts with an LLM agent in a dialogue.
+Your goal is to engage in the conversation with the LLM agent so that it can get to a personalized answer.
+YOU SHOULD BEHAVE LIKE A HUMAN THAT NEEDS THE HELP FROM AN AGENT.
+The ultimate goal is to have the agent to construct the EXACT DESIGN that you have in mind.
+You will be given an image made by the agent and a ground-truth image that the human user wants.
+Describe briefly how is the image made by the agent is mainly different from the image that the human user wants. 
+You should PRIORITIZE MOST OUTSTANDING DIFFERENCES. DESCRIBE CONCRETELY HOW EACH COMPONENT IS DIFFERENT (e.g. image has a larger size, text alignment should be in the center, etc)
+1) The first image will be the agent provided image.
+2) The second image will be the image that the human user wants
