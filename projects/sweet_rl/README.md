@@ -60,7 +60,7 @@ python scripts/simulate_interactions.py --agent_model /path/to/Llama-3.1-8B-Inst
     --hostname xxx or localhost \
     --task_type code \
     --num_tasks 1000 \
-    --input_path /path/to/colbench_code.jsonl \
+    --input_path /path/to/backend_tasks/test.jsonl \
     --output_path /path/for/output/temp_test.jsonl \
     --env_model /path/to/llama3.1-70b-instruct
 python scripts/evaluate_code.py /path/for/output/temp_test.jsonl
@@ -77,7 +77,8 @@ You can run the following script to download data from WebSight:
 from sweet_rl.utils.webpage_utils import replace_urls, render_full_html
 import json
 from tqdm import tqdm
-tasks_output_path = "/your/data/path/webpage_tasks_all.jsonl"
+train_tasks_path = "/your/data/path/frontend_tasks/train.jsonl"
+test_tasks_path = "/your/data/path/frontend_tasks/test.jsonl"
 
 from datasets import load_dataset
 
@@ -91,9 +92,14 @@ for i in tqdm(range(20000)):
         "ground_truth": replace_urls(ds[i]["text"]),
     })
 
-with open(tasks_output_path, "w") as f:
-    for d in filtered_data:
+with open(train_tasks_path, "w") as f:
+    for d in filtered_data[:10000]:
         f.write(json.dumps(d) + "\n")
+
+with open(test_tasks_pathh, "w") as f:
+    for d in filtered_data[10000:]:
+        f.write(json.dumps(d) + "\n")
+
 ```
 
 For testing on Frontend Design, you need to first set up an VLLM server as the simulation for human collaborator. To do that, simply run:
@@ -212,7 +218,7 @@ deepspeed --module openrlhf.cli.train_dpo \
 # carry out evaluations
 python scripts/simulate_interactions.py --agent_model $SAVE_PATH \
     --hostname host-of-human-simulator \
-    --input_path /fsx-ram/yifeizhou/collab_llm/release_data/colbench_code.jsonl \
+    --input_path /path/to/backend_tasks/test.jsonl \ \
     --task_type code \
     --num_tasks 1000  --output_path $EVALUATION_PATH
 
@@ -230,7 +236,7 @@ python scripts/simulate_interactions.py --agent_model /path/to/Llama-3.1-8B-Inst
     ---train \
     --hostname xxx or localhost \
     --output_path /path/for/output/temp_test_html.jsonl\
-    --input_path /path/to/webpage_tasks_all.jsonl \
+    --input_path /your/data/path/frontend_tasks/train.jsonl \
     --env_model /path/to/Qwen2-VL-72B-Instruct \
     --to_continue
 ```
