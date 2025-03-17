@@ -221,7 +221,7 @@ python scripts/evaluate_code.py $EVALUATION_PATH
 You should be able to see result similar to reported in the paper with a success rate around 40\%.
 
 ### Data on Frontend Design
-Due to legal issues, we are unable to provide outputs from Qwen, but we provide the same command where you can generate the data yourself:
+We provide the same command where you can generate the offline data for Frontend Design yourself:
 ```bash
 python scripts/simulate_interactions.py --agent_model /path/to/Llama-3.1-8B-Instruct \
     --task_type html \
@@ -233,7 +233,6 @@ python scripts/simulate_interactions.py --agent_model /path/to/Llama-3.1-8B-Inst
     --input_path /path/to/webpage_tasks_all.jsonl \
     --env_model /path/to/Qwen2-VL-72B-Instruct \
     --to_continue
-python scripts/evaluate_html.py /path/for/output/temp_test_html.jsonl 
 ```
 
 
