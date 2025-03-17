@@ -13,8 +13,7 @@ Official implementation for Collaborative Agent Bench and SWEET-RL.
 UC Berkeley, FAIR
 <br>
 *Equal advising, alphabetical order
-![paper_teaser-1](https://github.com/user-attachments/assets/85c9d4eb-30fa-4c9d-8a01-3d10269cc6a3)
-
+[paper_teaser](paper_teaser.png)
 
 ## Collaborative Agent Bench
 ### Quick Start
