@@ -1,3 +1,10 @@
+"""
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+This source code is licensed under the CC-By-NC license found in the
+LICENSE file in the root directory of this source tree.
+"""
+
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver import FirefoxOptions
@@ -12,27 +19,30 @@ import traceback
 # with open("temp_page.html", "w") as file:
 #     file.write(html_snippet)
 import re
+
+
 def replace_urls(text):
     # Regular expression to find the URLs
     pattern = r"https://source\.unsplash\.com/random/(\d+)x(\d+)/\?[\w=]+"
+
     # Function to replace each match with the new URL format
     def replace_match(match):
         width, height = match.groups()
         return f"https://picsum.photos/id/48/{width}/{height}"
-    
+
     # Use re.sub to replace all occurrences in the text
     new_text = re.sub(pattern, replace_match, text)
-    
+
     # Make sure that the new text has id 48 for all images
     # Define the regex pattern to match the URLs
-    pattern = r'https://picsum\.photos/(\d+)/(\d+)'
-    
+    pattern = r"https://picsum\.photos/(\d+)/(\d+)"
+
     # Define the replacement pattern
-    replacement = r'https://picsum.photos/id/48/\1/\2'
-    
+    replacement = r"https://picsum.photos/id/48/\1/\2"
+
     # Use re.sub to replace all matches in the paragraph
     new_text = re.sub(pattern, replacement, new_text)
-    
+
     return new_text
 
 
@@ -44,7 +54,7 @@ def get_driver():
     # options.add_argument('--log-level=3')
     # service = Service(log_path=os.devnull)  # Redirect logs to nowhere
     # Set up the Firefox driver
-    driver = webdriver.Firefox( options=options)
+    driver = webdriver.Firefox(options=options)
     return driver
 
     # chrome_options.add_argument("--no-sandbox")
@@ -76,14 +86,14 @@ def render_full_html(driver, html_snippet, temp_path, env_id=0):
     # return loop.run_until_complete(
     # render_html_and_capture_screenshot(html_snippet, os.path.join(temp_path, f"{env_id}_{current_time}.png"))
     # )
-    
+
     html_file_path = os.path.join(temp_path, f"{env_id}_{current_time}.html")
     image_path = os.path.join(temp_path, f"{env_id}_{current_time}.png")
     # Save the HTML snippet to a temporary file
     with open(os.path.join(temp_path, f"{env_id}_{current_time}.html"), "w") as file:
         file.write(html_snippet)
     # imgkit.from_file(html_file_path, image_path)
-    
+
     try:
         # Open the local HTML file
         driver.get(f"file://{html_file_path}")
@@ -96,7 +106,7 @@ def render_full_html(driver, html_snippet, temp_path, env_id=0):
         # total_width = driver.execute_script("return document.body.parentNode.scrollWidth")
         # # # Set the window size to the dimensions of the page
         # driver.set_window_size(total_width, total_height)
-        
+
         # time.sleep(1)
         # # Take a screenshot
         # driver.save_screenshot(image_path)
@@ -109,21 +119,26 @@ def render_full_html(driver, html_snippet, temp_path, env_id=0):
             os.remove(html_file_path)
         return None
 
+
 import re
+
+
 def extract_html_snippet(paragraph):
     # Regular expression pattern to match the entire HTML content
     paragraph = replace_urls(paragraph)
-    html_pattern = r'<html.*?>.*?</html>'
-    
+    html_pattern = r"<html.*?>.*?</html>"
+
     # Search for the HTML snippet in the paragraph
     match = re.search(html_pattern, paragraph, re.DOTALL)
-    
+
     if match:
         return paragraph.replace(match.group(0), "[SEE RENDERED HTML]"), match.group(0)
     else:
-        html_pattern = r'<body.*?>.*?</body>'
+        html_pattern = r"<body.*?>.*?</body>"
         match = re.search(html_pattern, paragraph, re.DOTALL)
         if match:
-            return paragraph.replace(match.group(0), "[SEE RENDERED HTML]"), match.group(0)
+            return paragraph.replace(
+                match.group(0), "[SEE RENDERED HTML]"
+            ), match.group(0)
         else:
             return paragraph, None
