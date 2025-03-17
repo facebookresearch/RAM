@@ -10,7 +10,6 @@ from tqdm import tqdm
 import openai
 from sweet_rl.environments import HumanInteractionEnv, HumanDesignInteractionEnv
 from sweet_rl.models.vllm_agent import VLLMAgent
-TRAIN_SET_SIZE = 10000
     
 def batch_interact_environment(agent, environments, tasks):
     # import IPython; IPython.embed(); exit(1)
@@ -80,12 +79,10 @@ def main(hostname = "a100-st-p4de24xlarge-297",
         human_prompt = fb.read()
     with open(agent_prompt_path, "r") as fb:
         agent_prompt = fb.read()
+        
     with open(input_path, "r") as fb:
         tasks = [json.loads(line) for line in fb]
-        if train:
-            tasks = tasks[TRAIN_SET_SIZE:num_tasks+TRAIN_SET_SIZE]
-        else:
-            tasks = tasks[:TRAIN_SET_SIZE][:num_tasks]
+        tasks = tasks[:num_tasks]
     
     print(f"********************Number of tasks: {len(tasks)}**************")
     # clients of API servers for the environments
