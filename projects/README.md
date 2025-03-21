@@ -15,7 +15,7 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 #### _other algorithms_
 
-- **Coconut (Continuous Chain-of-Thought)*** [[paper]](https://arxiv.org/abs/2412.06769).
+- **Coconut (Continuous Chain-of-Thought)*** [[project]](https://github.com/facebookresearch/coconut).
   _Training LLMs to reason in continuous latent space (rather than using language)._
 
 - **Backtracking Improves Generation Safety** [[paper]](https://arxiv.org/abs/2409.14586).
@@ -23,10 +23,13 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 - **System 2 Distillation** [[paper]](https://arxiv.org/abs/2407.06023).
   _Distilling reasoning traces (System 2) back into the Transformer (System 1)._
-  
+
 - **Beyond A*** [[paper]](https://arxiv.org/abs/2402.14083).
   _Better Planning with Transformers via Search Dynamics Bootstrapping._
-  
+
+- **SWEET-RL** [[project]](https://github.com/facebookresearch/sweet_rl).
+  _Training Multi-Turn LLM Agents on Collaborative Reasoning Tasks._
+
 #### _inference_
 
 - **From decoding to meta-generation** [[paper]](https://arxiv.org/abs/2406.16838).
@@ -43,7 +46,7 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 - **Ask, Refine, Trust** [[paper]](https://arxiv.org/abs/2311.07961).
   _Technique that uses critical questions to determine if an LLM generation needs refinement._
-  
+
 - **ToolVerifier** [[paper]](https://arxiv.org/abs/2402.14158).
   _Generalization to New Tools via Self-Verification._
 
