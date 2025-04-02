@@ -73,6 +73,9 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 #### _synthetic data for complex reasoning & tools_
 
+- **NaturalReasoning: Reasoning in the Wild with 2.8M Challenging Questions** [[paper]](https://arxiv.org/abs/2502.13124).
+  _Scaling reasoning capabilities with diverse and high-quality questions._
+
 - **Source2Synth** [[paper]](https://arxiv.org/abs/2409.08239).
   _Generating synthetic data from real sources to improve LLMs on complex reasoning tasks._
 
@@ -139,8 +142,11 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 #### _architectures_
 
+- **Multi-token attention** [[paper]](https://arxiv.org/abs/2504.00927)
+  _Attention mechanism that can focus on multiple tokens simultaneously_.
+
 - **Byte Latent Transformer** [[paper]](https://arxiv.org/abs/2412.09871)
-  _New Byte-level LLM architecture that matches tokenization-based LLM performance at scale.
+  _New Byte-level LLM architecture that matches tokenization-based LLM performance at scale._
 
 - **Adaptive Decoding via Latent Preference Optimization** [[paper]](https://arxiv.org/abs/2411.09661)
   _New layer that selects decoding params automatically *per token*_.
