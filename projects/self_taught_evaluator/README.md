@@ -14,7 +14,7 @@ First, the model was trained on data comprising responses and evaluation plans g
 
 ## Inference and Evaluation
 
-We provide example scripts to use the Self-Taught Evaluator as a judge to choose a better response from a pair. We provide a set of scripts to reproduce the RewardBench evaluation scores for this model. Please refer to [src/requirements.txt](./src/requirements.txt)
+We provide example scripts to use the Self-Taught Evaluator as a judge to choose a better response from a pair. We provide a set of scripts to reproduce the RewardBench evaluation scores for this model. Please refer to [src/requirements.txt](./src/requirements.txt). Our experiments were run with `vllm` version 0.6.1.
 
 > [!IMPORTANT]
 > This model was trained to judge a pair of responses using the specific prompt format from the RewardBench benchmark. Make sure to adopt the same prompt format when you run the model on your data.
