@@ -39,10 +39,10 @@ TBD
 
 
 ## Organizing Committee
-+ Ilia Kulikov <kulikov@meta.com>
-+ Jason Weston <jase@meta.com>
-+ Jing XU <jingxu23@meta.com>
-+ Olga Golovneva <olggol@meta.com>
-+ Swarnadeep Saha <swarnadeep@meta.com>
-+ Marjan Ghazvininejad <ghazvini@meta.com>
-+ Ping Yu <pingyu@meta.com>
++ Ilia Kulikov
++ Jason Weston
++ Jing XU
++ Olga Golovneva
++ Swarnadeep Saha
++ Marjan Ghazvininejad
++ Ping Yu
