@@ -40,10 +40,6 @@ We will host paper submissions on open review (link to appear here soon). We inv
 + Jason Wei, OpenAI
 
 
-## Tentative schedule:
-TBD
-
-
 ## Organizing Committee
 + Ilia Kulikov
 + Jason Weston
