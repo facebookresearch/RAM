@@ -4,6 +4,11 @@ While we are seeding this project with an initial set of popular tasks and a few
 models and examples, ongoing contributions from the research community are
 desired to increase the pool of tasks, models, and baselines.
 
+## Deploy pages
+1. Make necessary edits in `gh-pages` directory, commit and send PR.
+2. Push `gh-pages` as a subtree to its branch: `git subtree push --prefix gh-pages origin gh-pages`
+3. The page build should be started automatically.
+
 
 ## Pull Requests
 We actively welcome your pull requests.
