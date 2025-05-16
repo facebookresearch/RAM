@@ -19,8 +19,8 @@ Overall, we highlight that the workshop is most concerned with methods that aim 
 
 ## Workshop Event
 
-* Location: Palais des Congrès, Montreal, Canada 
-* Date: October 10, 2025
+* **Location**: Palais des Congrès, Montreal, Canada 
+* **Date**: October 10, 2025
 
 ## Call for Papers
 
