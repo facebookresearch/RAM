@@ -1,7 +1,4 @@
-<p align="center">
-    <img src=./ram2.jpeg width="900"> 
-</p>
-
+![Workshop logo](ram2.jpeg)
 
 # RAM 2: <em>Reasoning, Attention & Memory – 10 Years On</em>
 
