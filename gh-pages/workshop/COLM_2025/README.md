@@ -6,8 +6,7 @@
 
 <b>Ten years later...</b> we are hosting RAM 2 in the same location in Montreal, with a two-fold purpose. Firstly, as a retrospective and analysis of what has happened in the last 10 years. We are inviting presenters from the first workshop to this end, as well as to add their current perspectives. Hence secondly, and more importantly, we will bring together the field to discuss new trends and future directions for the next 10 years – which is further enabled by inviting new speakers, panelists and poster presenters discussing these fresh ideas.
 
-Why does this make sense? The RAM topic is as important as ever, and has gone on to dominate the field.
-
+Why does this make sense? The RAM topic is as important as ever, and has gone on to dominate the field.  
 These new directions include:
 
 - <em>R</em>: New reasoning methods including both token-based and that use continuous vectors, and how they combine with memory.
