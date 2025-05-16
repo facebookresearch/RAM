@@ -34,6 +34,11 @@ The library needed to run our code is
 ## Contributing
 Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests.
 
+## Deploy pages
+1. Make necessary edits in `gh-pages` directory, commit and send PR.
+2. Push `gh-pages` as a subtree to its branch: `git subtree push --prefix gh-pages origin gh-pages`
+3. The page build should be started automatically.
+
 ## License
 This project is licensed under the MIT License - see the `LICENSE` file for details. The license applies to the released data as well.
 
