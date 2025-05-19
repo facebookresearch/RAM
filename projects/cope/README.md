@@ -21,7 +21,7 @@ conda create --name cope python=3.9
 conda activate cope
 ```
 
-2. Install dependencies:
+2. Install dependencies. Our experiments were run with `transformers` version 4.42.4, you can specify it in `requirements.txt` to reproduce results in the paper:
 ```bash
 conda install pytorch=2.2 pytorch-cuda=12.1 -y --strict-channel-priority --override-channels -c pytorch -c nvidia -c conda-forge
 pip install -r requirements.txt
