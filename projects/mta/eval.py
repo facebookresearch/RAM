@@ -1,4 +1,9 @@
-# Copyright (c) Meta Platforms, Inc. and affiliates.
+"""
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+This source code is licensed under the MIT license found in the
+LICENSE file in the root directory of this source tree.
+"""
 
 import json
 import logging
@@ -70,9 +75,9 @@ class LMHarnessArgs:
 
 @dataclass
 class ValidationArgs:
-    max_steps: Optional[
-        int
-    ] = None  # If None the whole validation file is used -> /!\ This number of steps is gpu dependent (100 max steps on 8 gpus = 800 steps on 1 gpu)
+    max_steps: Optional[int] = (
+        None  # If None the whole validation file is used -> /!\ This number of steps is gpu dependent (100 max steps on 8 gpus = 800 steps on 1 gpu)
+    )
     use_val_from_train_src: bool = False  # Use the validation set from training sources
     root_dir: str = ""
     sources: List[str] = field(default_factory=list)  # Other sources to eval on
