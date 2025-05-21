@@ -4,7 +4,7 @@
 - The high level goal is to make it possible to use the similarities of multiple vector pairs to determine where attention must focus.
 - We add convolutions for keys, queries, and attention heads to allow conditioning on neighboring tokens!
 
-<p align="center"><img width="110%" src="figures/attn_schema.pdf" /></p>
+<p align="center"><img width="110%" src="figures/attn_schema.png" /></p>
 
 ## Papers
 
