@@ -1,6 +1,6 @@
 # use local train.py
 
-dump_dir: /checkpoint/ram/olggol/checkpoints/300M_mta_4
+dump_dir: <path_to_output>/checkpoints/300M_mta_4
 name: &name "300M_mta_4_h1002"
 steps: 400000
 grad_acc_steps: 1
@@ -51,7 +51,7 @@ model:
     gate_1d: true
 
 data:
-  root_dir: /checkpoint/ram/shared/datasets/slim_pajama/train/
+  root_dir: <path_to_dataset>/slim_pajama/train/
   sources:
     commoncrawl: 0.726
     c4: 0.081
@@ -69,7 +69,7 @@ data:
   load_async: true
   tokenizer:
     name: tiktoken
-    path: /datasets/pretrained-llms/Llama-3.1-70B-Instruct/original/tokenizer.model
+    path: <path_to_tokenizer>/Llama-3.1-70B-Instruct/original/tokenizer.model
 
 profiling:
   run: true
@@ -97,13 +97,13 @@ logging:
 # sync eval
 eval:
   ppl_files: 
-    - /checkpoint/ram/shared/datasets/slim_pajama/valid/arxiv/data.chunk.00.jsonl
-    - /checkpoint/ram/shared/datasets/slim_pajama/valid/book/data.chunk.00.jsonl
-    - /checkpoint/ram/shared/datasets/slim_pajama/valid/c4/data.chunk.00.jsonl
-    - /checkpoint/ram/shared/datasets/slim_pajama/valid/commoncrawl/data.chunk.00.jsonl
-    - /checkpoint/ram/shared/datasets/slim_pajama/valid/github/data.chunk.00.jsonl
-    - /checkpoint/ram/shared/datasets/slim_pajama/valid/stackexchange/data.chunk.00.jsonl
-    - /checkpoint/ram/shared/datasets/slim_pajama/valid/wikipedia/data.chunk.00.jsonl
+    - <path_to_dataset>/slim_pajama/valid/arxiv/data.chunk.00.jsonl
+    - <path_to_dataset>/slim_pajama/valid/book/data.chunk.00.jsonl
+    - <path_to_dataset>/slim_pajama/valid/c4/data.chunk.00.jsonl
+    - <path_to_dataset>/slim_pajama/valid/commoncrawl/data.chunk.00.jsonl
+    - <path_to_dataset>/slim_pajama/valid/github/data.chunk.00.jsonl
+    - <path_to_dataset>/slim_pajama/valid/stackexchange/data.chunk.00.jsonl
+    - <path_to_dataset>/slim_pajama/valid/wikipedia/data.chunk.00.jsonl
   ppl_seq_len: 2048
   ppl_batch_size: 4
   ppl_n_batches: 256
