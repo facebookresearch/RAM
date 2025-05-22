@@ -29,7 +29,6 @@ from lm_eval import simple_evaluate
 from lm_eval.api.instance import Instance
 from lm_eval.api.model import LM
 from omegaconf import OmegaConf
-from projects.difformer.single_json import SingleJSONLIterator
 from torch.nn import functional as F
 
 from projects.mta.data import init_choice_state, setup_sources
@@ -38,6 +37,7 @@ from projects.mta.generate import (
     PackedCausalTransformerGeneratorArgs,
     load_consolidated_model_and_tokenizer,
 )
+from projects.mta.single_json import SingleJSONLIterator
 from projects.mta.transformer import LMTransformer, LMTransformerArgs
 
 EVAL_FOLDER_NAME = "{:010d}"
