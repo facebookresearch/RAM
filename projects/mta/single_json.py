@@ -1,13 +1,20 @@
-from typing import Optional, Tuple, List, Dict, Iterator
-from logging import getLogger
-import json
-import numpy as np
+"""
+Copyright (c) Meta Platforms, Inc. and affiliates.
 
+This source code is licensed under the MIT license found in the
+LICENSE file in the root directory of this source tree.
+"""
+
+import json
+from logging import getLogger
+from typing import Dict, Iterator, List, Optional
+
+import numpy as np
 
 logger = getLogger()
 
-from dataclasses import dataclass
 from abc import abstractmethod
+from dataclasses import dataclass
 
 
 @dataclass
@@ -28,20 +35,16 @@ class Batch:
 
 class DataIterator:
     @abstractmethod
-    def __iter__(self) -> Iterator[Batch]:
-        ...
+    def __iter__(self) -> Iterator[Batch]: ...
 
     @abstractmethod
-    def get_position(self) -> Optional[List[int]]:
-        ...
+    def get_position(self) -> Optional[List[int]]: ...
 
     @abstractmethod
-    def set_position(self, position: Optional[List[int]]):
-        ...
+    def set_position(self, position: Optional[List[int]]): ...
 
     def close(self):
         pass
-
 
 
 def get_content_key(path: str) -> str:
@@ -114,7 +117,9 @@ def batch_iterator(
     for sample in jsonl_iterator:
         assert len(tokens) < n_buffer_toks
         if content_key == "src":
-            src_toks = tokenizer.encode(sample[content_key], add_bos=True, add_eos=False)
+            src_toks = tokenizer.encode(
+                sample[content_key], add_bos=True, add_eos=False
+            )
             tokens.extend(src_toks)
             mask.extend([False] * len(src_toks))
             tgt_toks = tokenizer.encode(sample["tgt"], add_bos=False, add_eos=True)
@@ -133,7 +138,9 @@ def batch_iterator(
             assert x.shape[1] // seq_len == buffer_size
             for i in range(x.shape[1] // seq_len):
                 a, b = i * seq_len, (i + 1) * seq_len
-                yield Batch(x=x[:, a:b], y=x[:, a + 1 : b + 1], mask=x_mask[:, a + 1 : b + 1])
+                yield Batch(
+                    x=x[:, a:b], y=x[:, a + 1 : b + 1], mask=x_mask[:, a + 1 : b + 1]
+                )
 
 
 def subsample(
