@@ -1,0 +1,3 @@
+[submodule "public_repos/lingua"]
+	path = public_repos/lingua
+	url = git@github.com:facebookresearch/lingua.git
