@@ -24,11 +24,12 @@ Overall, we highlight that the workshop is most concerned with methods that aim 
 
 ## Call for Papers
 
-We will host paper submissions on open review (link to appear here soon). We invite researchers and practitioners to submit their work to the COLM 2025 Workshop on Reasoning, Attention & Memory 2 (RAM2@COLM25). 
+We will host paper submissions on [open review](https://openreview.net/group?id=colmweb.org/COLM/2025/Workshop/RAM2). We invite researchers and practitioners to submit their work to the COLM 2025 Workshop on Reasoning, Attention & Memory 2 (RAM2@COLM25). 
 
 * **Submission Deadline:** June 23, 2025
 * **Author Notification Deadline:** July 24, 2025
 * **Submission Details:** Submissions should follow the [general guide for COLM conference](https://colmweb.org/cfp.html). Papers can be up to 9 pages (not including references) and have to be anonymized.  All submissions must be in PDF format, please use the [LaTeX style files provided by organizers](https://github.com/COLM-org/Template/archive/refs/tags/2025.zip).
+* **Dual Submission Policy:** We encourage submissions of novel research and permit submissions currently under review at other conferences or venues.
 
 
 ## Invited speakers
@@ -49,3 +50,8 @@ We will host paper submissions on open review (link to appear here soon). We inv
 + Swarnadeep Saha
 + Marjan Ghazvininejad
 + Ping Yu
+
+
+## Contact us
+
+Email: pc_ram2 [at] googlegroups.com
