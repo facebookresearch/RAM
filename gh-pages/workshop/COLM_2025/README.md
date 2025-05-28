@@ -29,7 +29,7 @@ We will host paper submissions on [open review](https://openreview.net/group?id=
 * **Submission Deadline:** June 23, 2025
 * **Author Notification Deadline:** July 24, 2025
 * **Submission Details:** Submissions should follow the [general guide for COLM conference](https://colmweb.org/cfp.html). Papers can be up to 9 pages (not including references) and have to be anonymized.  All submissions must be in PDF format, please use the [LaTeX style files provided by organizers](https://github.com/COLM-org/Template/archive/refs/tags/2025.zip).
-* **Dual Submission Policy:** We encourage submissions of novel research work and permit submissions currently under review at other conferences or venues.
+* **Dual Submission Policy:** We encourage submissions of novel research and permit submissions currently under review at other conferences or venues.
 
 
 ## Invited speakers
