@@ -840,7 +840,11 @@ class BaseTransformer(nn.Module):
                 self.layers.append(TransformerBlock(args, layer_id=layer_id))
             else:
                 args_without_mta = copy.deepcopy(args)
-                if args.mta.head_kernel_size is None and not args.mta.pre_sm_linear_head and not args.mta.post_sm_linear_head:
+                if (
+                    args.mta.head_kernel_size is None
+                    and not args.mta.pre_sm_linear_head
+                    and not args.mta.post_sm_linear_head
+                ):
                     # regular attention
                     logger.info(
                         f"Initializing regular transformer block at layer {layer_id}"
@@ -848,9 +852,7 @@ class BaseTransformer(nn.Module):
                     args_without_mta.mta.use_mta = False
                 else:
                     # remove q-k convolution before sm
-                    logger.info(
-                        f"No key-query convolution at layer {layer_id}"
-                    )
+                    logger.info(f"No key-query convolution at layer {layer_id}")
                     args_without_mta.mta.query_kernel_size = None
                     args_without_mta.mta.after_sm_query_kernel_size = None
 
