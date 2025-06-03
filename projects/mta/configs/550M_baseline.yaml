@@ -1,0 +1,96 @@
+# use local train.py
+
+dump_dir: <path_to_output>/checkpoints/550M_baseline
+name: &name "550M_baseline_h100"
+steps: 400000
+grad_acc_steps: 1
+probe_freq: 100
+
+seed: 777
+optim:
+  lr: 0.00015
+  weight_decay: 0.05
+  warmup: 375
+  scheduler: linear
+  beta2: 0.98
+  lr_min_ratio: 0.0
+
+distributed:
+  fsdp_type: full_shard
+  compile: true
+  model_dtype: bf16
+  matmul_allow_tf32: false
+  selective_activation_checkpointing: false
+  tp_size: 1
+
+model:
+  dim: 1280
+  n_layers: 24
+  n_heads: 10
+  rope_theta: 100_000
+  ffn_dim_multiplier: 1.0
+  multiple_of: 256
+  weight_tying: true
+  mta:
+    use_mta: false
+
+data:
+  root_dir: <path_to_dataset>/slim_pajama/train/
+  sources:
+    commoncrawl: 0.726
+    c4: 0.081
+    github: 0.049
+    book: 0.021
+    arxiv: 0.023
+    wikipedia: 0.05
+    stackexchange: 0.05
+# bsx = 2048 * 8 * nnodes * b_s
+# 4 nodes, 4 b_s = 0.25M tok per batch
+  batch_size: 4
+  prefetch_size: 1024
+  seq_len: 2048
+  n_views: 2
+  load_async: true
+  tokenizer:
+    name: tiktoken
+    path: <path_to_tokenizer>/Llama-3.1-70B-Instruct/original/tokenizer.model
+
+profiling:
+  run: true
+  mem_warmup: 0
+  mem_steps: 4
+  profile_warmup: 10
+  profile_steps: 4
+
+checkpoint:
+  dump:
+    every: 40000
+    keep: 1
+  eval:
+    every: 40000
+    keep: 1
+
+logging:
+    freq: 10
+    wandb: # specify monitoring if needed
+        project: lingua
+        entity: new_attention
+        resume: allow
+        id: *name
+
+# sync eval
+eval:
+  ppl_files: 
+    - <path_to_dataset>/slim_pajama/valid/arxiv/data.chunk.00.jsonl
+    - <path_to_dataset>/slim_pajama/valid/book/data.chunk.00.jsonl
+    - <path_to_dataset>/slim_pajama/valid/c4/data.chunk.00.jsonl
+    - <path_to_dataset>/slim_pajama/valid/commoncrawl/data.chunk.00.jsonl
+    - <path_to_dataset>/slim_pajama/valid/github/data.chunk.00.jsonl
+    - <path_to_dataset>/slim_pajama/valid/stackexchange/data.chunk.00.jsonl
+    - <path_to_dataset>/slim_pajama/valid/wikipedia/data.chunk.00.jsonl
+  ppl_seq_len: 2048
+  ppl_batch_size: 4
+  ppl_n_batches: 256
+  generator:
+    max_tokens: 2048
+    dtype: bf16
