@@ -383,6 +383,7 @@ class Attention(nn.Module):
             if self.use_mta and (
                 self.head_kernel_size is not None
                 or self.mta_kernel_after_sm is not None
+                or self.post_sm_linear_head
             ):
                 # scores are already probability
                 pass
@@ -839,17 +840,19 @@ class BaseTransformer(nn.Module):
                 self.layers.append(TransformerBlock(args, layer_id=layer_id))
             else:
                 args_without_mta = copy.deepcopy(args)
-                if args.mta.head_kernel_size is None:
+                if args.mta.head_kernel_size is None and not args.mta.pre_sm_linear_head and not args.mta.post_sm_linear_head:
                     # regular attention
                     logger.info(
                         f"Initializing regular transformer block at layer {layer_id}"
                     )
                     args_without_mta.mta.use_mta = False
-                elif args.mta.head_kernel_size is not None:
-                    # remove q-k convolution after sm
-                    args_without_mta.mta.after_sm_query_kernel_size = None
-                    args_without_mta.mta.after_sm_key_kernel_size = None
+                else:
+                    # remove q-k convolution before sm
+                    logger.info(
+                        f"No key-query convolution at layer {layer_id}"
+                    )
                     args_without_mta.mta.query_kernel_size = None
+                    args_without_mta.mta.after_sm_query_kernel_size = None
 
                 self.layers.append(
                     TransformerBlock(args_without_mta, layer_id=layer_id)

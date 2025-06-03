@@ -45,6 +45,11 @@ python -m lingua.stool script=train config=./configs/300M_mta.yaml nodes=4 qos=l
 
 300M-830M configurations assume 4 nodes for training, 1B configuration assums 8 nodes.
 
+3. Generate text completion:
+```bash
+python -m generate ckpt=<path_to_checkpoint>/consolidated dump_dir=/tmp max_gen_len=16
+```
+
 
 ## Contributors
 Olga Golovneva, Tianlu Wang, Jason Weston, Sainbayar Sukhbaatar
