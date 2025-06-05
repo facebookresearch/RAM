@@ -344,43 +344,42 @@ class Attention(nn.Module):
                 torch.tensor(self.head_dim, requires_grad=False, device="cuda")
             )
 
-            if self.use_mta:
-                if self.mta_kernel is not None:
-                    # pre-sm q-k MTA
-                    scores = self._mta_convolution(
-                        scores=scores,
-                        mask=mask,
-                        chunk_start_ids=chunk_start_ids,
-                        kernel=self.mta_kernel,
-                    )
-                if self.pre_sm_linear_head:
-                    # pre-sm head MTA
-                    scores = self.wpsm(scores.transpose(1, -1)).transpose(1, -1)
+            if self.mta_kernel is not None:
+                # pre-sm q-k MTA
+                scores = self._mta_convolution(
+                    scores=scores,
+                    mask=mask,
+                    chunk_start_ids=chunk_start_ids,
+                    kernel=self.mta_kernel,
+                )
+            if self.pre_sm_linear_head:
+                # pre-sm head MTA
+                scores = self.wpsm(scores.transpose(1, -1)).transpose(1, -1)
 
-                # now softmax
-                scores = scores + mask
+            # now softmax
+            scores = scores + mask
 
-                scores = self.normalize_attention(att_type="soft")(scores).type_as(xq)
+            scores = self.normalize_attention(att_type="soft")(scores).type_as(xq)
 
-                # post-sm q-k MTA
-                if self.mta_kernel_after_sm is not None:
-                    scores = self._mta_convolution(
-                        scores=scores,
-                        mask=mask,
-                        chunk_start_ids=chunk_start_ids,
-                        kernel=self.mta_kernel_after_sm,
-                    )
-                    scores = torch.where(mask == float("-inf"), 0.0, scores)
-                # post-sm head MTA
-                if self.head_kernel_size is not None:
-                    scores = self._head_convolution(
-                        scores=scores, bsz=bsz, seq_len=cache_len
-                    )
-                elif self.post_sm_linear_head:
-                    # pre-sm head MTA
-                    scores = self.wposm(scores.transpose(1, -1)).transpose(1, -1)
+            # post-sm q-k MTA
+            if self.mta_kernel_after_sm is not None:
+                scores = self._mta_convolution(
+                    scores=scores,
+                    mask=mask,
+                    chunk_start_ids=chunk_start_ids,
+                    kernel=self.mta_kernel_after_sm,
+                )
+                scores = torch.where(mask == float("-inf"), 0.0, scores)
+            # post-sm head MTA
+            if self.head_kernel_size is not None:
+                scores = self._head_convolution(
+                    scores=scores, bsz=bsz, seq_len=cache_len
+                )
+            elif self.post_sm_linear_head:
+                # post-sm linear head
+                scores = self.wposm(scores.transpose(1, -1)).transpose(1, -1)
 
-            if self.use_mta and (
+            if (
                 self.head_kernel_size is not None
                 or self.mta_kernel_after_sm is not None
                 or self.post_sm_linear_head
