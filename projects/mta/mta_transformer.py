@@ -24,6 +24,8 @@ from torch.nn import functional as F
 from torch.nn.attention.flex_attention import BlockMask, flex_attention
 from xformers.ops import AttentionBias, fmha
 
+from public_repos.multitokenatention_triton.mta_attention_triton import MTAAttentionTriton
+
 logger = logging.getLogger()
 
 flex_attention_comp = torch.compile(flex_attention)
@@ -147,6 +149,7 @@ class BaseTransformerArgs:
 
     mta: MTATransformerArgs = field(default_factory=MTATransformerArgs)
     dropout: float = 0.0
+    triton: bool = False # use triton-based MTA implementation
 
 
 class Attention(nn.Module):
@@ -162,6 +165,7 @@ class Attention(nn.Module):
         mta: Optional[MTATransformerArgs],
         dropout: float,
         layer_id: Optional[int],
+        triton: bool = False,
     ):
         super().__init__()
 
@@ -205,63 +209,74 @@ class Attention(nn.Module):
 
         # mta args
         self.use_mta = mta.use_mta
+        self.triton = triton
         if self.use_mta:
-            # pre-sm
-            self.mta_kernel = None
-            if mta.query_kernel_size is not None and mta.key_kernel_size is not None:
-                self.mta_kernel = torch.nn.parameter.Parameter(
-                    torch.empty(
-                        self.n_heads, 1, mta.query_kernel_size, mta.key_kernel_size
-                    )
-                )
-
-            self.pre_sm_linear_head = mta.pre_sm_linear_head
-            if self.pre_sm_linear_head:
-                self.wpsm = nn.Linear(
-                    n_heads,
-                    n_heads,
-                    bias=False,
-                )
-            # post-sm
-            self.mta_kernel_after_sm = None
-            if (
-                mta.after_sm_query_kernel_size is not None
-                and mta.after_sm_key_kernel_size is not None
-            ):
-                self.mta_kernel_after_sm = torch.nn.parameter.Parameter(
-                    torch.empty(
-                        self.n_heads,
-                        1,
-                        mta.after_sm_query_kernel_size,
-                        mta.after_sm_key_kernel_size,
-                    )
-                )
-
-            self.head_kernel_size = mta.head_kernel_size
-            self.post_sm_linear_head = mta.post_sm_linear_head
-            assert not (
-                self.post_sm_linear_head and self.head_kernel_size is not None
-            ), "linear head can not be combined with head conv"
-
-            if self.head_kernel_size is not None:
-                assert self.n_heads % mta.head_kernel_size == 0
-                self.head_kernel = torch.nn.parameter.Parameter(
-                    torch.empty(
-                        self.n_heads // mta.head_kernel_size,
-                        mta.head_kernel_size,
-                        mta.head_kernel_size,
-                    )
-                )
-            elif self.post_sm_linear_head:
-                self.wposm = nn.Linear(
-                    n_heads,
-                    n_heads,
-                    bias=False,
-                )
-
             # common
             self.pad_key = mta.pad_key
             self.mta_init_method = mta.init_method
+            if not self.triton:
+                # pre-sm
+                self.mta_kernel = None
+                if mta.query_kernel_size is not None and mta.key_kernel_size is not None:
+                    self.mta_kernel = torch.nn.parameter.Parameter(
+                        torch.empty(
+                            self.n_heads, 1, mta.query_kernel_size, mta.key_kernel_size
+                        )
+                    )
+
+                self.pre_sm_linear_head = mta.pre_sm_linear_head
+                if self.pre_sm_linear_head:
+                    self.wpsm = nn.Linear(
+                        n_heads,
+                        n_heads,
+                        bias=False,
+                    )
+                # post-sm
+                self.mta_kernel_after_sm = None
+                if (
+                    mta.after_sm_query_kernel_size is not None
+                    and mta.after_sm_key_kernel_size is not None
+                ):
+                    self.mta_kernel_after_sm = torch.nn.parameter.Parameter(
+                        torch.empty(
+                            self.n_heads,
+                            1,
+                            mta.after_sm_query_kernel_size,
+                            mta.after_sm_key_kernel_size,
+                        )
+                    )
+
+                self.head_kernel_size = mta.head_kernel_size
+                self.post_sm_linear_head = mta.post_sm_linear_head
+                assert not (
+                    self.post_sm_linear_head and self.head_kernel_size is not None
+                ), "linear head can not be combined with head conv"
+
+                if self.head_kernel_size is not None:
+                    assert self.n_heads % mta.head_kernel_size == 0
+                    self.head_kernel = torch.nn.parameter.Parameter(
+                        torch.empty(
+                            self.n_heads // mta.head_kernel_size,
+                            mta.head_kernel_size,
+                            mta.head_kernel_size,
+                        )
+                    )
+                elif self.post_sm_linear_head:
+                    self.wposm = nn.Linear(
+                        n_heads,
+                        n_heads,
+                        bias=False,
+                    )
+            else:
+                assert self.n_heads == self.n_kv_heads, "Triton MTA requires n_heads == n_kv_heads"
+                self.triton_mta = MTAAttentionTriton(
+                    n_heads=self.n_heads,
+                    mta=mta,
+                    dropout=dropout,
+                    causal=True,
+                    use_mask=False,
+                    # dtype=torch.bfloat16,
+                )
 
         self.dropout = dropout
 
@@ -334,7 +349,7 @@ class Attention(nn.Module):
         xk = repeat_kv(xk, self.heads_per_group, dim=2)
         xv = repeat_kv(xv, self.heads_per_group, dim=2)
 
-        if self.use_mta:
+        if self.use_mta and not self.triton:
             xq, xk, xv = map(
                 lambda e: e.transpose(1, 2), (xq, xk, xv)
             )  # B S H D -> B H S D
@@ -400,6 +415,11 @@ class Attention(nn.Module):
                 self.cache_attn[0, :, :cache_len, :cache_len] = scores
             output = torch.matmul(scores, xv)
             output = output.transpose(1, 2)
+        elif self.use_mta and self.triton:
+            xq, xk, xv = map(
+                lambda e: e.transpose(1, 2), (xq, xk, xv)
+            )  # B S H D -> B H S D
+            output = self.triton_mta(xq, xk, xv, mask, chunk_start_ids)
         else:
             if attn_impl == "flex_attention":
                 assert mask is None or isinstance(mask, BlockMask)
@@ -565,88 +585,45 @@ class Attention(nn.Module):
         scores = scores_new.reshape(bsz, self.n_heads, seq_len, -1)
         return scores
 
-    def reset_mta_parameters(self, init_std=None, factor=1.0):
-        init_std = init_std or (self.dim ** (-0.5))
-        if self.group_norm:
-            self.subln.reset_parameters()
-
-        if self.use_mta:
-            if self.mta_kernel is not None:
-                if self.mta_init_method == "uniform":
-                    torch.nn.init.uniform_(self.mta_kernel.data, a=-1.0, b=1.0)
-                elif self.mta_init_method == "normal":
-                    init_std = 0.3
-                    torch.nn.init.uniform_(
-                        self.mta_kernel.data,
-                        mean=0.0,
-                        std=init_std,
-                        a=-3 * init_std,
-                        b=3 * init_std,
-                    )
-                elif self.mta_init_method == "diagonal":
-                    # diagonal of the form
-                    # 1 0 0 0 0
-                    # 0 1 0 0 0
-                    # 0 0 1 0 0
-                    with torch.no_grad():
-                        diagonal_kernel = torch.ones(self.mta_kernel.data.shape)
-                        _, _, A, B = self.mta_kernel.data.shape
-                        diagonal = (B + 1) // 2 - A
-                        diagonal_kernel = torch.tril(diagonal_kernel, diagonal=diagonal)
-                        diagonal_kernel = torch.triu(diagonal_kernel, diagonal=diagonal)
-                        diagonal_kernel = torch.distributed.tensor.distribute_tensor(
-                            diagonal_kernel,
-                            device_mesh=self.mta_kernel.data.device_mesh,
-                            placements=self.mta_kernel.data.placements,
-                        )
-                        self.mta_kernel.data.copy_(diagonal_kernel)
-                elif self.mta_init_method == "identity":
-                    assert self.pad_key == "both"
-                    # identity kernel of the form
-                    # 0 0 0 0 0
-                    # 0 0 0 0 0
-                    # 0 0 1 0 0
-                    with torch.no_grad():
-                        nheads, head_sz, query_sz, key_sz = self.mta_kernel.data.shape
-                        identity_kernel = torch.zeros(
-                            nheads, head_sz, query_sz, key_sz
-                        ).cuda()
-                        if head_sz == 1:
-                            identity_kernel[:, :, -1, key_sz // 2] = 1.0
-                        else:
-                            # it is bit complicated with head conv
-                            # weight to other heads should be zero
-                            identity_kernel = identity_kernel.view(
-                                nheads // head_sz, head_sz, head_sz, query_sz, key_sz
-                            )
-                            for i in range(head_sz):
-                                identity_kernel[:, i, i, -1, key_sz // 2] = 1.0
-                            identity_kernel = identity_kernel.view(
-                                nheads, head_sz, query_sz, key_sz
-                            )
-                        identity_kernel = torch.distributed.tensor.distribute_tensor(
-                            identity_kernel,
-                            device_mesh=self.mta_kernel.data.device_mesh,
-                            placements=self.mta_kernel.data.placements,
-                        )
-                        self.mta_kernel.data.copy_(identity_kernel)
-                elif self.mta_init_method == "const":
-                    self.mta_kernel.data.fill_(0.3)
-                else:
-                    raise ValueError(
-                        f"Unsopperted mta_init_method: {self.mta_init_method}"
-                    )
-
-            if self.mta_kernel_after_sm is not None:
-                assert self.mta_init_method == "identity"
-                assert self.pad_key == "both"
-                with torch.no_grad():
-                    (
-                        nheads,
-                        head_sz,
-                        query_sz,
-                        key_sz,
-                    ) = self.mta_kernel_after_sm.data.shape
+    
+    def _init_conv_kernel(self, kernel, init_std):
+        if self.mta_init_method == "uniform":
+            torch.nn.init.uniform_(kernel.data, a=-1.0, b=1.0)
+        elif self.mta_init_method == "normal":
+            init_std = 0.3
+            torch.nn.init.uniform_(
+                kernel.data,
+                mean=0.0,
+                std=init_std,
+                a=-3 * init_std,
+                b=3 * init_std,
+            )
+        elif self.mta_init_method == "diagonal":
+            # diagonal of the form
+            # 1 0 0 0 0
+            # 0 1 0 0 0
+            # 0 0 1 0 0
+            with torch.no_grad():
+                diagonal_kernel = torch.ones(kernel.data.shape)
+                _, _, A, B = kernel.data.shape
+                diagonal = (B + 1) // 2 - A
+                diagonal_kernel = torch.tril(diagonal_kernel, diagonal=diagonal)
+                diagonal_kernel = torch.triu(diagonal_kernel, diagonal=diagonal)
+                diagonal_kernel = torch.distributed.tensor.distribute_tensor(
+                    diagonal_kernel,
+                    device_mesh=kernel.data.device_mesh,
+                    placements=kernel.data.placements,
+                )
+                kernel.data.copy_(diagonal_kernel)
+        elif self.mta_init_method == "identity":
+            assert self.pad_key == "both"
+            # identity kernel of the form
+            # 0 0 0 0 0
+            # 0 0 0 0 0
+            # 0 0 1 0 0
+            with torch.no_grad():
+                if len(kernel.data.shape) == 4:
+                    nheads, head_sz, query_sz, key_sz = kernel.data.shape
                     identity_kernel = torch.zeros(
                         nheads, head_sz, query_sz, key_sz
                     ).cuda()
@@ -663,30 +640,69 @@ class Attention(nn.Module):
                         identity_kernel = identity_kernel.view(
                             nheads, head_sz, query_sz, key_sz
                         )
-                    identity_kernel = torch.distributed.tensor.distribute_tensor(
-                        identity_kernel,
-                        device_mesh=self.mta_kernel_after_sm.data.device_mesh,
-                        placements=self.mta_kernel_after_sm.data.placements,
-                    )
-                    self.mta_kernel_after_sm.data.copy_(identity_kernel)
+                else:
+                    nheads, query_sz, key_sz = kernel.data.shape
+                    identity_kernel = torch.zeros(nheads, query_sz, key_sz).cuda()
+                    identity_kernel[:, -1, key_sz // 2] = 1.0
+                
+                identity_kernel = torch.distributed.tensor.distribute_tensor(
+                    identity_kernel,
+                    device_mesh=kernel.data.device_mesh,
+                    placements=kernel.data.placements,
+                )
+                kernel.data.copy_(identity_kernel)
+        elif self.mta_init_method == "const":
+            kernel.data.fill_(0.3)
+        else:
+            raise ValueError(
+                f"Unsopperted mta_init_method: {self.mta_init_method}"
+            )
+
+
+    def _init_linear_head(self, head_linear):
+        identity_kernel = torch.eye(self.n_heads).cuda()
+        identity_kernel = torch.distributed.tensor.distribute_tensor(
+            identity_kernel,
+            device_mesh=head_linear.weight.data.device_mesh,
+            placements=head_linear.weight.data.placements,
+        )
+        head_linear.weight.data.copy_(identity_kernel)
+
+
+    def reset_mta_parameters(self, init_std=None, factor=1.0):
+        init_std = init_std or (self.dim ** (-0.5))
+        if self.group_norm:
+            self.subln.reset_parameters()
+
+        if self.use_mta and self.triton:
+            # Initialize pre-softmax convolution kernel
+            if self.triton_mta.mta_conv_triton.weight is not None:
+                self._init_conv_kernel(self.triton_mta.mta_conv_triton.weight, init_std)
+
+            # Initialize post-softmax convolution kernel
+            if self.triton_mta.mta_conv_after_sm_triton.weight is not None:
+                self._init_conv_kernel(self.triton_mta.mta_conv_after_sm_triton.weight, init_std)
+
+            # Initialize linear heads as identity
+            if hasattr(self.triton_mta, 'wpsm_triton'):
+                self._init_linear_head(self.triton_mta.wpsm_triton)
+
+            if hasattr(self.triton_mta, 'wposm_triton'):
+                self._init_linear_head(self.triton_mta.wposm_triton)
+
+        elif self.use_mta:
+            if self.mta_kernel is not None:
+                self._init_conv_kernel(self.mta_kernel, init_std)
+
+            if self.mta_kernel_after_sm is not None:
+                self._init_conv_kernel(self.mta_kernel_after_sm, init_std)
 
             if self.pre_sm_linear_head:
-                identity_kernel = torch.eye(self.n_heads).cuda()
-                identity_kernel = torch.distributed.tensor.distribute_tensor(
-                    identity_kernel,
-                    device_mesh=self.wpsm.weight.data.device_mesh,
-                    placements=self.wpsm.weight.data.placements,
-                )
-                self.wpsm.weight.data.copy_(identity_kernel)
+                self._init_linear_head(self.wpsm)
+
 
             if self.post_sm_linear_head:
-                identity_kernel = torch.eye(self.n_heads).cuda()
-                identity_kernel = torch.distributed.tensor.distribute_tensor(
-                    identity_kernel,
-                    device_mesh=self.wpsm.weight.data.device_mesh,
-                    placements=self.wpsm.weight.data.placements,
-                )
-                self.wposm.weight.data.copy_(identity_kernel)
+                self._init_linear_head(self.wposm)
 
             elif self.head_kernel_size is not None:
                 if self.mta_init_method == "identity":
@@ -713,6 +729,8 @@ class Attention(nn.Module):
                     a=-3 * init_std,
                     b=3 * init_std,
                 )
+        # elif self.use_mta and self.triton:
+        #     self.triton_mta.reset_mta_parameters(init_std)
 
     def reset_parameters(self, init_std=None, factor=1.0):
         init_std = init_std or (self.dim ** (-0.5))
@@ -762,6 +780,7 @@ class TransformerBlock(nn.Module):
             dropout=args.dropout,
             mta=args.mta,
             layer_id=layer_id,
+            triton=args.mta.use_mta and args.triton,
         )
         self.feed_forward = FeedForward(
             dim=args.dim,
@@ -855,6 +874,7 @@ class BaseTransformer(nn.Module):
                     logger.info(f"No key-query convolution at layer {layer_id}")
                     args_without_mta.mta.query_kernel_size = None
                     args_without_mta.mta.after_sm_query_kernel_size = None
+                    args_without_mta.triton = None
 
                 self.layers.append(
                     TransformerBlock(args_without_mta, layer_id=layer_id)

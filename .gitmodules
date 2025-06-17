@@ -1,3 +1,6 @@
 [submodule "public_repos/lingua"]
 	path = public_repos/lingua
 	url = git@github.com:facebookresearch/lingua.git
+[submodule "public_repos/multitokenatention_triton"]
+	path = public_repos/multitokenatention_triton
+	url = git@github.com:Gusanidas/multitokenatention_triton.git
