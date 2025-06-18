@@ -1,7 +1,7 @@
 # use local train.py
 
-dump_dir: <path_to_output>/checkpoints/300M_mta
-name: &name "300M_mta"
+dump_dir: /checkpoint/ram/olggol/checkpoints/300M_mta_triton
+name: &name "[isa]300M_mta_triton"
 steps: 400000
 grad_acc_steps: 1
 probe_freq: 100
@@ -18,12 +18,13 @@ optim:
 distributed:
   fsdp_type: full_shard
   compile: true
-  model_dtype: bf16
-  matmul_allow_tf32: false
+  model_dtype: fp32
+  matmul_allow_tf32: true
   selective_activation_checkpointing: false
   tp_size: 1
 
 model:
+  triton: true
   dim: 1024
   n_layers: 20
   n_heads: 16
@@ -38,7 +39,7 @@ model:
     query_kernel_size: 6
     key_kernel_size: 11
     # after sm
-    head_kernel_size: 16
+    post_sm_linear_head: true
     after_sm_query_kernel_size: 6
     after_sm_key_kernel_size: 11
     # common
@@ -50,8 +51,9 @@ model:
     add_gating: true
     gate_1d: true
 
+
 data:
-  root_dir: <path_to_dataset>/slim_pajama/train/
+  root_dir: /checkpoint/ram/shared/datasets/slim_pajama/train/
   sources:
     commoncrawl: 0.726
     c4: 0.081
@@ -69,7 +71,7 @@ data:
   load_async: true
   tokenizer:
     name: tiktoken
-    path: <path_to_tokenizer>/Llama-3.1-70B-Instruct/original/tokenizer.model
+    path: /datasets/pretrained-llms/Llama-3.1-70B-Instruct/original/tokenizer.model
 
 profiling:
   run: true
@@ -97,16 +99,16 @@ logging:
 # sync eval
 eval:
   ppl_files: 
-    - <path_to_dataset>/slim_pajama/valid/arxiv/data.chunk.00.jsonl
-    - <path_to_dataset>/slim_pajama/valid/book/data.chunk.00.jsonl
-    - <path_to_dataset>/slim_pajama/valid/c4/data.chunk.00.jsonl
-    - <path_to_dataset>/slim_pajama/valid/commoncrawl/data.chunk.00.jsonl
-    - <path_to_dataset>/slim_pajama/valid/github/data.chunk.00.jsonl
-    - <path_to_dataset>/slim_pajama/valid/stackexchange/data.chunk.00.jsonl
-    - <path_to_dataset>/slim_pajama/valid/wikipedia/data.chunk.00.jsonl
+    - /checkpoint/ram/shared/datasets/slim_pajama/valid/arxiv/data.chunk.00.jsonl
+    - /checkpoint/ram/shared/datasets/slim_pajama/valid/book/data.chunk.00.jsonl
+    - /checkpoint/ram/shared/datasets/slim_pajama/valid/c4/data.chunk.00.jsonl
+    - /checkpoint/ram/shared/datasets/slim_pajama/valid/commoncrawl/data.chunk.00.jsonl
+    - /checkpoint/ram/shared/datasets/slim_pajama/valid/github/data.chunk.00.jsonl
+    - /checkpoint/ram/shared/datasets/slim_pajama/valid/stackexchange/data.chunk.00.jsonl
+    - /checkpoint/ram/shared/datasets/slim_pajama/valid/wikipedia/data.chunk.00.jsonl
   ppl_seq_len: 2048
   ppl_batch_size: 4
   ppl_n_batches: 256
   generator:
     max_tokens: 2048
-    dtype: bf16
+    dtype: fp32
