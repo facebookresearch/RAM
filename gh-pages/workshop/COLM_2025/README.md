@@ -54,4 +54,4 @@ We will host paper submissions on [open review](https://openreview.net/group?id=
 
 ## Contact us
 
-Email: pc_ram2 [at] googlegroups.com
+Email: ram2_pc [at] googlegroups.com
