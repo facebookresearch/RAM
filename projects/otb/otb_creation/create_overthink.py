@@ -6,19 +6,18 @@ This source code is licensed under the license found in the
 LICENSE file in the root directory of this source tree.
 """
 
-from prompts import OVERTHINKING_PROMPT, QUESTION_FORMATS, ALL_DOMAINS
-
-
-from collections import Counter
-import numpy as np
-import json
-import pyjson5
-import time
-from litellm import completion
-import requests
-import multiprocessing
 import argparse
+import json
+import multiprocessing
 import os
+import time
+from collections import Counter
+
+import numpy as np
+import pyjson5
+import requests
+from litellm import completion
+from prompts import ALL_DOMAINS, OVERTHINKING_PROMPT, QUESTION_FORMATS
 
 os.environ["OPENAI_API_KEY"] = ""
 

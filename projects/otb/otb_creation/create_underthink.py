@@ -6,10 +6,11 @@ This source code is licensed under the license found in the
 LICENSE file in the root directory of this source tree.
 """
 
+import os
+
+import pandas as pd
 import reasoning_gym
 from reasoning_gym.factory import create_dataset
-import pandas as pd
-import os
 
 puzzles = {
     "ab": {"length": 20},
