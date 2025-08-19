@@ -1,0 +1,6 @@
+litellm==1.75.8
+numpy==2.3.2
+pandas==2.3.1
+pyjson5==1.6.9
+reasoning_gym==0.1.23
+Requests==2.32.5
