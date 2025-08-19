@@ -5,7 +5,22 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 ## Reasoning
 
-#### _via alignment_
+#### _CoT and RL_
+
+- **OptimalThinkingBench** [[paper]](https://arxiv.org/abs/2508.13141).
+  _New benchmark measuring overthinking & underthinking of LLMs_.
+
+- **Reasoning for Factuality** [[paper]](https://www.arxiv.org/abs/2508.05618).
+  _Shows how to learn CoTs that improve factuality via a new reward function_.
+
+- **ASTRO** [[paper]](https://arxiv.org/abs/2507.00417).
+  _Teaching LLMs to reason by reflecting and backtracking in-context_.
+
+- **NaturalThoughts** [[paper]](https://arxiv.org/abs/2507.01921).
+  _Creates better CoT distillation emphasizing difficult and diverse reasoning_.
+
+- **Briding Online and Offline RL** [[paper]](https://arxiv.org/abs/2506.21495).
+  _Mix verifiable & non-verifiable tasks, comparing semi-online DPO & GRPO (similar results)_.
 
 - **Thinking LLMs** [[paper]](https://arxiv.org/abs/2410.10630).
   _Train LLMs to write down its internal thoughts for general instructions (non-verifiable tasks)._
@@ -71,11 +86,17 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 #### _synthetic data quality_
 
+- **CoT-Self-Instruct** [[paper]](https://arxiv.org/abs/2507.23751)
+  _Create synthetic data using reasoning followed by filtering for high quality, for large gains._
+
 - **RIP** [[paper]](https://arxiv.org/abs/2501.18578)
   _A method to *curate* high quality data, or *create* high quality synthetic data. Gives large improvements._
 
 #### _synthetic data for complex reasoning & tools_
 
+- **Self-Challenging LLM Agents** [[paper]](https://arxiv.org/abs/2506.01716).
+  _LLM creates own challenging agentic tool-use tasks, resulting in better agentic performance_.
+  
 - **NaturalReasoning: Reasoning in the Wild with 2.8M Challenging Questions** [[paper]](https://arxiv.org/abs/2502.13124).
   _Scaling reasoning capabilities with diverse and high-quality questions._
 
@@ -89,6 +110,15 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 ## (Self-)Alignment
 
 #### _(self-)alignment optimization techniques_
+
+- **Self-Challenging LLM Agents** [[paper]](https://arxiv.org/abs/2506.01716).
+  _LLM creates own challenging agentic tool-use tasks, resulting in better agentic performance_.
+
+- **Solve & Verify** [[paper]](https://arxiv.org/abs/2502.14948).
+  _A self-play framework for LLMs to learn how to code by writing code & unit tests_.
+
+- **Briding Online and Offline RL** [[paper]](https://arxiv.org/abs/2506.21495).
+  _Mix verifiable & non-verifiable tasks, comparing semi-online DPO & GRPO (similar results)_.
 
 - **Diversity Preference Optimization** [[paper]](https://arxiv.org/abs/2501.18101)
   _SOTA LLMs have model collapse. DivPO training improves diversity with similar quality._
