@@ -9,31 +9,37 @@
 
 ## Paper
 
-This work is based on the following paper: [OptimalThinkingBench: Evaluating Over and Underthinking in LLMs]().
+This work is based on the following paper: [OptimalThinkingBench: Evaluating Over and Underthinking in LLMs](https://arxiv.org/abs/2508.13141).
 
 ## Setup
 
 The following setup is tested only on h100/h200 gpus. We recommend the below steps to reproduce experiments:
 
-1. Create conda environment
+### 1. Create conda environment
 
 ```bash
-conda create --name otb python=3.10
+conda create --name otb
 conda activate otb
 ```
 
-2. Install dependencies
+### 2. Install dependencies
 
 ```
-cd otb_creation
-pip install -r requirements.txt
+transformers==4.55.2
+vllm==0.10.0
+litellm==1.75.3
+numpy==2.2.6
+pandas==2.3.1
+pyjson5==1.6.9
+reasoning_gym==0.1.23
+Requests==2.32.4
 ```
 
-3. OptimalThinkingBench Creation
+### 3. Creating OptimalThinkingBench
 
-a. Download the Llama-4-Maverick model from [here](https://huggingface.co/meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8).
+1. Download the Llama-4-Maverick model from [here](https://huggingface.co/meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8).
 
-b. Create OverthinkingBench as follows:
+2. Create OverthinkingBench as follows:
 
 ```
 python create_overthink.py --m path_to_llama_maverick_model
@@ -43,7 +49,7 @@ python filter_overthink.py
 
 OverthinkingBench will be saved inside `data/overthink_bench_by_maverick.json`
 
-c. Create UnderthinkingBench as follows:
+3. Create UnderthinkingBench as follows:
 
 ```
 python create_underthink.py
@@ -52,7 +58,11 @@ python create_underthink.py
 
 UnderthinkingBench will be saved inside `data/underthink_data.pkl`
 
-4. Model Evaluation
+### 4. Downloading OptimalThinkingBench
+
+Link to directly download the benchmark is coming soon!
+
+### 5. Model Evaluation on OptimalThinkingBench
 
 Coming soon!
 
@@ -65,6 +75,6 @@ If you use our benchmark in your own work, please cite with the following BibTex
 @article{aggarwal2025otb,
   title={OptimalThinkingBench: Evaluating Over and Underthinking in LLMs},
   author={Aggarwal, Pranjal and Kim, Seungone and Lanchantin, Jack and Welleck, Sean and Weston, Jason and Kulikov, Ilia and Saha, Swarnadeep},
-  journal={arXiv preprint arXiv: },
+  journal={arXiv preprint arXiv: 2508.13141},
   year={2025}
 }
