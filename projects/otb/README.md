@@ -27,11 +27,7 @@ conda activate otb
 ```
 transformers==4.55.2
 vllm==0.10.0
-<<<<<<< HEAD
 litellm[proxy]==1.75.3
-=======
-litellm==1.75.3
->>>>>>> main
 numpy==2.2.6
 pandas==2.3.1
 pyjson5==1.6.9
