@@ -27,7 +27,7 @@ conda activate otb
 ```
 transformers==4.55.2
 vllm==0.10.0
-litellm==1.75.3
+litellm[proxy]==1.75.3
 numpy==2.2.6
 pandas==2.3.1
 pyjson5==1.6.9
@@ -60,7 +60,7 @@ UnderthinkingBench will be saved inside `data/underthink_data.pkl`
 
 ### 4. Downloading OptimalThinkingBench
 
-Link to directly download the benchmark is coming soon!
+Data is provided under `data`.
 
 ### 5. Model Evaluation on OptimalThinkingBench
 
@@ -75,6 +75,6 @@ If you use our benchmark in your own work, please cite with the following BibTex
 @article{aggarwal2025otb,
   title={OptimalThinkingBench: Evaluating Over and Underthinking in LLMs},
   author={Aggarwal, Pranjal and Kim, Seungone and Lanchantin, Jack and Welleck, Sean and Weston, Jason and Kulikov, Ilia and Saha, Swarnadeep},
-  journal={arXiv preprint arXiv: 2508.13141},
+  journal={arXiv preprint arXiv:2508.13141},
   year={2025}
 }
