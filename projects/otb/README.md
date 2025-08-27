@@ -60,7 +60,7 @@ UnderthinkingBench will be saved inside `data/underthink_data.pkl`
 
 ### 4. Downloading OptimalThinkingBench
 
-Data is provided [here](https://github.com/facebookresearch/RAM/tree/otb_data/projects/otb/otb_creation/data).
+Data is available on [HuggingFace](https://huggingface.co/datasets/facebook/optimal_thinking_bench) and [here](https://github.com/facebookresearch/RAM/tree/otb_data/projects/otb/otb_creation/data).
 
 ### 5. Model Evaluation on OptimalThinkingBench
 
