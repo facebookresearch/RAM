@@ -7,7 +7,10 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 #### _CoT and RL_
 
-- **OptimalThinkingBench** [[paper]](https://arxiv.org/abs/2508.13141).
+- **StepWiser** [[paper]](https://arxiv.org/abs/2508.19229)
+  _Stepwise Generative Judge trained with RL. SOTA on ProcessBench; gains at when used at train/test time_.
+  
+- **OptimalThinkingBench** [[project]](otb) [[paper]](https://arxiv.org/abs/2508.13141).
   _New benchmark measuring overthinking & underthinking of LLMs_.
 
 - **Reasoning for Factuality** [[paper]](https://www.arxiv.org/abs/2508.05618).
@@ -65,8 +68,14 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 - **ToolVerifier** [[paper]](https://arxiv.org/abs/2402.14158).
   _Generalization to New Tools via Self-Verification._
 
-## Evaluation
+## Evaluation & Reward Models
 
+- **DARLING** [[paper]](https://arxiv.org/abs/2509.02534)
+  _Method to optimize quality+diversity reward to give gains on each over conventional GRPO RL_
+  
+- **Reasoning for Factuality** [[paper]](https://www.arxiv.org/abs/2508.05618).
+  _Shows how to learn CoTs that improve factuality via a new reward function_.
+  
 - **J1** [[paper]](https://arxiv.org/abs/2505.10320).
   _Learns CoTs for LLM-as-a-Judge via GRPO, outperforms EvalPlanner & Distilled R1 models at 8B and 70B scale._
 
@@ -84,14 +93,23 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 ## Synthetic Data
 
-#### _synthetic data quality_
+#### _synthetic data & data quality_
 
 - **CoT-Self-Instruct** [[paper]](https://arxiv.org/abs/2507.23751)
   _Create synthetic data using reasoning followed by filtering for high quality, for large gains._
 
 - **RIP** [[paper]](https://arxiv.org/abs/2501.18578)
   _A method to *curate* high quality data, or *create* high quality synthetic data. Gives large improvements._
+  
+- **Recycling the Web** [[paper]](https://arxiv.org/abs/2506.04689)
+  _A method to create more high quality pretraining data via rewriting low quality documents._
+  
+- **Instruction Back-and-Forth Translation** [[paper]](https://arxiv.org/abs/2408.04614)
+  _Improves Instruction Backtranslation by rewriting the web document._
 
+- **Instruction Backtranslation** [[paper]](https://arxiv.org/abs/2308.06259)
+  _Self-Alignment method by predicting instructions for web documents._
+  
 #### _synthetic data for complex reasoning & tools_
 
 - **Self-Challenging LLM Agents** [[paper]](https://arxiv.org/abs/2506.01716).
@@ -110,6 +128,9 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 ## (Self-)Alignment
 
 #### _(self-)alignment optimization techniques_
+
+- **DARLING** [[paper]](https://arxiv.org/abs/2509.02534)
+  _Method to optimize quality+diversity reward to give gains on each over conventional GRPO RL_
 
 - **Self-Challenging LLM Agents** [[paper]](https://arxiv.org/abs/2506.01716).
   _LLM creates own challenging agentic tool-use tasks, resulting in better agentic performance_.
@@ -175,7 +196,7 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 #### _architectures_
 
-- **Multi-token attention** [[paper]](https://arxiv.org/abs/2504.00927)
+- **Multi-token attention** [[project]](mta)  [[paper]](https://arxiv.org/abs/2504.00927)
   _Attention mechanism that can focus on multiple tokens simultaneously_.
 
 - **Byte Latent Transformer** [[paper]](https://arxiv.org/abs/2412.09871)
