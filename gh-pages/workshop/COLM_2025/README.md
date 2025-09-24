@@ -31,6 +31,25 @@ We will host paper submissions on [open review](https://openreview.net/group?id=
 * **Submission Details:** Submissions should follow the [general guide for COLM conference](https://colmweb.org/cfp.html). Papers can be up to 9 pages (not including references) and have to be anonymized.  All submissions must be in PDF format, please use the [LaTeX style files provided by organizers](https://github.com/COLM-org/Template/archive/refs/tags/2025.zip).
 * **Dual Submission Policy:** We encourage submissions of novel research and permit submissions currently under review at other conferences or venues.
 
+## Schedule
+
+| Start time | End Time | Event           | Title                                                                                                                                                                                      | Speaker                      |
+| :---------: | :--------: | :---------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------: |
+| 9:20 AM    | 9:40 AM    | Opening remarks |                                                                                                                                                                                            | Jason Weston                 |
+| 9:40 AM    | 10:20 AM   | Invited talk 1  | Insights from Memory Architectures for Building Intelligence                                                                                                                               | Sainbayar Sukhbaatar         |
+| 10:20 AM   | 11:00 AM   | Invited talk 2  | New Frontiers in AI Capability via Self-Improvement                                                                                                                                        | Azalia Mirhoseini            |
+| 11:00 AM   | 11:40 AM   | Invited talk 3  | The 1991 Unnormalized Linear Transformer, Closely Related Neural Fast Weight Programmers of the 2020s, and the Future of Neural Networks Learning to Program other Neural Networks.           |                Juergen Schmidhuber              |
+| 11:40 AM   | 12:00 PM   | Panel 1         | Panel discussion: Memory and attention                                                                                                                                                     |                              |
+| 12:00 PM   | 12:20 PM   | Paper talk 1    | Let's Predict Sentence by Sentence                                                                                                                                                         | Hanseok Oh |
+| 12:20 PM   | 12:40 PM   | Paper talk 2    | Style over Substance: Distilled Language Models Reason Via Stylistic Replication                                                                                                           |             TBD                 |
+| 12:40 PM   | 2:00 PM    | Lunch / break   |                                                                                                                                                                                            |                              |
+| 2:00 PM    | 2:20 PM    | Paper talk 3    | MEM1: Learning to Synergize Memory and Reasoning for Efficient Long-Horizon Agents                                                                                                         |             TBD                 |
+| 2:20 PM    | 3:00 PM    | Invited talk 4  | Retrospective on connecting MT with AI 10 years ago...                                                                                                                                     | Kyunghyun Cho                |
+| 3:00 PM    | 3:40 PM    | Invited talk 5  | The Art of Artificial Reasoning for Small Language Models                                                                                                                                  | Yejin Choi                   |
+| 3:40 PM    | 4:00 PM    | Panel 2         | Panel discussion: reasoning                                                                                                                                                                |                              |
+| 4:00 PM    | 4:20 PM    | Paper talk 4    | Learning to Discover Abstractions for LLM Reasoning                                                                                                                                        |                 TBD             |
+| 4:20 PM    | 5:00 PM    | Invited talk 6  | Turning advances in reasoning and capability into improved safety assurances                                                                                                               |         Yoshua Bengio                     |
+| 5:00 PM    | 5:20 PM    | Panel 3         | Panel discussion: Future of LLMs                                                                                                                                                           |                              |
 
 ## Invited speakers
 + Yoshua Bengio, Univ. of Montreal
@@ -39,7 +58,6 @@ We will host paper submissions on [open review](https://openreview.net/group?id=
 + Azalia Mirhoseini, Stanford
 + Juergen Schmidhuber, KAUST
 + Sainbayar Sukhbaatar, Meta
-+ Jason Wei, OpenAI
 
 
 ## Organizing Committee
