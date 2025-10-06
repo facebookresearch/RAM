@@ -1,0 +1,9 @@
+transformers==4.55.2
+vllm==0.10.0
+litellm[proxy]==1.75.3
+numpy==2.2.6
+pandas==2.3.1
+pyjson5==1.6.9
+reasoning_gym==0.1.23
+Requests==2.32.4
+math_verify

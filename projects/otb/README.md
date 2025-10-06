@@ -25,46 +25,38 @@ conda activate otb
 ### 2. Install dependencies
 
 ```
-transformers==4.55.2
-vllm==0.10.0
-litellm[proxy]==1.75.3
-numpy==2.2.6
-pandas==2.3.1
-pyjson5==1.6.9
-reasoning_gym==0.1.23
-Requests==2.32.4
+pip install -e .
 ```
 
-### 3. Creating OptimalThinkingBench
+### 3. Quickstart
 
-1. Download the Llama-4-Maverick model from [here](https://huggingface.co/meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8).
-
-2. Create OverthinkingBench as follows:
+If you want to run a single command to prepare data, generate outputs and evaluate, you can use the following command:
 
 ```
-python create_overthink.py --m path_to_llama_maverick_model
-python filter_overthink.py
-
+otbench run --model <model_name> --run_locally
 ```
 
-OverthinkingBench will be saved inside `data/overthink_bench_by_maverick.json`
+### 4. Step by Step Evaluation on OptimalThinkingBench (Optional)
 
-3. Create UnderthinkingBench as follows:
-
-```
-python create_underthink.py
+1. Prepare dataset:
 
 ```
+otbench prepare
+```
 
-UnderthinkingBench will be saved inside `data/underthink_data.pkl`
+This downloads data from HuggingFace and saves it to `data/otb_full`.
 
-### 4. Downloading OptimalThinkingBench
+2. Generate model outputs:
 
-Data is provided [here](https://github.com/facebookresearch/RAM/tree/otb_data/projects/otb/otb_creation/data).
+```
+otbench generate --model <model_name> --dataset data/otb_full --output final_outputs/otbench/{{model}}.jsonl --multiprocessing 1 --temperature 0.6 --num_gens 8 --run_locally
+```
 
-### 5. Model Evaluation on OptimalThinkingBench
+3. Evaluate:
 
-Coming soon!
+```
+otbench eval final_outputs/otbench/<model_name>.jsonl --model <model_name>
+```
 
 ## Contributors
 Pranjal Aggarwal, Seungone Kim, Jack Lanchantin, Sean Welleck, Jason Weston, Ilia Kulikov, Swarnadeep Saha

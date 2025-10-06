@@ -1,0 +1,5 @@
+data*
+*.egg-info
+nohup.out
+final_outputs
+__pycache__

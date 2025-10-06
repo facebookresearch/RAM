@@ -103,7 +103,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "-m",
         "--model_path",
-        required=True,
+        default="meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+        required=False,
         help="Path to the Llama-4-Maverick-17B-128E-Instruct-FP8 model.",
     )
 
