@@ -1,5 +1,6 @@
-from setuptools import setup, find_packages
 from pathlib import Path
+
+from setuptools import find_packages, setup
 
 
 def read_requirements(requirements_path: Path):
@@ -8,7 +9,7 @@ def read_requirements(requirements_path: Path):
     lines = []
     for line in requirements_path.read_text().splitlines():
         line = line.strip()
-        if not line or line.startswith('#'):
+        if not line or line.startswith("#"):
             continue
         lines.append(line)
     return lines
@@ -17,7 +18,9 @@ def read_requirements(requirements_path: Path):
 setup(
     name="otbench",
     version="0.1.0",
-    packages=find_packages(include=["otbench", "otbench.*", "otb_creation", "otb_creation.*"]),
+    packages=find_packages(
+        include=["otbench", "otbench.*", "otb_creation", "otb_creation.*"]
+    ),
     include_package_data=True,
     install_requires=read_requirements(Path(__file__).parent / "requirements.txt"),
     entry_points={
@@ -26,5 +29,3 @@ setup(
         ]
     },
 )
-
-
