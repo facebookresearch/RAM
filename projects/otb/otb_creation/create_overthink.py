@@ -17,6 +17,7 @@ import numpy as np
 import pyjson5
 import requests
 from litellm import completion
+
 from prompts import ALL_DOMAINS, OVERTHINKING_PROMPT, QUESTION_FORMATS
 
 os.environ["OPENAI_API_KEY"] = ""
@@ -103,7 +104,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "-m",
         "--model_path",
-        required=True,
+        default="meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+        required=False,
         help="Path to the Llama-4-Maverick-17B-128E-Instruct-FP8 model.",
     )
 
