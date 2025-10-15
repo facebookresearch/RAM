@@ -15,7 +15,6 @@ import pandas as pd
 import requests
 from datasets import load_from_disk
 from tqdm import tqdm
-
 from utils import call_llm
 
 parser = argparse.ArgumentParser()
