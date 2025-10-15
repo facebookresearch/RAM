@@ -1,3 +1,11 @@
+"""
+Copyright (c) Meta Platforms, Inc. and affiliates.
+All rights reserved.
+
+This source code is licensed under the license found in the
+LICENSE file in the root directory of this source tree.
+"""
+
 import argparse
 import os
 import sys
@@ -31,11 +39,15 @@ def cmd_generate(args: argparse.Namespace) -> int:
 
 
 def cmd_eval(args: argparse.Namespace) -> int:
-    return _run(f"python {os.path.join(ROOT, 'eval.py')} {args.input} --model {args.model}")
+    return _run(
+        f"python {os.path.join(ROOT, 'eval.py')} {args.input} --model {args.model}"
+    )
 
 
 def cmd_create_overthink(args: argparse.Namespace) -> int:
-    return _run(f"python {os.path.join(ROOT, 'otb_creation', 'create_overthink.py')} --model_path {args.model}")
+    return _run(
+        f"python {os.path.join(ROOT, 'otb_creation', 'create_overthink.py')} --model_path {args.model}"
+    )
 
 
 def cmd_filter_overthink(args: argparse.Namespace) -> int:
@@ -70,7 +82,11 @@ def build_parser() -> argparse.ArgumentParser:
     p_eval.set_defaults(func=cmd_eval)
 
     p_co = sub.add_parser("create_overthink")
-    p_co.add_argument("--model", dest="model", default="meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8")
+    p_co.add_argument(
+        "--model",
+        dest="model",
+        default="meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+    )
     p_co.set_defaults(func=cmd_create_overthink)
 
     p_fo = sub.add_parser("filter_overthink")
@@ -87,7 +103,7 @@ def build_parser() -> argparse.ArgumentParser:
         if ret != 0:
             return ret
         output = args.output if args.output else "final_outputs/otbench/{{model}}.jsonl"
-        output = output.replace("{{model}}", args.model.replace('/', '-'))
+        output = output.replace("{{model}}", args.model.replace("/", "-"))
         return cmd_eval(argparse.Namespace(input=output, model=args.model))
 
     p_runall = sub.add_parser("run")
@@ -116,5 +132,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-

@@ -15,7 +15,6 @@ import pandas as pd
 import requests
 from datasets import load_from_disk
 from tqdm import tqdm
-
 from utils import call_llm
 
 parser = argparse.ArgumentParser()
@@ -85,15 +84,19 @@ def process_row(row, model_name):
     response = call_llm(
         model_name,
         prompt,
-        max_tokens=8192
-        if model_name in ["gpt-4o", "gpt-4.1"]
-        else 2048
-        if model_name
-        in [
-            "/datasets/pretrained-llms/Qwen2.5-Math-7B-Instruct",
-            "/datasets/pretrained-llms/Qwen2.5-Math-72B-Instruct",
-        ]
-        else 16384,
+        max_tokens=(
+            8192
+            if model_name in ["gpt-4o", "gpt-4.1"]
+            else (
+                2048
+                if model_name
+                in [
+                    "/datasets/pretrained-llms/Qwen2.5-Math-7B-Instruct",
+                    "/datasets/pretrained-llms/Qwen2.5-Math-72B-Instruct",
+                ]
+                else 16384
+            )
+        ),
         n=args.num_gens,
         temperature=args.temperature,
     )
