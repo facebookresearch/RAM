@@ -17,7 +17,6 @@ import numpy as np
 import pyjson5
 import requests
 from litellm import completion
-
 from prompts import ALL_DOMAINS, OVERTHINKING_PROMPT, QUESTION_FORMATS
 
 os.environ["OPENAI_API_KEY"] = ""
