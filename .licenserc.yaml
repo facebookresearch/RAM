@@ -1,17 +1,15 @@
 header:
-  license:
-    content: |
-      Copyright (c) Meta Platforms, Inc. and affiliates.
-      
-      This source code is licensed under the MIT license found in the
-      LICENSE file in the root directory of this source tree.
-  alternatives:
-    - content: |
-        Copyright (c) Meta Platforms, Inc. and affiliates.
-        All rights reserved.
-        
-        This source code is licensed under the license found in the
-        LICENSE file in the root directory of this source tree.
+  license: |
+    Copyright (c) Meta Platforms, Inc. and affiliates.
+    
+    This source code is licensed under the MIT license found in the
+    LICENSE file in the root directory of this source tree.
+  alternative: |
+    Copyright (c) Meta Platforms, Inc. and affiliates.
+    All rights reserved.
+    
+    This source code is licensed under the license found in the
+    LICENSE file in the root directory of this source tree.
   paths:
     - "**/*.py"
     - "**/*.sh"
