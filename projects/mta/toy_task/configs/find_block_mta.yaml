@@ -1,0 +1,89 @@
+# results in the paper reported as average over three seeds (42, 43, 44)
+seed: 43
+
+name: mta_toy_5_2_all_seed_${seed}_1gpu_pad319v2
+dump_dir: /checkpoint/ram/olggol/checkpoints/${name} # replace with your path
+steps: 100000
+probe_freq: 1000
+
+optim:
+  lr: 0.0001
+  weight_decay: 0
+  warmup: 1000
+  scheduler: constant
+  beta2: 0.98
+  lr_min_ratio: 0.1
+
+distributed:
+  fsdp_type: full_shard
+  compile: true
+  model_dtype: bf16
+  matmul_allow_tf32: false
+  selective_activation_checkpointing: false
+  tp_size: 1
+
+model:
+  dim: 256
+  n_layers: 4
+  n_heads: 2
+  rope_theta: 100_000
+  ffn_dim_multiplier: 1.0
+  weight_tying: true
+  dropout: 0.1
+  mta:
+    use_mta: true
+    # before sm
+    query_kernel_size: 2
+    key_kernel_size: 9
+    # common
+    init_method: identity
+    pad_key: "both"
+
+data:
+    root_dir: /checkpoint/ram/olggol/data/mta_toy_task_pad # replace with your path
+    sources:
+      train_5_319pad_2_1000000: 1
+    batch_size: 64
+    prefetch_size: 4
+    seq_len: 321 # must be seq length used in data generation + 2
+    n_views: 2
+    load_async: false
+    tokenizer:
+        name: char
+    src_tgt_format: true
+    no_loss_prompt: true
+
+profiling:
+  run: false
+  mem_warmup: 0
+  mem_steps: 4
+  profile_warmup: 100
+  profile_steps: 4
+
+checkpoint:
+  dump:
+    every: 10000
+    keep: 1
+  eval:
+    every: 1000
+    keep: 1
+
+logging:
+    freq: 100
+    wandb:
+        project: lingua
+        entity: new_attention
+        resume: allow
+        id: ${name}
+
+# sync eval
+eval:
+  ppl_files: 
+    # replace with your path
+    - /checkpoint/ram/olggol/data/mta_toy_task_pad/test_5_319pad_2_1000000/data.chunk.0000.jsonl
+  ppl_seq_len: 320 # seq len - 1
+  ppl_batch_size: 64
+  ppl_n_batches: 100
+  generator:
+    max_tokens: 64
+    dtype: bf16
