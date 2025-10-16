@@ -95,25 +95,29 @@ class MTATransformerArgs:
     )
     mta_layers: Optional[str] = None  # optional parameter to specify layers with MTA
     # specify if used in combination with pre-sm
-    after_sm_query_kernel_size: Optional[
-        int
-    ] = None  # convolutional kernel size in query dimension
-    after_sm_key_kernel_size: Optional[
-        int
-    ] = None  # convolutional kernel size in key dimension
+    after_sm_query_kernel_size: Optional[int] = (
+        None  # convolutional kernel size in query dimension
+    )
+    after_sm_key_kernel_size: Optional[int] = (
+        None  # convolutional kernel size in key dimension
+    )
     init_method: str = (
         "identity"  # how to initialize kernel weights; ["const", "uniform", "normal"]
     )
-    head_kernel_size: Optional[
-        int
-    ] = None  # kernel size in head dimension to be applied *after* softmax
+    head_kernel_size: Optional[int] = (
+        None  # kernel size in head dimension to be applied *after* softmax
+    )
     group_norm: bool = False
     layer_norm_rescale: bool = False  # https://arxiv.org/pdf/2502.05795 in group norm
     curse_norm: bool = (
         False  # https://arxiv.org/pdf/2502.05795 in attn and feed forward
     )
-    pre_sm_linear_head: bool = False  # pre-softmax linear head; equivalent to head conv hernel with size n_heads, but faster
-    post_sm_linear_head: bool = False  # post-softmax linear head; equivalent to head conv hernel with size n_heads, but faster
+    pre_sm_linear_head: bool = (
+        False  # pre-softmax linear head; equivalent to head conv hernel with size n_heads, but faster
+    )
+    post_sm_linear_head: bool = (
+        False  # post-softmax linear head; equivalent to head conv hernel with size n_heads, but faster
+    )
     add_gating: bool = False  # add gating mechanism to group norm
     gate_1d: bool = True
 

@@ -35,16 +35,13 @@ class Batch:
 
 class DataIterator:
     @abstractmethod
-    def __iter__(self) -> Iterator[Batch]:
-        ...
+    def __iter__(self) -> Iterator[Batch]: ...
 
     @abstractmethod
-    def get_position(self) -> Optional[List[int]]:
-        ...
+    def get_position(self) -> Optional[List[int]]: ...
 
     @abstractmethod
-    def set_position(self, position: Optional[List[int]]):
-        ...
+    def set_position(self, position: Optional[List[int]]): ...
 
     def close(self):
         pass
