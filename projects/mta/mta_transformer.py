@@ -379,19 +379,6 @@ class Attention(nn.Module):
                 # post-sm linear head
                 scores = self.wposm(scores.transpose(1, -1)).transpose(1, -1)
 
-            if (
-                self.head_kernel_size is not None
-                or self.mta_kernel_after_sm is not None
-                or self.post_sm_linear_head
-            ):
-                # scores are already probability
-                pass
-            else:
-                scores = scores + mask
-                scores = self.normalize_attention(att_type="soft")(scores).type_as(
-                    xq
-                )  # B H S-Q S-K
-
             scores = F.dropout(scores, p=self.dropout, training=self.training)
 
             if self.cache_attention_maps:
