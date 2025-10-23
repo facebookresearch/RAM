@@ -7,6 +7,12 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 #### _CoT and RL_
 
+- **AggLM** [[paper]](https://arxiv.org/abs/2509.06870) [[tweets]](https://x.com/jaseweston/status/1965233976949543194)
+  _Uses RL to train an LLM solution aggregator, with strong results_.
+
+- **RESTRAIN** [[paper]](https://arxiv.org/abs/2510.02172) [[tweets]](https://x.com/jaseweston/status/1974000962219225271)
+  _Self-training RL method that improves over other label-free / test-time training methods_.
+
 - **StepWiser** [[paper]](https://arxiv.org/abs/2508.19229)
   _Stepwise Generative Judge trained with RL. SOTA on ProcessBench; gains at when used at train/test time_.
   
@@ -68,7 +74,13 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 - **ToolVerifier** [[paper]](https://arxiv.org/abs/2402.14158).
   _Generalization to New Tools via Self-Verification._
 
-## Evaluation & Reward Models
+## Reward Models & Evaluation
+
+- **HERO** [[paper]](https://arxiv.org/abs/2510.07242) [[tweets]](https://x.com/jaseweston/status/1977756142571864539)
+  _Combines sparse verifiable and dense RMs into a hybrid reward to give better results_.
+
+- **StepWiser** [[paper]](https://arxiv.org/abs/2508.19229)
+  _Stepwise Generative Judge trained with RL. SOTA on ProcessBench; gains at when used at train/test time_.
 
 - **DARLING** [[paper]](https://arxiv.org/abs/2509.02534)
   _Method to optimize quality+diversity reward to give gains on each over conventional GRPO RL_
@@ -90,6 +102,22 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 - **Self-Rewarding LLMs** [[paper]](https://arxiv.org/abs/2401.10020)
   _Shows LLMs can judge themselves to self-improve without human feedback._
+
+  
+## Agents
+
+- **Early Experience** [[paper]](https://arxiv.org/abs/2510.08558) [[tweets]](https://x.com/jaseweston/status/1979179944258265358).
+  _SFT is sparse; RL on long-horizons is hard. EE provides new mid-training signals that help_
+  
+- **Self-Challenging LLM Agents** [[paper]](https://arxiv.org/abs/2506.01716).
+  _LLM creates own challenging agentic tool-use tasks, resulting in better agentic pe
+
+- **SWEET-RL** [[project]](https://github.com/facebookresearch/sweet_rl).
+  _Training Multi-Turn LLM Agents on Collaborative Reasoning Tasks._
+
+- **ToolVerifier** [[paper]](https://arxiv.org/abs/2402.14158).
+  _Generalization to New Tools via Self-Verification._
+
 
 ## Synthetic Data
 
@@ -128,6 +156,12 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 ## (Self-)Alignment
 
 #### _(self-)alignment optimization techniques_
+
+- **WaltzRL** [[paper]](https://arxiv.org/abs/2510.08240) [[tweets]](https://x.com/jaseweston/status/1978185306999341256)
+  _Method to improve safety alignment through multi-agent RL_
+
+- **RLHI** [[paper]](https://x.com/jaseweston/status/1972851921255051489) [[tweets]](https://x.com/jaseweston/status/1972851921255051489)
+  _Method to RL train from organic Human Interaction (aka RLHI) which helps_.
 
 - **DARLING** [[paper]](https://arxiv.org/abs/2509.02534)
   _Method to optimize quality+diversity reward to give gains on each over conventional GRPO RL_
@@ -195,6 +229,9 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
   _LLMs generate internal thoughts as they read text, enabling reasoning & memorization._
 
 #### _architectures_
+
+- **Stochastic activations** [[paper]](https://arxiv.org/abs/2509.22358)  [[tweets]](https://x.com/jaseweston/status/1972649914233389062)
+  _Select between several non-linear functions in the feed-forward layers of an LLM._
 
 - **Multi-token attention** [[project]](mta)  [[paper]](https://arxiv.org/abs/2504.00927)
   _Attention mechanism that can focus on multiple tokens simultaneously_.
