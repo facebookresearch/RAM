@@ -106,6 +106,9 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
   
 ## Agents
 
+- **Experience Synthesis** [[paper]](https://arxiv.org/abs/2511.03773) [[tweets]](https://x.com/jaseweston/status/1986613046047846569).
+  _Scaling training environments for RL by simulating them with reasoning LLMs_
+
 - **Early Experience** [[paper]](https://arxiv.org/abs/2510.08558) [[tweets]](https://x.com/jaseweston/status/1979179944258265358).
   _SFT is sparse; RL on long-horizons is hard. EE provides new mid-training signals that help_
   
@@ -140,6 +143,9 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
   
 #### _synthetic data for complex reasoning & tools_
 
+- **SPICE** [[paper]](https://arxiv.org/abs/2510.24684) [[tweets]](https://x.com/jaseweston/status/1983343787465150814).
+  _Challenger creates tasks grounded on documents, Reasoner solves them in self-play, both trained by RL_.
+  
 - **Self-Challenging LLM Agents** [[paper]](https://arxiv.org/abs/2506.01716).
   _LLM creates own challenging agentic tool-use tasks, resulting in better agentic performance_.
   
@@ -156,6 +162,9 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 ## (Self-)Alignment
 
 #### _(self-)alignment optimization techniques_
+
+- **SPICE** [[paper]](https://arxiv.org/abs/2510.24684) [[tweets]](https://x.com/jaseweston/status/1983343787465150814).
+  _Challenger creates tasks grounded on documents, Reasoner solves them in self-play, both trained by RL_.
 
 - **WaltzRL** [[paper]](https://arxiv.org/abs/2510.08240) [[tweets]](https://x.com/jaseweston/status/1978185306999341256)
   _Method to improve safety alignment through multi-agent RL_
