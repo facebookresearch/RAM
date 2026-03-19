@@ -57,6 +57,8 @@ To train for this harder setting, we also introduce the **Principia Collection**
 - Mathematics Subject Classification (MSC 2020)
 - Physics Subject Headings (PhySH)
 
+These topic headings are sampled (e.g. ``Techniques for Polymers & Soft Matter » Resonance techniques » Nuclear magnetic resonance » Magnetic resonance imaging”) and are used to make challenging questions with sufficient diversity.
+
 The target outputs span six answer types:
 
 - equations
