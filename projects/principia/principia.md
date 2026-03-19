@@ -68,21 +68,63 @@ The target outputs span six answer types:
 - matrices
 - piecewise functions
 
+Here are some illustrative examples:
+
 ![Principia Collection examples](images/principia-collection.png)
 
 *Figure: example instances from the Principia Collection, showing the level of detail and the mathematical-object answer types the dataset targets.*
 
-## Why Verification Is Hard
+### How we create the synthetic data
 
-A central issue is that mathematical objects can be equivalent while looking different syntactically. That breaks many rule-based verification pipelines.
+To create high quality data, there are a number of steps:
 
-The paper therefore introduces **Principia VerifyBench**, a meta-evaluation set for answer equivalence, and uses strong model-based verifiers to judge whether two answers denote the same object.
+**Step 1: Topic mining, as just discussed above.**
+</br>
 
-The labeling pipeline relies on pairwise equivalence judgments and majority voting rather than exact string matching.
+**Step 2: Problem Statement Generation.**
+This process consists of three sub-stages:
+</br>
+- *2.1:* First, for each subject entity, we sketch strategy descriptions that outline the core capabilities required
+to solve a problem. For each entity, we generate 40 descriptions.
+- *2.2:* Second, we iterate over each subject entity & capability pair to generate problem statements. In this
+step, one of the six mathematical object types is randomly selected as the answer type. 
+- *2.3:* Finally, we include an additional refinement step to revise problem statements that resemble simple
+knowledge-probing questions, ensuring they require more genuine reasoning during the solving process.
+
+</br>
+
+**Step 3: Filtering out Invalid Problem Statements.**  The filtering is based on three main criteria:
+(1) the problem statement must consist of only one question and be self-contained, (2) the problem should
+explicitly require the intended answer type, and (3) extensive hints or the answer itself should not be included
+in the problem statement. We prompt GPT-OSS-120B to evaluate all three conditions and retain only those
+instances that are judged as “Yes” for every criterion.
+
+**Step 4: Response Generation & Majority-Voting for mathematical objects.** To obtain labels for the generated
+problem statements, we prompt GPT-OSS-120B eight times and apply self-consistency, taking the majority vote as the label. 
+See the following figure:
 
 ![Majority-vote verification](images/majority-vote.png)
 
 *Figure: illustration of the majority-vote procedure used to determine labels when multiple mathematically equivalent answers may be written in different forms.*
+
+Overall, we find this data creation procedure effective in increasing the conceptual depth of the generated problems and ensuring correctness.
+
+<p align="center">
+<img src="images/create_example.png" alt="How to create an example" width="75%"></center>
+</p>
+
+*Figure: Example of a subject entity (acquired from PhySH), a strategy description (from step 1), an initial problem
+statement and its corresponding CoT, and a revised problem statement and its corresponding CoT (from step 2).*
+
+<!--
+## Why Verification Is Hard
+
+A central issue is that mathematical objects can be equivalent while looking different syntactically. That breaks many rule-based verification pipelines.
+
+We therefore also introduce **Principia VerifyBench**, a meta-evaluation set for answer equivalence, and uses strong model-based verifiers to judge whether two answers denote the same object.
+
+The labeling pipeline relies on pairwise equivalence judgments and majority voting rather than exact string matching.
+-->
 
 
 
@@ -112,16 +154,23 @@ demonstrating cross-format generalization of reasoning abilities.
 
 ## Main Results
 
-The high-level findings from this section are:
+We conduct detailed experiments comparing various models on PrincipiaBench, including post-training various backbones with our training set, Principia Collection.
+The main findings of our experiments are:
+- We find that strong LMs such as Qwen3-235B and o3 struggle on PrincipiaBench, achieving only 55.27\% and 62.57\% accuracy, respectively.
+- Next, we use the *Principia Collection*, as an RL post-training dataset tailored to induce the ability to derive mathematical objects.
+* RL training on the *Principia Collection* yields +7.52–18.23\% improvements on *PrincipiaBench* across four different LMs.
+* Moreover, LMs trained on *Principia Collection* improve by +7.08–20.10\% on AIME-2025 (numerical) and +3.78–25.47\% on GPQA-Diamond (MCQA), 
+demonstrating cross-format generalization of reasoning abilities.
 
-- Training on Principia Collection improves PrincipiaBench performance by 7.22 to 18.35 points on average across the studied base models.
-- The same training also improves numerical and MCQA benchmarks, which suggests the gain is not narrow overfitting to one answer format.
-- Strong model-based verifiers are necessary. Weak or rule-based verifiers degrade training badly when answers become structurally complex.
+![Principia Collection examples](images/main_table.png)
 
-One of the most important conclusions is that **training on mathematical-object outputs transfers outward**, while MCQA-heavy supervision does not transfer nearly as well in the other direction.
+- Another important conclusion is that **training on mathematical-object outputs transfers outward**, while MCQA-heavy supervision does not transfer nearly as well in the other direction.
 
 
 
+![Principia Collection examples](images/rl_plot.png)
+
+![Principia Collection examples](images/verifiers.png)
 
 ## Takeaway
 
