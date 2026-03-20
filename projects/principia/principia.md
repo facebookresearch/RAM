@@ -114,39 +114,6 @@ Overall, we find this data creation procedure effective in increasing the concep
 *Figure: Example of a subject entity (acquired from PhySH), a strategy description (from step 1), an initial problem
 statement and its corresponding CoT, and a revised problem statement and its corresponding CoT (from step 2).*
 
-<!--
-## Why Verification Is Hard
-
-A central issue is that mathematical objects can be equivalent while looking different syntactically. That breaks many rule-based verification pipelines.
-
-We therefore also introduce **Principia VerifyBench**, a meta-evaluation set for answer equivalence, and uses strong model-based verifiers to judge whether two answers denote the same object.
-
-The labeling pipeline relies on pairwise equivalence judgments and majority voting rather than exact string matching.
--->
-
-
-
-<!--
-
-**Problem:** The ability to precisely derive mathematical objects is a core requirement for downstream STEM applications, including mathematics, physics, and chemistry, 
-where reasoning must culminate in formally structured expressions. 
-Yet, current LM evaluations of mathematical and scientific reasoning rely heavily on simplified answer formats such as numerical values or multiple choice options due to
-the convenience of automated assessment. 
-Likewise, existing RL post-training datasets overrepresent easy-to-verify formats, largely excluding complex mathematical-object answers.
-
-**Contribution:** To address these, we introduce the **PrincipiaBench**, a benchmark designed to evaluate an LM's ability to derive mathematical objects,
-and **Principia Collection**, a synthetic post-training dataset which improves LLM's on both PrincipiaBench and other reasoning tasks.  Finally, we release **Principia VerifyBench**,
-a meta-evaluation benchmark that enables assessment of rule-based and model-based verifiers used in benchmarking and reward modeling 
-for mathematical-object outputs. Together, the Principia suite provides a unified framework for evaluating and improving LM reasoning.
-
-**Results:** We find that strong LMs such as Qwen3-235B and o3 struggle, achieving only 55.27\% and 62.57\% accuracy, respectively.
-Next, we use the *Principia Collection*, an RL post-training dataset tailored to induce the ability to derive mathematical objects.
-RL training on the *Principia Collection* yields +7.52–18.23\% improvements on *PrincipiaBench* across four LMs. Moreover,
-LMs trained on *Principia Collection* improve by +7.08–20.10\% on AIME-2025 (numerical) and +3.78–25.47\% on GPQA-Diamond (MCQA), 
-demonstrating cross-format generalization of reasoning abilities.
--->
-
-
 
 ## Main Experimental Results
 
@@ -159,10 +126,6 @@ The main findings of our experiments are:
 demonstrating cross-format generalization of reasoning abilities.
 
 ![Principia Collection examples](images/main_table.png)
-
-<!--
-- Another important conclusion is that **training on mathematical-object outputs transfers outward**, while MCQA-heavy supervision does not transfer nearly as well in the other direction.
--->
 
 ### Comparison to other training datasets
 
@@ -197,10 +160,7 @@ Likewise, existing RL post-training datasets overrepresent easy-to-verify format
 
 To address these, we introduce the **PrincipiaBench**, a benchmark designed to evaluate an LM's ability to derive mathematical objects,
 and **Principia Collection**, a synthetic post-training dataset which improves LLM's on both PrincipiaBench and other reasoning tasks. 
-<!-- Finally, we release **Principia VerifyBench**,
-a meta-evaluation benchmark that enables assessment of rule-based and model-based verifiers used in benchmarking and reward modeling 
-for mathematical-object outputs. 
--->
+
 Together, the Principia suite provides a unified framework for evaluating and improving LM reasoning.
 
 
@@ -208,7 +168,7 @@ Together, the Principia suite provides a unified framework for evaluating and im
 Seungone Kim, Pranjal Aggarwal, Bo Liu, Swarnadeep Saha, Ping Yu, Anaelia Ovalle, Jack Lanchantin, Jing Xu, Weizhe Yuan, Wenting Zhao, Adina Williams, Marjan Ghazvininejad, Graham Neubig, Sean Welleck, Jason Weston, Ilia Kulikov.
 
 ## More details
-More details can be found in the [full technical report](link).
+More details can be found in the [full technical report](https://arxiv.org/abs/2603.18886).
 
 ## Citation
 If you use our training data or benchmark in your own work, please also cite with the following BibTex entry:
@@ -216,6 +176,6 @@ If you use our training data or benchmark in your own work, please also cite wit
 @article{principia2026,
   title={Reasoning over mathematical objects: on-policy reward modeling and test time aggregation},
   author={Pranjal Aggarwal, Marjan Ghazvininejad, Seungone Kim, Ilia Kulikov, Jack Lanchantin, Xian Li, Tianjian Li, Bo Liu, Graham Neubig, Anaelia Ovalle, Swarnadeep Saha, Sainbayar Sukhbaatar, Sean Welleck, Jason Weston, Chenxi Whitehouse, Adina Williams, Jing Xu, Ping Yu, Weizhe Yuan, Jingyu Zhang, Wenting Zhao},
-  journal={arXiv preprint arXiv:X.X},
+  journal={arXiv preprint arXiv:2603.18886},
   year={2026}
 }
