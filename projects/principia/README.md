@@ -1,3 +1,5 @@
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
 # Principia: Training LLMs to Reason over Mathematical Objects
 
 
@@ -11,9 +13,6 @@ Benchmark: [PrincipiaBench on HuggingFace](https://huggingface.co/datasets/faceb
 
 Training data: [Principia Collection on HuggingFace](https://huggingface.co/datasets/facebook/principia-collection)
 
-</br>
-
-
 ![Principia main results](images/teaser.png)
 
 *Figure: RL training on the Principia Collection improves performance on PrincipiaBench and transfers to numerical and MCQ benchmarks.*
@@ -25,8 +24,7 @@ A large fraction of current reasoning evaluation still rewards models for produc
 - a numerical answer
 - a multiple-choice option
 
-Those formats are convenient to grade, but they hide important weakness: a model does not learn how to manipulate complex objects successfully, e.g. it can learn to solve a multiple-choice question (MCQ) by reasoning backward from the options rather than deriving the answer from first principles. 
- .
+Those formats are convenient to grade, but they hide important weakness: a model does not learn how to manipulate complex objects successfully, e.g. it can learn to solve a multiple-choice question (MCQ) by reasoning backward from the options rather than deriving the answer from first principles.
 
 An example mathematical-object answer we work with looks like:
 
@@ -79,11 +77,9 @@ Here are some illustrative examples:
 To create high quality data, there are a number of steps:
 
 **Step 1: Topic mining, as just discussed above.**
-</br>
 
 **Step 2: Problem Statement Generation.**
 This process consists of three sub-stages:
-</br>
 - *2.1:* First, for each subject entity, we sketch strategy descriptions that outline the core capabilities required
 to solve a problem. For each entity, we generate 40 descriptions.
 - *2.2:* Second, we iterate over each subject entity & capability pair to generate problem statements. In this
@@ -108,7 +104,7 @@ See the following figure:
 Overall, we find this data creation procedure effective in increasing the conceptual depth of the generated problems and ensuring correctness.
 
 <p align="center">
-<img src="images/create_example.png" alt="How to create an example" width="80%"></center>
+<img src="images/create_example.png" alt="How to create an example" width="80%">
 </p>
 
 *Figure: Example of a subject entity (acquired from PhySH), a strategy description (from step 1), an initial problem
@@ -119,10 +115,10 @@ statement and its corresponding CoT, and a revised problem statement and its cor
 
 We conduct detailed experiments comparing various models on *PrincipiaBench*, including post-training various LM backbones with our training set, *Principia Collection*.
 The main findings of our experiments are:
-- We find that strong LMs such as Qwen3-235B and o3 struggle on *PrincipiaBench*, achieving only 55.27\% and 62.57\% accuracy, respectively.
+- We find that strong LMs such as Qwen3-235B and o3 struggle on *PrincipiaBench*, achieving only 55.27% and 62.57% accuracy, respectively.
 - Next, we use the *Principia Collection*, as an RL post-training dataset tailored to induce the ability to derive mathematical objects.
-* RL training on the *Principia Collection* yields +7.52–18.23\% improvements on *PrincipiaBench* across four different LMs.
-* Moreover, LMs trained on *Principia Collection* improve by +7.08–20.10\% on AIME-2025 (numerical) and +3.78–25.47\% on GPQA-Diamond (MCQA), 
+- RL training on the *Principia Collection* yields +7.52–18.23% improvements on *PrincipiaBench* across four different LMs.
+- Moreover, LMs trained on *Principia Collection* improve by +7.08–20.10% on AIME-2025 (numerical) and +3.78–25.47% on GPQA-Diamond (MCQA),
 demonstrating cross-format generalization of reasoning abilities.
 
 ![Principia Collection examples](images/main_table.png)
@@ -133,7 +129,7 @@ We find that training on *Principia Collection* gives superior performance on re
 datasets, as measured by *PrincipiaBench*.
 
 <p align="center">
-<img src="images/rl-plot.png" alt="RL experiments" width="75%"></center>
+<img src="images/rl-plot.png" alt="RL experiments" width="75%">
 </p>
 
 *Figure: Training directly on complex mathematical objects yields substantially better transfer than training on datasets requiring
@@ -179,3 +175,4 @@ If you use our training data or benchmark in your own work, please also cite wit
   journal={arXiv preprint arXiv:2603.18886},
   year={2026}
 }
+```

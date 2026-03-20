@@ -2,6 +2,7 @@ name: Deploy GitHub Pages
 run-name: Deploy gh-pages by ${{ github.actor }}
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
