@@ -205,7 +205,7 @@ Together, the Principia suite provides a unified framework for evaluating and im
 
 
 ## Contributors
-Pranjal Aggarwal, Marjan Ghazvininejad, Seungone Kim, Ilia Kulikov, Jack Lanchantin, Xian Li, Tianjian Li, Bo Liu, Graham Neubig, Anaelia Ovalle, Swarnadeep Saha, Sainbayar Sukhbaatar, Sean Welleck, Jason Weston, Chenxi Whitehouse, Adina Williams, Jing Xu, Ping Yu, Weizhe Yuan, Jingyu Zhang, Wenting Zhao
+Seungone Kim, Pranjal Aggarwal, Bo Liu, Swarnadeep Saha, Ping Yu, Anaelia Ovalle, Jack Lanchantin, Jing Xu, Weizhe Yuan, Wenting Zhao, Adina Williams, Marjan Ghazvininejad, Graham Neubig, Sean Welleck, Jason Weston, Ilia Kulikov.
 
 ## More details
 More details can be found in the [full technical report](link).
@@ -213,9 +213,9 @@ More details can be found in the [full technical report](link).
 ## Citation
 If you use our training data or benchmark in your own work, please also cite with the following BibTex entry:
 ```
-@article{aggarwal2025otb,
+@article{principia2026,
   title={Reasoning over mathematical objects: on-policy reward modeling and test time aggregation},
-  author={RAM Team},
-  journal={arXiv preprint arXiv:2508.13141},
+  author={Pranjal Aggarwal, Marjan Ghazvininejad, Seungone Kim, Ilia Kulikov, Jack Lanchantin, Xian Li, Tianjian Li, Bo Liu, Graham Neubig, Anaelia Ovalle, Swarnadeep Saha, Sainbayar Sukhbaatar, Sean Welleck, Jason Weston, Chenxi Whitehouse, Adina Williams, Jing Xu, Ping Yu, Weizhe Yuan, Jingyu Zhang, Wenting Zhao},
+  journal={arXiv preprint arXiv:X.X},
   year={2026}
 }
