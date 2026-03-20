@@ -1,0 +1,37 @@
+name: Deploy GitHub Pages
+run-name: Deploy gh-pages by ${{ github.actor }}
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "gh-pages/**"
+      - "projects/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Resolve symlinks
+        run: |
+          # Process directory symlinks first (replace with copies of the actual directories)
+          find ./gh-pages -type l -xtype d | while read link; do
+            target=$(readlink -f "$link")
+            rm "$link"
+            cp -r "$target" "$link"
+          done
+          # Then resolve file symlinks
+          find ./gh-pages -type l -xtype f -exec sh -c 'cp --remove-destination "$(readlink -f "$0")" "$0"' {} \;
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./gh-pages
+          publish_branch: gh-pages
