@@ -48,21 +48,34 @@ $$
 $$
 
 Where:
-- $r_{\text{LM}}(x, y)$ is the LM-as-RM
-- $\pi_{\theta}$ is the current policy  
-- $\pi_{\text{ref}}$ is the reference model  
-- $\beta$ = KL penalty (controls drift)
+- $r_{\text{LM}}(x, y)$ is the LM-as-RM,  $\pi_{\theta}$ is the current policy. $\pi_{\text{ref}}$ is the reference model  and  $\beta$ = KL penalty (controls drift).
 
 A key distinction however is that RLLM uses RL **twice**:
 
 1. To train the **LM-as-RM**. In particular we wish to train this as *on-policy* as possible wrt the responses from the LM.
 2. To train the **policy using that LM**. 
 
-#### LM-as-RM training
+### LM-as-RM training
 
 For LM-as-RM training we follow the [J1](https://arxiv.org/abs/2505.10320) recipe, except which we will show that on-policy training is crucial for strong performance.
 
-In this recipe, synthetic 
+In this recipe, training data is constructed as synthetic judgment tasks with labels, converting diverse tasks into a unified verifiable format compatible with RLVR-style training.
+
+##### LM-as-RM Synthetic Training Data Generation.
+Let $\pi_{\theta_\text{policy}}$ denote the initial policy LLM that we want to optimize using an LM-as-RM. 
+
+To train the LM-as-RM, we first sample \emph{on-policy} responses from $\pi_{\theta_\text{policy}}$ and synthetically annotate the responses for the reward modeling task.
+Specifically, given a dataset $\mathcal{D}$ with instructions $x$ and optionally available reference answers $y_{\mathrm{ref}}$, we generate reward model training data in three steps: 
+- (i) sample a set of responses $\mathbf{y}$ from the policy $\pi_{\theta_\text{policy}}$;
+- (ii) employ a strong teacher LLM to rate the correctness or quality of these responses, obtaining scores $\mathbf{s}$. For mathematical reasoning tasks, these ratings are typically binary (correct/incorrect); for non-verifiable tasks, the scores span a continuous scale $\([s_{\mathrm{min}}, s_{\mathrm{max}}]\)$ reflecting response quality.
+- Finally, we create a balanced dataset to ensure a uniform distribution over the assigned scores.
+
+
+##### LM-as-RM RLVR 
+Given the scores, we now train the LM-as-RM using RLVR. We format examples from the synthetic dataset $\mathcal{D}_{\text{LM}}$ into seed LM-as-RM prompts (depending on the training configuration), and instruct the model to generate a judgment $(t', s')$, consisting of a reasoning trace $t'$ and a predicted score $s'$.
+
+We then optimize the model using GRPO, assigning a reward of $1$ if the predicted score matches the teacher score, and $0$ otherwise.
+
 
 
 #### Flexible Rewarding: Beyond Scalars and Binary Signals
