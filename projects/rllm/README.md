@@ -31,6 +31,364 @@ We show that on-policy training of the LM-as-RM outperforms both prompted LMs-as
 
 ## How does it work
 
+### Reinforcement Learning for LLMs: From Humans to Verifiers to LMs
+
+Modern LLM post-training is increasingly framed as a reinforcement learning (RL) problem. But the *source of reward*—what tells the model what is “good”—has evolved significantly.
+
+Three common approaches are:
+- Reinforcement Learning from Human Feedback (RLHF)
+- Reinforcement Learning with Verifiable Rewards (RLVR)
+- Reinforcement Learning with Language Models as Reward Models (RLLM)
+
+In this work we emphasize the transition toward RLLM as a more general and flexible approach.
+
+### RLHF: Learning from Human Preferences
+
+The classic approach, popularized by systems like InstructGPT, is **Reinforcement Learning with Human Feedback (RLHF)**.
+
+Here’s the setup:
+
+- You collect human preference data:  
+  each example contains:
+  - prompt $x$
+  - preferred response $y_c$
+  - rejected response $y_r$
+
+- You train a **reward model** $r_\phi(x, y)$ to score responses.
+
+The reward model is trained using a pairwise ranking objective:
+
+$$
+\mathcal{L}_R = -\mathbb{E}_{(x,y_c,y_r)\in \mathcal{D}}[\log \sigma(r_\phi(x,y_c) - r_\phi(x,y_r))]
+$$
+
+This encourages the model to assign higher scores to preferred outputs.
+
+Once trained, this reward model is used to optimize a policy (e.g., via PPO).
+
+### Limitations
+
+RLHF works well—but has key issues:
+
+- **Expensive**: requires large-scale human annotation
+- **Scalar rewards**: compress rich judgments into a single number
+- **Reward hacking**: models exploit weaknesses in the learned reward
+
+---
+
+## RLVR: Learning from Verifiable Outcomes
+
+To address reward hacking, **Reinforcement Learning with Verifiable Rewards (RLVR)** replaces learned rewards with *objective checks*.
+
+Instead of scoring responses, we ask:
+
+> “Is this answer *correct*?”
+
+The reward becomes:
+
+$$
+\psi(x, y, y_{\mathrm{ref}}) =
+\begin{cases}
+\gamma, & \text{if } y \text{ is correct} \\
+0, & \text{otherwise}
+\end{cases}
+$$
+
+### Examples
+
+- Math → symbolic equivalence checks
+- Code → unit tests
+- Structured tasks → rule-based validators
+
+### Strengths
+
+- Hard to game (less reward hacking)
+- Strong performance on reasoning tasks
+
+### Limitations
+
+- Requires **ground-truth answers**
+- Only works where correctness is **easily verifiable**
+- Not applicable to:
+  - open-ended dialogue
+  - creative writing
+  - subjective tasks
+
+---
+
+## RLLM: Using Language Models as Reward Models
+
+A newer direction is to use **LLMs themselves as evaluators**.
+
+This falls under Reinforcement Learning from AI Feedback (RLAIF), but we focus on a specific variant:
+
+> **RLLM: Reinforcement Learning with Language Models as Reward Models**
+
+Instead of:
+- a scalar reward model (RLHF), or
+- a hard verifier (RLVR),
+
+we use a **“thinking” LLM** to generate rewards.
+
+### Key idea
+
+The reward is no longer a fixed function:
+
+$$
+r_{\text{LM}}(x, y)
+$$
+
+It can:
+
+- reason about the response
+- compare alternatives
+- use context or references
+- produce structured judgments
+
+---
+
+## A Unified RL Objective
+
+Training still follows a standard RL objective:
+
+$$
+\max_{\pi_{\theta}} \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi(\cdot|x)} [ r_{\text{LM}}(x, y) ]
+- \beta \mathbb{D}_{\text{KL}}(\pi_{\theta} || \pi_{\text{ref}})
+$$
+
+Where:
+
+- $\pi_{\theta}$ = current policy  
+- $\pi_{\text{ref}}$ = reference model  
+- $\beta$ = KL penalty (controls drift)
+
+### Key distinction
+
+RLLM uses RL **twice**:
+
+1. To train the **LM-as-reward-model**
+2. To train the **policy using that LM**
+
+---
+
+## Flexible Rewarding: Beyond Scalars and Binary Signals
+
+Unlike RLHF and RLVR, RLLM supports:
+
+### Different evaluation modes
+
+- **Pointwise**: score a single response  
+- **Pairwise**: compare two responses  
+- **Listwise**: rank multiple candidates  
+
+### Different contexts
+
+- **Reference-free**:
+  $$
+  r_{\text{LM}}(x, y)
+  $$
+
+- **Reference-based**:
+  $$
+  r_{\text{LM}}(x, y_{\text{ref}}, y)
+  $$
+
+This flexibility allows one framework to handle many task types.
+
+---
+
+## Task Spectrum: Verifiable vs Non-Verifiable
+
+RLLM is designed to unify training across:
+
+### Verifiable tasks
+- Math
+- Code
+- Structured reasoning
+
+### Non-verifiable tasks
+- Open-ended chat
+- Writing
+- Alignment and style
+
+This is crucial because:
+
+> Most real-world LLM use cases are *not* easily verifiable.
+
+---
+
+## Big Picture
+
+| Paradigm | Reward Source | Strength | Weakness |
+|----------|-------------|----------|----------|
+| RLHF | Human preferences | General-purpose | Expensive, hackable |
+| RLVR | Verifiers | Robust, objective | Limited scope |
+| RLLM | LLM judgments | Flexible, scalable | Depends on evaluator quality |
+
+---
+
+## Intuition
+
+You can think of the progression like this:
+
+- **RLHF** → “Ask humans what’s good”  
+- **RLVR** → “Check if it’s correct”  
+- **RLLM** → “Let models *reason* about quality”
+
+  
+# Reinforcement Learning for LLMs: From Human Feedback to Language-Model-Based Evaluation
+
+Modern post-training of large language models (LLMs) is commonly framed as a reinforcement learning (RL) problem. A central component in this framework is the **source of reward**, which determines how model outputs are evaluated and improved.
+
+This section outlines three paradigms:
+
+- Reinforcement Learning from Human Feedback (RLHF)
+- Reinforcement Learning with Verifiable Rewards (RLVR)
+- Reinforcement Learning with Language Models as Reward Models (RLLM)
+
+The emphasis is on the transition toward RLLM as a more general and flexible approach.
+
+---
+
+## RLHF: Learning from Human Preferences
+
+In RLHF, a reward model is trained from human preference data. Each data point consists of:
+
+- a prompt $x$
+- a preferred response $y_c$
+- a rejected response $y_r$
+
+The reward model $r_\phi(x, y)$ is trained using a pairwise ranking loss:
+
+$$
+\mathcal{L}_R = -\mathbb{E}_{(x,y_c,y_r)}[\log \sigma(r_\phi(x,y_c) - r_\phi(x,y_r))]
+$$
+
+This reward model is then used to optimize a policy via RL (e.g., PPO).
+
+**Limitations:**
+
+- Requires large-scale human annotation
+- Reduces complex judgments to scalar signals
+- Susceptible to reward misspecification and exploitation
+
+---
+
+## RLVR: Learning from Verifiable Signals
+
+RLVR replaces learned reward models with objective verification signals. The reward function is defined as:
+
+$$
+\psi(x, y, y_{\mathrm{ref}}) =
+\begin{cases}
+\gamma, & \text{if } y \text{ is correct} \\
+0, & \text{otherwise}
+\end{cases}
+$$
+
+This approach is effective when correctness can be automatically checked, such as:
+
+- mathematical reasoning
+- code generation (via unit tests)
+- structured tasks with rule-based validation
+
+**Limitations:**
+
+- Requires access to ground-truth solutions
+- Not applicable to open-ended or subjective tasks
+
+---
+
+## RLLM: Language Models as Reward Models
+
+RLLM generalizes the notion of reward by using a language model itself as the evaluator. Rather than relying on a fixed scalar reward model or a binary verifier, the reward is produced by an LLM:
+
+$$
+r_{\text{LM}}(x, y)
+$$
+
+This enables richer evaluation:
+
+- reasoning about outputs
+- comparing alternatives
+- incorporating context or references
+- generating structured feedback
+
+---
+
+## RL Objective
+
+Training follows a standard KL-regularized RL objective:
+
+$$
+\max_{\pi_{\theta}} \mathbb{E}_{y \sim \pi(\cdot|x)} [ r_{\text{LM}}(x, y) ]
+- \beta \, \mathbb{D}_{\text{KL}}(\pi_{\theta} || \pi_{\text{ref}})
+$$
+
+where:
+
+- $\pi_{\theta}$ is the current policy
+- $\pi_{\text{ref}}$ is a reference policy
+- $\beta$ controls deviation from the reference
+
+The key distinction is that the reward function is now **adaptive and model-based**, rather than fixed.
+
+---
+
+## Flexible Evaluation Modes
+
+RLLM supports multiple evaluation paradigms:
+
+- **Pointwise evaluation**
+  $$
+  r_{\text{LM}}(x, y)
+  $$
+
+- **Pairwise comparison**
+  $$
+  r_{\text{LM}}(x, y_1, y_2)
+  $$
+
+- **Reference-based evaluation**
+  $$
+  r_{\text{LM}}(x, y_{\text{ref}}, y)
+  $$
+
+This flexibility allows a single framework to be applied across diverse task types.
+
+---
+
+## Task Coverage
+
+RLLM unifies training across:
+
+- **Verifiable tasks** (e.g., math, code)
+- **Non-verifiable tasks** (e.g., dialogue, writing, alignment)
+
+This contrasts with prior approaches, which typically specialize in one regime.
+
+---
+
+## Discussion
+
+The transition from RLHF and RLVR to RLLM reflects a broader shift:
+
+- from fixed reward functions  
+- to learned, context-dependent evaluation mechanisms  
+
+In RLLM, both the policy and the reward function can be parameterized by language models, enabling more expressive and adaptable training pipelines.
+
+---
+
+## Summary
+
+| Paradigm | Reward Source | Strengths | Limitations |
+|----------|-------------|----------|------------|
+| RLHF | Human preferences | General-purpose | Expensive, scalar rewards |
+| RLVR | Verifiers | Objective, robust | Limited scope |
+| RLLM | Language models | Flexible, general | Depends on evaluator quality |
+
+RLLM provides a unified framework for incorporating both verifiable and non-verifiable feedback, while enabling richer forms of evaluation than prior approaches.
 
 
 
