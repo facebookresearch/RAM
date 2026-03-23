@@ -192,7 +192,7 @@ We also studied the importance of on-policy training of LM-as-RM models alongsid
 Chenxi Whitehouse, Ilia Kulikov, Ping Yu, Jason Weston, Xian Li, Swarnadeep Saha.
 
 ## More details
-More details can be found in the [full technical report](https://arxiv.org/abs/2603.18886).
+More details can be found in the [full technical report](https://arxiv.org/abs/2603.18886) (see section 2).
 
 ## Citation
 To reference the work in this blog post, please use the following BibTex entry:
