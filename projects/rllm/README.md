@@ -5,7 +5,7 @@
 
 ## Our Contribution
 
-We develop RLLM, a framework for reinforcement learning (RL) that  **unifies** the post-training paradigm, enabling the policy model to excel across **easy-to-verify, hard-to-verify, and non-verifiable tasks**. 
+We develop RLLM, a framework for reinforcement learning (RL) that **unifies** the post-training paradigm, enabling the policy model to excel across **easy-to-verify, hard-to-verify, and non-verifiable tasks**. 
 
 Reinforcement Learning with an LM as Reward Model (RLLM) first trains an LM-as-RM on on-policy synthetic judgments using RL and  uses its generative rewards to optimize the policy itself. 
 
@@ -30,7 +30,7 @@ We show that **RLLM** can serve as a single, unified post-training recipe, enabl
 We show that on-policy training of the LM-as-RM outperforms both prompted LMs-as-RMs (including a larger GPT-OSS-120B) and off-policy trained ones. Finally, through extensive analyses across a wide range of policy–reward LM pairings -- varying in model size, capability, and training data (easy- vs. hard-to-verify, reference-free vs. reference-based tasks) -- we identify the key ingredients for effective post-training with Language Models as Reward Models.
 
 
-## How does it work
+## How does it work?
 
 
 Modern LLM post-training is increasingly framed as a reinforcement learning (RL) problem. But the *source of reward*—what tells the model what is “good”—has evolved significantly.
@@ -39,7 +39,7 @@ In this work we emphasize the transition toward RLLM as a more general and flexi
 This falls under Reinforcement Learning from AI Feedback (RLAIF), but we focus on a specific setting. Instead of a scalar reward model (RLHF), or a hard verifier (RLVR),
 we use a *“thinking” LLM* to generate rewards, which is itself trained by on-policy RL. 
 
-This allows the model to reason about the response, compare alternatives, use context or references and produce structured judgments -- and this thinking is trained wrt the policy itself.
+This allows the model to reason about the response, compare alternatives, use context or references, and produce structured judgments -- and this thinking is trained with respect to the policy itself.
 
 **RLLM** Training still follows a standard RL objective:
 
@@ -57,7 +57,7 @@ A key distinction however is that RLLM uses RL **twice**:
 
 ### LM-as-RM training
 
-For LM-as-RM training we follow the [J1](https://arxiv.org/abs/2505.10320) recipe, except which we will show that on-policy training is crucial for strong performance.
+For LM-as-RM training we follow the [J1](https://arxiv.org/abs/2505.10320) recipe, except that we will show that on-policy training is crucial for strong performance.
 
 In this recipe, training data is constructed as synthetic judgment tasks with labels, converting diverse tasks into a unified verifiable format compatible with RLVR-style training.
 
@@ -67,7 +67,7 @@ Let $\pi_{\theta_\text{policy}}$ denote the initial policy LLM that we want to o
 To train the LM-as-RM, we first sample \emph{on-policy} responses from $\pi_{\theta_\text{policy}}$ and synthetically annotate the responses for the reward modeling task.
 Specifically, given a dataset $\mathcal{D}$ with instructions $x$ and optionally available reference answers $y_{\mathrm{ref}}$, we generate reward model training data in three steps: 
 - (i) sample a set of responses $\mathbf{y}$ from the policy $\pi_{\theta_\text{policy}}$;
-- (ii) employ a strong teacher LLM to rate the correctness or quality of these responses, obtaining scores $\mathbf{s}$. For mathematical reasoning tasks, these ratings are typically binary (correct/incorrect); for non-verifiable tasks, the scores span a continuous scale $\([s_{\mathrm{min}}, s_{\mathrm{max}}]\)$ reflecting response quality.
+- (ii) employ a strong teacher LLM to rate the correctness or quality of these responses, obtaining scores $\mathbf{s}$. For mathematical reasoning tasks, these ratings are typically binary (correct/incorrect); for non-verifiable tasks, the scores span a continuous scale $[s_{\mathrm{min}}, s_{\mathrm{max}}]$ reflecting response quality.
 - Finally, we create a balanced dataset to ensure a uniform distribution over the assigned scores.
 
 
@@ -106,7 +106,7 @@ Let's dig a little deeper into the results.
 
 ### Reference-free setting
 We conduct experiments where we compare  post-trained Qwen3-1.7B (Instruct) models using RLLM or RLHF on easy-to-verify and hard-to-verify reasoning benchmarks in the reference-free setting.
-All models are trained on hard-to-verify samples. RLHF'ed models are optimized using SOTA scalar RMs. RLLM models are optimized using either prompted LM-as-RM or our trained \methodrm{} LM-as-RM.
+All models are trained on hard-to-verify samples. RLHF'ed models are optimized using SOTA scalar RMs. RLLM models are optimized using either prompted LM-as-RM or our trained J1 LM-as-RM.
 We observe improved RLLM results by scaling up the LM-as-RM, with J1-Qwen3-32B-RM improving AIME24 by 12\% on top of a Qwen3-1.7B (Instruct) model.
 
 ![Method](table1.png)
@@ -123,7 +123,7 @@ We compare post-trained Qwen3-1.7B (Instruct) models using RLLM or RLVR on easy-
 We also compare RLLM, RLHF, and RLVR across different training datasets -- easy-to-verify, hard-to-verify, reference-free, and reference-based. RLLM on hard-to-verify data with a strong LM-as-RM outperforms all models trained on easy-to-verify data.
 
 ![Method](table3.png)
-*Figure: Reference-based setting. RLLM provides strong results compared to models trained on easy-to-verify data.*
+*Figure: Easy vs Hard to verify in different settings. RLLM provides strong results compared to models trained on easy-to-verify data.*
 
 ### Non-Verifiable Instruction-following tasks
 
@@ -150,14 +150,14 @@ Our results show that we do not observe further improvements on top of the promp
 
 
 ![Method](plot1.png)
-*Figure: Analysis of Generator-Verifier Gap. (a) Comparison of different LMs-as-RMs in a reference-free setting on a held-out validation set (of correct/incorrect responses). J1 RM training on top of a weaker Qwen3-1.7B does not lead to further improvements, while the same on top of a stronger Qwen3-32B leads to 10\% absolute improvement. Results are averaged across 8 seeds. (b) Corresponding validation reward curves for \methodrm{} training across RL steps.*
+*Figure: Analysis of Generator-Verifier Gap. (a) Comparison of different LMs-as-RMs in a reference-free setting on a held-out validation set (of correct/incorrect responses). J1 RM training on top of a weaker Qwen3-1.7B does not lead to further improvements, while the same on top of a stronger Qwen3-32B leads to 10\% absolute improvement. Results are averaged across 8 seeds. (b) Corresponding validation reward curves for J1 training across RL steps.*
 
 
 ### On-policy vs off-policy LM-as-RM training
 
 We compare an on-policy trained LM-as-RM with two off-policy trained RMs. All three RMs are trained on top of the same Qwen3-32B model using the same recipe, differing only in their training data: the off-policy RMs are trained on responses generated either by a weaker Llama model or by a stronger Qwen3-8B model. 
 
-Athough the results show that training improves judgment accuracy for all these models on their respective in-distribution validation sets, the off-policy trained LMs-as-RMs do not transfer to downstream policy improvements. This shows that RM capability improvements measured on static, offline benchmarks (with different data distributions) may not always be indicative of downstream task improvements because of lack of OOD generalization.
+Although the results show that training improves judgment accuracy for all these models on their respective in-distribution validation sets, the off-policy trained LMs-as-RMs do not transfer to downstream policy improvements. This shows that RM capability improvements measured on static, offline benchmarks (with different data distributions) may not always be indicative of downstream task improvements because of lack of OOD generalization.
 
 ![Method](table6.png)
 *Figure: Comparison of RLLM post-training of Qwen3-1.7B with on-policy versus off-policy J1-trained LMs-as-RMs. On-policy J1-Qwen3-32B-RM is trained on Qwen3-1.7B responses while off-policy models are trained on either weaker Llama responses or stronger Qwen3-8B responses. On-policy trained LM-as-RM outperforms off-policy trained ones.*
@@ -170,14 +170,14 @@ We observe that on the hard prompts, win rates improve with more judgments while
 
 
 ![Method](table7.png)
-*Figure: the effect of scaling up reward modeling compute in RLLM via pointwise, pairwise, pairwise with a pivot rollout, and triplet-based scoring between rollouts methods of conputing reward.*
+*Figure: the effect of scaling up reward modeling compute in RLLM via pointwise, pairwise, pairwise with a pivot rollout, and triplet-based scoring between rollouts methods of computing reward.*
 
 
 ## Conclusion
 
-We showed that RLLM -- RL with (RL-trained) language models as reward models -- can serve as a single, unified post-training recipe across easy-to-verify, hard-to-verify, and non-verifiable tasks. Through extensive experiments, we demonstrated that RLLM outperforms both RLHF (with scalar RMs) and RLVR (with rule-based rewards), showcasing particularly large gains when training on hard-to-verify tasks.
+We showed that RLLM -- RL with (RL-trained) language models as reward models -- unifies post-training into one recipe, so the policy model excels across easy-to-verify, hard-to-verify, and non-verifiable tasks. Through extensive experiments, we demonstrated that RLLM outperforms both RLHF (with scalar RMs) and RLVR (with rule-based rewards), showcasing particularly large gains when training on hard-to-verify tasks.
 
-We also studied the importance of on-policy training of LM-as-RM models alongside the impact of generator-verifier gap and showed that these are important components for successful RLLM training.
+We also studied the importance of on-policy training of LM-as-RM models alongside the impact of the generator-verifier gap and showed that these are important components for successful RLLM training.
 
 
 ## Contributors
