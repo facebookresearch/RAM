@@ -18,7 +18,7 @@ We show that training the RLLM reward model on-policy (via responses sampled fro
 
 ![Method](RLLM.png)
 
-*Figure: The Reinforcement Learning with an LM as Reward Model (RLLM) method compared to standard RLHF and RLVR approaches for post-training LLMs.*
+*Figure: Reinforcement Learning with an LM as Reward Model (RLLM) method compared to standard RLHF and RLVR approaches for post-training LLMs.*
 
 
 ## Why This Matters
@@ -27,7 +27,7 @@ Post-training for LLMs typically follows one of two paradigms: Reinforcement Lea
 
 We show that **RLLM** can serve as a single, unified post-training recipe, enabling the policy model to excel across easy-to-verify, hard-to-verify, and non-verifiable tasks.
 
-We show that on-policy training of the LM-as-RM outperforms both prompted LMs-as-RMs (including a larger GPT-OSS-120B) and off-policy trained ones. Finally, through extensive analyses across a wide range of policy–reward LM pairings -- varying in model size, capability, and training data (easy- vs. hard-to-verify, reference-free vs. reference-based tasks) -- we identify the key ingredients for effective post-training with Language Models as Reward Models.
+Further, we show that on-policy training of the LM-as-RM outperforms both prompted LMs-as-RMs (including a larger GPT-OSS-120B) and off-policy trained ones. Finally, through extensive analyses across a wide range of policy–reward LM pairings -- varying in model size, capability, and training data (easy- vs. hard-to-verify, reference-free vs. reference-based tasks) -- we identify the key ingredients for effective post-training with Language Models as Reward Models.
 
 
 ## How does it work?
@@ -37,18 +37,18 @@ Modern LLM post-training is increasingly framed as a reinforcement learning (RL)
 In this work we emphasize the transition toward RLLM as a more general and flexible approach: use **LLMs themselves as evaluators**.
 
 This falls under Reinforcement Learning from AI Feedback (RLAIF), but we focus on a specific setting. Instead of a scalar reward model (RLHF), or a hard verifier (RLVR),
-we use a *“thinking” LLM* to generate rewards, which is itself trained by on-policy RL. 
+we use a *“thinking” LLM* to generate rewards, which is itself trained by on-policy RL. Notably, recent rubric-based evaluation methods -- where structured criteria guide judgment -- can be viewed as a special case within our framework: the LM-as-RM implicitly internalizes and flexibly applies such rubrics through its reasoning, without requiring explicitly specified scoring rules. 
 
 This allows the model to reason about the response, compare alternatives, use context or references, and produce structured judgments -- and this thinking is trained with respect to the policy itself.
 
-**RLLM** Training still follows a standard RL objective:
+**RLLM** training still follows a standard RL objective:
 
 $$
 \max_{\pi_{\theta}} \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi(\cdot|x)} [ r_{\text{LM}}(x, y) ] - \beta \mathbb{D}_{\text{KL}}(\pi_{\theta} || \pi_{\text{ref}})
 $$
 
 Where:
-- $r_{\text{LM}}(x, y)$ is the LM-as-RM,  $\pi_{\theta}$ is the current policy. $\pi_{\text{ref}}$ is the reference model  and  $\beta$ = KL penalty (controls drift).
+- $r_{\text{LM}}(x, y)$ is the LM-as-RM,  $\pi_{\theta}$ is the current policy, $\pi_{\text{ref}}$ is the reference model  and  $\beta$ = KL penalty (controls drift).
 
 A key distinction however is that RLLM uses RL **twice**:
 
@@ -64,7 +64,7 @@ In this recipe, training data is constructed as synthetic judgment tasks with la
 ##### LM-as-RM Synthetic Training Data Generation.
 Let $\pi_{\theta_\text{policy}}$ denote the initial policy LLM that we want to optimize using an LM-as-RM. 
 
-To train the LM-as-RM, we first sample \emph{on-policy} responses from $\pi_{\theta_\text{policy}}$ and synthetically annotate the responses for the reward modeling task.
+To train the LM-as-RM, we first sample *on-policy* responses from $\pi_{\theta_\text{policy}}$ and synthetically annotate the responses for the reward modeling task.
 Specifically, given a dataset $\mathcal{D}$ with instructions $x$ and optionally available reference answers $y_{\mathrm{ref}}$, we generate reward model training data in three steps: 
 - (i) sample a set of responses $\mathbf{y}$ from the policy $\pi_{\theta_\text{policy}}$;
 - (ii) employ a strong teacher LLM to rate the correctness or quality of these responses, obtaining scores $\mathbf{s}$. For mathematical reasoning tasks, these ratings are typically binary (correct/incorrect); for non-verifiable tasks, the scores span a continuous scale $[s_{\mathrm{min}}, s_{\mathrm{max}}]$ reflecting response quality.
@@ -150,7 +150,7 @@ Our results show that we do not observe further improvements on top of the promp
 
 
 ![Method](plot1.png)
-*Figure: Analysis of Generator-Verifier Gap. (a) Comparison of different LMs-as-RMs in a reference-free setting on a held-out validation set (of correct/incorrect responses). J1 RM training on top of a weaker Qwen3-1.7B does not lead to further improvements, while the same on top of a stronger Qwen3-32B leads to 10\% absolute improvement. Results are averaged across 8 seeds. (b) Corresponding validation reward curves for J1 training across RL steps.*
+*Figure: Analysis of Generator-Verifier Gap. Comparison of different LMs-as-RMs in a reference-free setting on a held-out validation set (of correct/incorrect responses). J1 RM training on top of a weaker Qwen3-1.7B does not lead to further improvements, while the same on top of a stronger Qwen3-32B leads to 10\% absolute improvement. Results are averaged across 8 seeds.*
 
 
 ### On-policy vs off-policy LM-as-RM training
@@ -187,7 +187,7 @@ Chenxi Whitehouse, Ilia Kulikov, Ping Yu, Jason Weston, Xian Li, Swarnadeep Saha
 More details can be found in the [full technical report](https://arxiv.org/abs/2603.18886).
 
 ## Citation
-If you use our training data or benchmark in your own work, please also cite with the following BibTex entry:
+To reference the work in this blog post, please use the following BibTex entry:
 ```
 @article{principia2026,
   title={Reasoning over mathematical objects: on-policy reward modeling and test time aggregation},
