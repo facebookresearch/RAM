@@ -26,11 +26,11 @@ We show that training the RLLM reward model on-policy (via responses sampled fro
 
 ![Method](fig1.png)
 
-*Figure: *
+*Figure: Our parallel thinking scaffolding and method. We use pass@k optimization for optimizing the initial round of responses and pass@1 optimization (standard RLVR) for optimizing the aggregation rollouts, and train end-to-end.*
 
 ![Method](fig2.png)
 
-*Figure: *
+*Figure: During each round, we sample rollouts from the past aggregation round, pack them into the aggregation prompt, and perform inference to obtain the next pool of rollouts.*
 
 
 
@@ -41,44 +41,38 @@ We show that training the RLLM reward model on-policy (via responses sampled fro
 
 ![Method](prompt.png)
 
-*Figure: *
+*Figure: Aggregation prompt the LLM can use to aggregate its own generations*
 
 
 ## Experimental Results
 
-We perform a number of experiments across different settings and backbones for both the LM and the LM-as-RM.
-
-Overall, across all these settings, RLLM achieves consistently higher accuracy and win rates than RLVR and RLHF, with particularly large gains when trained on hard-to-verify problems.
-
-
-![Method](nonverif.png)
-
-*Figure: Performance comparison of post-trained Qwen3-1.7B models on (a) verifiable tasks (average of five math benchmarks) and (b) non-verifiable instruction-following tasks. Models are trained via RLHF (with *Skywork-Reward-V2-Llama-3.1-8B* as scalar-RM), RLVR (with *Math-Verify* as rule-based verifier) and, our RLLM (with *J1-Qwen3-32B* as LM-as-RM). Post-training data for verifiable tasks is either (1) easy-to-verify, (2) hard-to-verify, (3) reference-free, or (4) reference-based.*
-
-Let's dig a little deeper into the results.
-
 
 ### Self-aggregation improves frontier models
 
+Parallel generation + aggregation (orange) brings gains across 4 competition math benchmarks (AIME, Brumo, HMMT and IMO-Answerbench) on top of 3 strong models: Kimi-K2-Thinking, Qwen3-4B-Thinking-2507, and
+Qwen3-4B-Instruct-2507, compared to standard generation (blue) and majority voting (green).
+
+
 ![Method](lorge.png)
-*Figure: *
+*Figure: Parallel generation + aggregation (orange) brings gains across 4 competition math benchmarks on top of 3 strong models: Kimi-K2-Thinking, Qwen3-4B-Thinking-2507, and
+Qwen3-4B-Instruct-2507, compared to standard generation (blue) and majority voting (green).*
 
 
 ### The role of candidate diversity (pass@k) in self-aggregation
 
 
 ![Method](passk.png)
-*Figure: *
+*Figure: Performance of repeated aggregation is upper bounded by the initial pass@k (green) for both Qwen3-4B-Thinking-2507 (left) and Qwen3-4B-Instruct-2507 (right). The asymptotic performance is upper-bounded by the pass@k at the initial round.*
 
 ![Method](temp.png)
-*Figure: *
+*Figure: Model = Qwen3-4B-Thinking-2507. Effect of initial sampling temperature on decoding performance, averaged over HMMT, Brumo, and AIME. Increasing the initial temperature leaves pass@1 nearly unchanged while improving pass@k, resulting in higher aggregation performance.*
 
 
 ### Main Experiments
 
 
 ![Method](compare_methods.png)
-*Figure: *
+*Figure: Comparison of training strategies across the initial and aggregation rounds. Columns show whether model parameters are updated via pass@1 or pass@k optimization, or kept fixed.*
 
 
 #### Competition Math
