@@ -24,17 +24,27 @@ The LM-as-RM exploits an LLM's:
 We show that training the RLLM reward model on-policy (via responses sampled from the policy model) yields **improved results**.
 
 
-![Method](RLLM.png)
+![Method](fig1.png)
 
-*Figure: Reinforcement Learning with an LM as Reward Model (RLLM) method compared to standard RLHF and RLVR approaches for post-training LLMs.*
+*Figure: *
+
+![Method](fig2.png)
+
+*Figure: *
+
+
 
 
 ## Why This Matters
 
 ## How does it work?
 
+![Method](prompt.png)
 
-## Main Experimental Results
+*Figure: *
+
+
+## Experimental Results
 
 We perform a number of experiments across different settings and backbones for both the LM and the LM-as-RM.
 
@@ -48,10 +58,44 @@ Overall, across all these settings, RLLM achieves consistently higher accuracy a
 Let's dig a little deeper into the results.
 
 
-### Reference-free setting
+### Self-aggregation improves frontier models
+
+![Method](lorge.png)
+*Figure: *
 
 
-![Method](table7.png)
+### The role of candidate diversity (pass@k) in self-aggregation
+
+
+![Method](passk.png)
+*Figure: *
+
+![Method](temp.png)
+*Figure: *
+
+
+### Main Experiments
+
+
+![Method](compare_methods.png)
+*Figure: *
+
+
+#### Competition Math
+
+![Method](main.png)
+*Figure: *
+
+![Method](rewards.png)
+*Figure: *
+
+#### Scientific Reasoning
+
+![Method](main2.png)
+*Figure: *
+
+
+![Method](rewards2.png)
 *Figure: *
 
 ## Conclusion
