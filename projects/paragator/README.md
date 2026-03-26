@@ -46,7 +46,7 @@ This work identifies two recurring problems in prior approaches:
 That means the aggregator is trained on the wrong distribution and often sees redundant candidate pools.
 
 
-## The Setup
+## ParaGator
 
 Given a problem $x$, the model first samples a pool of candidate solutions:
 
@@ -70,6 +70,10 @@ $$
 
 That objective explicitly rewards the model for putting at least one correct solution into the pool, which encourages diversity instead of mode collapse.
 
+
+## Main Experiments
+
+
 ### Self-aggregation improves frontier models
 
 Parallel generation + aggregation (orange) brings gains across 4 competition math benchmarks (AIME, Brumo, HMMT and IMO-Answerbench) on top of 3 strong models: Kimi-K2-Thinking, Qwen3-4B-Thinking-2507, and
@@ -82,18 +86,9 @@ Qwen3-4B-Instruct-2507, compared to standard generation (blue) and majority voti
 *Figure: parallel generation followed by aggregation improves strong open models over standard decoding and majority voting.*
 
 
-## Why Existing Aggregation Methods Fall Short
-
-The paper identifies two recurring problems in prior approaches:
-
-- they often optimize only the aggregator and treat the generator as fixed
-- standard outcome-based RL collapses candidate generation toward one dominant mode
-
-That means the aggregator is trained on the wrong distribution and often sees redundant candidate pools.
 
 
-
-## A Key Empirical Observation: The role of candidate diversity (pass@k) in self-aggregation
+### A Key Empirical Observation: The role of candidate diversity (pass@k) in self-aggregation
 
 Self-aggregation is bounded by the quality and diversity of the initial candidate pool. If the pool does not contain enough good or complementary trajectories, aggregation cannot recover much.
 
@@ -117,13 +112,12 @@ The repeated-aggregation experiments make the same point more directly:
 
 
 
-### Main Experiments
+### ParaGator experiments
 
-
+blah blah
 
 <p align="center"><img width="80%" src="compare_methods.png" /></p>
 *Figure: Comparison of training strategies across the initial and aggregation rounds. Columns show whether model parameters are updated via pass@1 or pass@k optimization, or kept fixed.*
-
 
 #### Competition Math
 
