@@ -18,7 +18,7 @@ We introduce a new reasoning aggregation method called **ParaGator**. Its core c
 - the LLM generator should produce diverse candidates -- train with pass@k
 - the LLM aggregator should synthesize those candidates into a final answer
 
-ParaGator thus trains initial candidate generation with pass@k optimization and aggregation with pass@1 optimization.
+ParaGator thus trains initial candidate generation with pass@k optimization and aggregation with pass@1 optimization, training end-to-end.
 This brings large gains, as shown on competition math and scientific reasoning problems.
 
 ![Method](fig1.png)
@@ -28,7 +28,7 @@ This brings large gains, as shown on competition math and scientific reasoning p
 
 ![Method](fig2.png)
 
-*Figure: During each round, we sample rollouts from the past aggregation round, pack them into the aggregation prompt, and perform inference to obtain the next pool of rollouts.*
+*Figure: At inference, during each round we sample rollouts from the past aggregation round, pack them into the aggregation prompt, and perform inference to obtain the next pool of rollouts.*
 
 
 
@@ -36,7 +36,7 @@ This brings large gains, as shown on competition math and scientific reasoning p
 
 
 Classical majority vote/self consistency neither trains aggregation, nor uses the LLM to aggregate.
-Recent methods like AggLM and RSA introduce LLM-based aggregation.
+Recent methods like [AggLM](https://arxiv.org/abs/2509.06870) and [RSA](https://arxiv.org/abs/2509.26626) advocate for LLM-based aggregation.
 
 This work identifies two recurring problems in prior approaches:
 
