@@ -76,13 +76,24 @@ That objective explicitly rewards the model for putting at least one correct sol
 
 ### Self-aggregation improves frontier models
 
-Parallel generation + aggregation (orange) brings gains across 4 competition math benchmarks (AIME, Brumo, HMMT and IMO-Answerbench) on top of 3 strong models: Kimi-K2-Thinking, Qwen3-4B-Thinking-2507, and
-Qwen3-4B-Instruct-2507, compared to standard generation (blue) and majority voting (green).
+<!--
+First, we show that even basic LLM self-aggregation does help for frontier models that we cannot easily train.
+This result is important because it justifies that this 
+-->
 
+We first show that basic aggregation of parallel generations yields improvements on frontier open-sourced models, such as Kimi-K2-Thinking. 
+This motivates that employing and improving aggregation procedures will likely continue to be useful as models scale, and that the results of our
+training experiments should generalize beyond the smaller models we employ. 
 
-![Method](lorge.png)
+We find that parallel generation + aggregation brings gains across 4 competition math benchmarks (AIME, Brumo, HMMT and IMO-Answerbench)
+on top of 3 strong models: Kimi-K2-Thinking, Qwen3-4B-Thinking-2507, and Qwen3-4B-Instruct-2507, compared to standard generation and majority voting.
+
+<!--
 *Figure: Parallel generation + aggregation (orange) brings gains across 4 competition math benchmarks on top of 3 strong models: Kimi-K2-Thinking, Qwen3-4B-Thinking-2507, and
 Qwen3-4B-Instruct-2507, compared to standard generation (blue) and majority voting (green).*
+-->
+
+![Method](lorge.png)
 *Figure: parallel generation followed by aggregation improves strong open models over standard decoding and majority voting.*
 
 
@@ -97,6 +108,10 @@ The repeated-aggregation experiments make the same point more directly:
 
 
 *Figure: repeated aggregation saturates below the initial pass@k bound, which motivates directly training the generator for better candidate diversity.*
+We then further show that
+self-aggregation requires diversity among the responses to be packed into the aggregation prompt in order to
+perform better (§3.4.2), motivating our training approach
+
 
 
 
