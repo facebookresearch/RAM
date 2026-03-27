@@ -81,12 +81,12 @@ First, we show that even basic LLM self-aggregation does help for frontier model
 This result is important because it justifies that this 
 -->
 
-We first show that basic aggregation of parallel generations yields improvements on frontier open-sourced models, such as Kimi-K2-Thinking. 
-This motivates that employing and improving aggregation procedures will likely continue to be useful as models scale, and that the results of our
-training experiments should generalize beyond the smaller models we employ. 
-
+We first show that basic aggregation of parallel generations yields improvements on frontier open-sourced models. <!-- , such as Kimi-K2-Thinking. -->
 We find that parallel generation + aggregation brings gains across 4 competition math benchmarks (AIME, Brumo, HMMT and IMO-Answerbench)
 on top of 3 strong models: Kimi-K2-Thinking, Qwen3-4B-Thinking-2507, and Qwen3-4B-Instruct-2507, compared to standard generation and majority voting.
+
+This motivates that employing and improving aggregation procedures will likely continue to be useful as models scale, and that the results of our
+training should generalize beyond the smaller models we employ in subsequent experiments. 
 
 <!--
 *Figure: Parallel generation + aggregation (orange) brings gains across 4 competition math benchmarks on top of 3 strong models: Kimi-K2-Thinking, Qwen3-4B-Thinking-2507, and
@@ -101,27 +101,35 @@ Qwen3-4B-Instruct-2507, compared to standard generation (blue) and majority voti
 
 ### A Key Empirical Observation: The role of candidate diversity (pass@k) in self-aggregation
 
-Self-aggregation is bounded by the quality and diversity of the initial candidate pool. If the pool does not contain enough good or complementary trajectories, aggregation cannot recover much.
-
-
-The repeated-aggregation experiments make the same point more directly:
-
-
-*Figure: repeated aggregation saturates below the initial pass@k bound, which motivates directly training the generator for better candidate diversity.*
-We then further show that
+Next, we analyze the diversity issue in standard self-aggregation, and show that
 self-aggregation requires diversity among the responses to be packed into the aggregation prompt in order to
-perform better (§3.4.2), motivating our training approach
+perform better, motivating our training approach
 
 
+We plot the performance of multiple rounds of aggregation, measuring pass@1, pass@4, and majority voting@4. 
+We find that the pass@1 performance $\color{blue}{(blue)}$ never exceeds the initial pass@4 $\color{green}{(green)}$, 
+showing that the asymptotic performance is bounded by pass@k at the initial round, motivating our pass@k optimization method.
+
+That is, self-aggregation is bounded by the quality and diversity of the initial candidate pool. 
+If the pool does not contain enough good or complementary trajectories, aggregation cannot recover much.
+
+<!-- The repeated-aggregation experiments make the same point more directly: -->
 
 
 
 ![Method](passk.png)
-*Figure: Performance of repeated aggregation is upper bounded by the initial pass@k (green) for both Qwen3-4B-Thinking-2507 (left) and Qwen3-4B-Instruct-2507 (right). The asymptotic performance is upper-bounded by the pass@k at the initial round.*
+*Figure: repeated aggregation saturates below the initial pass@k bound, which motivates directly training the generator for better candidate diversity.*
+
+<!-- *Figure: Performance of repeated aggregation is upper bounded by the initial pass@k  <span style="color: green;">(green)</span> for both Qwen3-4B-Thinking-2507 (left) and Qwen3-4B-Instruct-2507 (right). The asymptotic performance is upper-bounded by the pass@k at the initial round.*
+-->
+
+
+Changing the initial sampling temperature also validates this hypothesis. We vary the initial sampling temperature (0.6, 0.8, 1.0) while keeping the aggregation sampling temperature fixed (1.0).
+Pass@1 performance is similar at the initial round but a higher initial pass@k results in a higher aggregation pass@1.
 
 
 <p align="center"><img width="80%" src="temp.png" /></p>
-*Figure: Model = Qwen3-4B-Thinking-2507. Effect of initial sampling temperature on decoding performance, averaged over HMMT, Brumo, and AIME. Increasing the initial temperature leaves pass@1 nearly unchanged while improving pass@k, resulting in higher aggregation performance.*
+*Figure: Model = Qwen3-4B-Thinking-2507. Effect of initial sampling temperature on decoding performance. Increasing the initial temperature leaves pass@1 nearly unchanged while improving pass@k, resulting in higher aggregation performance.*
 
 
 
