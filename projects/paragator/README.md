@@ -48,27 +48,58 @@ That means the aggregator is trained on the wrong distribution and often sees re
 
 ## ParaGator
 
+Our method jointly trains a single language model, $\mathcal{M}_\theta$ to (i) generate diverse candidate solutions and 
+(ii) aggregate these solutions into a final answer. Both stages are optimized end-to-end using online RL.
+
+### Training
+
 Given a problem $x$, the model first samples a pool of candidate solutions:
 
 $$
 y_i \sim \mathcal{M}_\theta(y \mid p_C, x), \quad i = 1,\dots,m
 $$
 
-Then it aggregates those candidates into a final answer:
+Then it aggregates those candidates into a final answer using the same LLM with an aggregation prompt:
 
 $$
 \tilde{y} \sim \mathcal{M}_\theta(y \mid p_A, x, y_{1:m})
 $$
 
-The candidate stage is trained with a pass@k objective, while the aggregation stage is trained with pass@1.
+<p align="center"><img width="80%" src="prompt.png" /></p>
 
-The paper defines pass@k as:
+*Figure: Aggregation Prompt.  At inference, during each round we sample rollouts from the past aggregation round, pack them into the aggregation prompt, and perform inference to obtain the next pool of rollouts.*
+
+Given the problem \(x\) and the candidate set \(y_{1:m}\), we prompt the same model to act as an aggregator. The input is the problem concatenated with the candidates in a fixed, structured format.
+
+The initial candidate generation stage is trained with a pass@k objective, while the aggregation stage is trained with standard pass@1.
+
+Crucially, the aggregator is always trained on-policy: during training, it sees candidate pools sampled from the current generator $\(\mathcal{M}_\theta\)$, rather than from a frozen or separately trained model. This alignment between training and inference eliminates the off-policy mismatch common in prior self-aggregation methods and ensures that the generator learns to produce candidates that are well-suited for downstream aggregation.
+
+#### Pass@1 Aggregation Optimization
+
+The aggregated solutions use pass@1 performance: the aggregator receives a reward of 1 if and only if its final answer is correct. Unlike the candidate stage, only the single aggregated trajectory is rewarded, pushing the model to reliably synthesize the best answer from the available candidates.
+
+#### Pass@K Candidate Optimization
+
+Pass@k is defined as:
 
 $$
 \mathrm{pass@}k = \max[r(y_1), r(y_2), \dots, r(y_k)]
 $$
 
-That objective explicitly rewards the model for putting at least one correct solution into the pool, which encourages diversity instead of mode collapse.
+This explicitly rewards the model for putting at least one correct solution into the pool, which encourages diversity instead of mode collapse.
+
+We use the pass@k optimization method described in \citet{chen2025passktrainingadaptivelybalancing}, where the advantages of a correct response and an incorrect response are given by:
+
+$$A_\text{correct} = \frac{1 - \mu(x)}{\sigma(x)}, ~~A_\text{incorrect} = \frac{1 - \mu(x) - \frac{\binom{N_{\text{incorrect}} - 1}{k- 1}}{\binom{N-1}{k-1}}}{\sigma(x)},$$ 
+
+where $N$ is the group size, $N_\text{incorrect}$ is the number of incorrect rollouts in this group, and $\mu(x)$ and $\sigma(x)$ are the mean and standard deviation of the rewards for the group whose prompt is $x$. 
+
+Compared to standard GRPO, only the advantage of incorrect examples is modified by an offset of $\frac{\binom{N_{\text{incorrect}} - 1}{k- 1}}{\binom{N-1}{k-1}}$. In our work, we make a further modification as in Dr.GRPO by removing the division by $\sigma(x)$.
+
+Intuitively, the model is rewarded when at least one of its $m$ attempts solves the problem, which encourages spreading probability mass across complementary solution modes rather than collapsing onto a single trajectory.
+
+### Inference
 
 
 ## Main Experiments
