@@ -23,7 +23,7 @@ This brings large gains, as shown on competition math and scientific reasoning p
 
 ![Method](fig1.png)
 
-*Figure: Our parallel thinking scaffolding and method. We use pass@k optimization for optimizing the initial round of responses and pass@1 optimization (standard RLVR) for optimizing the aggregation rollouts, and train end-to-end.*
+*Figure: Our parallel thinking scaffolding and training method. We use pass@k optimization for optimizing the initial round of responses and pass@1 optimization (standard RLVR) for optimizing the aggregation rollouts, and train end-to-end.*
 
 
 ![Method](fig2.png)
@@ -35,7 +35,7 @@ This brings large gains, as shown on competition math and scientific reasoning p
 ## Why Existing Aggregation Methods Fall Short
 
 
-Classical majority vote/self consistency neither trains aggregation, nor uses the LLM to aggregate.
+Classical majority vote/self-consistency neither trains aggregation nor uses the LLM to aggregate.
 Recent methods like [AggLM](https://arxiv.org/abs/2509.06870) and [RSA](https://arxiv.org/abs/2509.26626) advocate for LLM-based aggregation.
 
 This work identifies two recurring problems in prior approaches:
@@ -49,7 +49,7 @@ That means the aggregator is trained on the wrong distribution and often sees re
 ## ParaGator
 
 Our method jointly trains a single language model, $\mathcal{M}_\theta$ to (i) generate diverse candidate solutions and 
-(ii) aggregate these solutions into a final answer. Both stages are optimized end-to-end using online RL.
+(ii) to aggregate these solutions into a final answer. Both stages are optimized end-to-end using online RL.
 
 ### Training
 
@@ -75,13 +75,13 @@ That is, the input is the problem concatenated with the candidates in a fixed, s
 
 The initial candidate generation stage is trained with a pass@k objective, while the aggregation stage is trained with standard pass@1.
 
-Crucially, the aggregator is always trained on-policy: during training, it sees candidate pools sampled from the current generator $\(\mathcal{M}_\theta\)$, rather than from a frozen or separately trained model. This alignment between training and inference eliminates the off-policy mismatch common in prior self-aggregation methods and ensures that the generator learns to produce candidates that are well-suited for downstream aggregation.
+Crucially, the aggregator is always trained on-policy: during training, it sees candidate pools sampled from the current generator $\mathcal{M}_\theta$, rather than from a frozen or separately trained model. This alignment between training and inference eliminates the off-policy mismatch common in prior self-aggregation methods and ensures that the generator learns to produce candidates that are well-suited for downstream aggregation.
 
 #### Pass@1 Aggregation Optimization
 
 The aggregated solutions use pass@1 performance: the aggregator receives a reward of 1 if and only if its final answer is correct. Unlike the candidate stage, only the single aggregated trajectory is rewarded, pushing the model to reliably synthesize the best answer from the available candidates.
 
-#### Pass@K Candidate Optimization
+#### Pass@k Candidate Optimization
 
 Pass@k is defined as:
 
@@ -93,11 +93,11 @@ This explicitly rewards the model for putting at least one correct solution into
 
 We use the pass@k optimization method described in \citet{chen2025passktrainingadaptivelybalancing}, where the advantages of a correct response and an incorrect response are given by:
 
-$$A_\text{correct} = \frac{1 - \mu(x)}{\sigma(x)}, ~~A_\text{incorrect} = \frac{1 - \mu(x) - \frac{\binom{N_{\text{incorrect}} - 1}{k- 1}}{\binom{N-1}{k-1}}}{\sigma(x)},$$ 
+$$A_\text{correct} = \frac{1 - \mu(x)}{\sigma(x)}, ~~A_\text{incorrect} = \frac{1 - \mu(x) - \frac{\binom{N_{\text{incorrect}} - 1}{k-1}}{\binom{N-1}{k-1}}}{\sigma(x)},$$ 
 
 where $N$ is the group size, $N_\text{incorrect}$ is the number of incorrect rollouts in this group, and $\mu(x)$ and $\sigma(x)$ are the mean and standard deviation of the rewards for the group whose prompt is $x$. 
 
-Compared to standard GRPO, only the advantage of incorrect examples is modified by an offset of $\frac{\binom{N_{\text{incorrect}} - 1}{k- 1}}{\binom{N-1}{k-1}}$. In our work, we make a further modification as in Dr.GRPO by removing the division by $\sigma(x)$.
+Compared to standard GRPO, only the advantage of incorrect examples is modified by an offset of $\frac{\binom{N_{\text{incorrect}} - 1}{k-1}}{\binom{N-1}{k-1}}$. In our work, we make a further modification as in Dr.GRPO by removing the division by $\sigma(x)$.
 
 Intuitively, the model is rewarded when at least one of its $m$ attempts solves the problem, which encourages spreading probability mass across complementary solution modes rather than collapsing onto a single trajectory.
 
@@ -127,7 +127,7 @@ First, we show that even basic LLM self-aggregation does help for frontier model
 This result is important because it justifies that this 
 -->
 
-We first show that basic aggregation of parallel generations yields improvements on frontier open-sourced models. <!-- , such as Kimi-K2-Thinking. -->
+We first show that basic aggregation of parallel generations yields improvements on frontier open-source models. <!-- , such as Kimi-K2-Thinking. -->
 We find that parallel generation + aggregation brings gains across 4 competition math benchmarks (AIME, Brumo, HMMT and IMO-Answerbench)
 on top of 3 strong models: Kimi-K2-Thinking, Qwen3-4B-Thinking-2507, and Qwen3-4B-Instruct-2507, compared to standard generation and majority voting.
 
@@ -140,7 +140,7 @@ Qwen3-4B-Instruct-2507, compared to standard generation (blue) and majority voti
 -->
 
 ![Method](lorge.png)
-*Figure: parallel generation followed by aggregation improves strong open models over standard decoding and majority voting.*
+*Figure: Parallel generation followed by aggregation improves strong open models over standard decoding and majority voting.*
 
 
 
@@ -163,7 +163,7 @@ If the pool does not contain enough good or complementary trajectories, aggregat
 
 
 ![Method](passk.png)
-*Figure: repeated aggregation saturates below the initial pass@k bound, which motivates directly training the generator for better candidate diversity.*
+*Figure: Repeated aggregation saturates below the initial pass@k bound, which motivates directly training the generator for better candidate diversity.*
 
 
 Changing the initial sampling temperature also validates this hypothesis. We vary the initial sampling temperature (0.6, 0.8, 1.0) while keeping the aggregation sampling temperature fixed (1.0).
@@ -178,9 +178,9 @@ Pass@1 performance is similar at the initial round but a higher initial pass@k r
 
 
 
-### ParaGator experiments
+### ParaGator Experiments
 
-We validate training our ParaGator in two regimes: competition math and scientific reasoning.
+We validate training ParaGator in two regimes: competition math and scientific reasoning.
 
 We compare ParaGator against a number of baselines. For each, we use the same repeated aggregation scaffold, but different training methods:
 (i) the base model only, (ii) no aggregation training, just standard Dr.GRPO training, (iii) offline pass@1 aggregation training, (iv) online pass@1 aggregation training,
@@ -201,7 +201,7 @@ ParaGator delivers the best average performance after aggregation and achieves t
 
 
 ![Method](main.png)
-*Figure: Competition math experiments. The Best values in each column bolded. Numbers = Pass@1/Pass@4.*
+*Figure: Competition math experiments. The best values in each column are bolded. Numbers = Pass@1/Pass@4.*
 
 
 We plot the reward curves for both the initial round and the aggregation round. The curves show a clear trade-off in prior baselines: Dr.GRPO attains reasonable initial-round reward but lags in aggregation-round reward, while offline aggregation training exhibits the opposite pattern, improving aggregation performance at the expense of the initial round. Online multitask training partially mitigates this mismatch by optimizing both rounds jointly, but still underperforms our method. In contrast, ParaGator consistently achieves the highest reward in both rounds, which translates into the strongest overall pass rates across aggregation steps.
