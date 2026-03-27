@@ -103,6 +103,19 @@ Intuitively, the model is rewarded when at least one of its $m$ attempts solves 
 
 ### Inference
 
+During training, we optimize a single round of aggregation over one candidate pool. At inference time, however, we naturally generalize this to multiple iterations of aggregation, enabling sequential scaling in addition to the learned parallel sampling.
+
+Concretely, given problem $x$, we first sample an initial pool of $m$ candidates $y_{1:m}^{(0)} \sim \mathcal{M}_\theta(y \mid x)$ and sample $m$ aggregated solutions 
+
+$$\tilde{y}_{1:m}^{(0)} \sim \mathcal{M}_\theta(y \mid p_A, x, y_{1:m}^{(0)})$$
+
+We then form an updated candidate pool 
+
+$$y_{1:m}^{(1)} = \tilde{y}_{1:m}^{(0)}$$ 
+
+from these aggregation rollouts. The model is then prompted again in aggregation mode on $(x, y_{1:m}^{(1)})$ to produce a refined set of solutions $\tilde{y}_{1:m}^{(1)}$, and so on. This continues for $T$ iterations before returning the final aggregated answer.
+
+This iterative procedure preserves the same generator–aggregator interface used during training, while allowing the model at test time to repeatedly refine its reasoning over an evolving pool of candidate solutions under a fixed compute budget.
 
 ## Main Experiments
 
