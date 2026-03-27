@@ -65,11 +65,13 @@ $$
 \tilde{y} \sim \mathcal{M}_\theta(y \mid p_A, x, y_{1:m})
 $$
 
+That is, the input is the problem concatenated with the candidates in a fixed, structured format:
+
+
 <p align="center"><img width="80%" src="prompt.png" /></p>
 
-*Figure: Aggregation Prompt.  At inference, during each round we sample rollouts from the past aggregation round, pack them into the aggregation prompt, and perform inference to obtain the next pool of rollouts.*
 
-Given the problem \(x\) and the candidate set \(y_{1:m}\), we prompt the same model to act as an aggregator. The input is the problem concatenated with the candidates in a fixed, structured format.
+*Figure: Aggregation Prompt.  At inference, during each round we sample rollouts from the past aggregation round, pack them into the aggregation prompt, and perform inference to obtain the next pool of rollouts.*
 
 The initial candidate generation stage is trained with a pass@k objective, while the aggregation stage is trained with standard pass@1.
 
