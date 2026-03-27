@@ -23,7 +23,7 @@ This brings large gains, as shown on competition math and scientific reasoning p
 
 ![Method](fig1.png)
 
-*Figure: Our parallel thinking scaffolding and method. We use pass@k optimization for optimizing the initial round of responses and pass@1 optimization (standard RLVR) for optimizing the aggregation rollouts, and train end-to-end.*
+*Figure: Our parallel thinking scaffolding and training method. We use pass@k optimization for optimizing the initial round of responses and pass@1 optimization (standard RLVR) for optimizing the aggregation rollouts, and train end-to-end.*
 
 
 ![Method](fig2.png)
@@ -35,7 +35,7 @@ This brings large gains, as shown on competition math and scientific reasoning p
 ## Why Existing Aggregation Methods Fall Short
 
 
-Classical majority vote/self consistency neither trains aggregation, nor uses the LLM to aggregate.
+Classical majority vote/self-consistency neither trains aggregation nor uses the LLM to aggregate.
 Recent methods like [AggLM](https://arxiv.org/abs/2509.06870) and [RSA](https://arxiv.org/abs/2509.26626) advocate for LLM-based aggregation.
 
 This work identifies two recurring problems in prior approaches:
@@ -56,7 +56,7 @@ Our method jointly trains a single language model, $\mathcal{M}_\theta$ to (i) g
 Given a problem $x$, the model first samples a pool of candidate solutions:
 
 $$
-y_i \sim \mathcal{M}_\theta(y \mid p_C, x), \quad i = 1,\dots,m
+y_i \sim \mathcal{M}_\theta(y \mid x), \quad i = 1,\dots,m
 $$
 
 Then it aggregates those candidates into a final answer using the same LLM with an aggregation prompt:
@@ -65,23 +65,27 @@ $$
 \tilde{y} \sim \mathcal{M}_\theta(y \mid p_A, x, y_{1:m})
 $$
 
+<!--
 That is, the input is the problem concatenated with the candidates in a fixed, structured format:
-
+-->
 
 <p align="center"><img width="80%" src="prompt.png" /></p>
 
 
+
+<!--
 *Figure: Aggregation Prompt.  At inference, during each round we sample rollouts from the past aggregation round, pack them into the aggregation prompt, and perform inference to obtain the next pool of rollouts.*
+-->
 
 The initial candidate generation stage is trained with a pass@k objective, while the aggregation stage is trained with standard pass@1.
 
-Crucially, the aggregator is always trained on-policy: during training, it sees candidate pools sampled from the current generator $\(\mathcal{M}_\theta\)$, rather than from a frozen or separately trained model. This alignment between training and inference eliminates the off-policy mismatch common in prior self-aggregation methods and ensures that the generator learns to produce candidates that are well-suited for downstream aggregation.
+Crucially, the aggregator is always trained on-policy: during training, it sees candidate pools sampled from the current generator $\mathcal{M}_\theta$, rather than from a frozen or separately trained model. This alignment between training and inference eliminates the off-policy mismatch common in prior self-aggregation methods and ensures that the generator learns to produce candidates that are well-suited for downstream aggregation.
 
 #### Pass@1 Aggregation Optimization
 
 The aggregated solutions use pass@1 performance: the aggregator receives a reward of 1 if and only if its final answer is correct. Unlike the candidate stage, only the single aggregated trajectory is rewarded, pushing the model to reliably synthesize the best answer from the available candidates.
 
-#### Pass@K Candidate Optimization
+#### Pass@k Candidate Optimization
 
 Pass@k is defined as:
 
@@ -91,13 +95,13 @@ $$
 
 This explicitly rewards the model for putting at least one correct solution into the pool, which encourages diversity instead of mode collapse.
 
-We use the pass@k optimization method described in \citet{chen2025passktrainingadaptivelybalancing}, where the advantages of a correct response and an incorrect response are given by:
+We use the pass@k optimization method described in [Chen et al.](https://arxiv.org/abs/2508.10751), where the advantages of a correct response and an incorrect response are given by:
 
-$$A_\text{correct} = \frac{1 - \mu(x)}{\sigma(x)}, ~~A_\text{incorrect} = \frac{1 - \mu(x) - \frac{\binom{N_{\text{incorrect}} - 1}{k- 1}}{\binom{N-1}{k-1}}}{\sigma(x)},$$ 
+$$A_\text{correct} = \frac{1 - \mu(x)}{\sigma(x)}, ~~A_\text{incorrect} = \frac{1 - \mu(x) - \frac{\binom{N_{\text{incorrect}} - 1}{k-1}}{\binom{N-1}{k-1}}}{\sigma(x)},$$ 
 
 where $N$ is the group size, $N_\text{incorrect}$ is the number of incorrect rollouts in this group, and $\mu(x)$ and $\sigma(x)$ are the mean and standard deviation of the rewards for the group whose prompt is $x$. 
 
-Compared to standard GRPO, only the advantage of incorrect examples is modified by an offset of $\frac{\binom{N_{\text{incorrect}} - 1}{k- 1}}{\binom{N-1}{k-1}}$. In our work, we make a further modification as in Dr.GRPO by removing the division by $\sigma(x)$.
+Compared to standard GRPO, only the advantage of incorrect examples is modified by an offset of $\frac{\binom{N_{\text{incorrect}} - 1}{k-1}}{\binom{N-1}{k-1}}$. In our work, we make a further modification as in Dr.GRPO by removing the division by $\sigma(x)$.
 
 Intuitively, the model is rewarded when at least one of its $m$ attempts solves the problem, which encourages spreading probability mass across complementary solution modes rather than collapsing onto a single trajectory.
 
@@ -127,12 +131,12 @@ First, we show that even basic LLM self-aggregation does help for frontier model
 This result is important because it justifies that this 
 -->
 
-We first show that basic aggregation of parallel generations yields improvements on frontier open-sourced models. <!-- , such as Kimi-K2-Thinking. -->
+We first show that basic aggregation of parallel generations yields improvements when using frontier open-source models. <!-- , such as Kimi-K2-Thinking. -->
 We find that parallel generation + aggregation brings gains across 4 competition math benchmarks (AIME, Brumo, HMMT and IMO-Answerbench)
 on top of 3 strong models: Kimi-K2-Thinking, Qwen3-4B-Thinking-2507, and Qwen3-4B-Instruct-2507, compared to standard generation and majority voting.
 
 This motivates that employing and improving aggregation procedures will likely continue to be useful as models scale, and that the results of our
-training should generalize beyond the smaller models we employ in subsequent experiments. 
+training should generalize beyond the smaller models we employ in our subsequent experiments. 
 
 <!--
 *Figure: Parallel generation + aggregation (orange) brings gains across 4 competition math benchmarks on top of 3 strong models: Kimi-K2-Thinking, Qwen3-4B-Thinking-2507, and
@@ -140,7 +144,7 @@ Qwen3-4B-Instruct-2507, compared to standard generation (blue) and majority voti
 -->
 
 ![Method](lorge.png)
-*Figure: parallel generation followed by aggregation improves strong open models over standard decoding and majority voting.*
+*Figure: Parallel generation followed by aggregation improves strong open models over standard decoding and majority voting.*
 
 
 
@@ -149,7 +153,7 @@ Qwen3-4B-Instruct-2507, compared to standard generation (blue) and majority voti
 
 Next, we analyze the diversity issue in standard self-aggregation, and show that
 self-aggregation requires diversity among the responses to be packed into the aggregation prompt in order to
-perform better, motivating our training approach
+perform better, motivating our training approach.
 
 
 We plot the performance of multiple rounds of aggregation, measuring pass@1, pass@4, and majority voting@4. 
@@ -163,7 +167,7 @@ If the pool does not contain enough good or complementary trajectories, aggregat
 
 
 ![Method](passk.png)
-*Figure: repeated aggregation saturates below the initial pass@k bound, which motivates directly training the generator for better candidate diversity.*
+*Figure: Repeated aggregation saturates below the initial pass@k bound, which motivates directly training the generator for better candidate diversity.*
 
 
 Changing the initial sampling temperature also validates this hypothesis. We vary the initial sampling temperature (0.6, 0.8, 1.0) while keeping the aggregation sampling temperature fixed (1.0).
@@ -178,9 +182,9 @@ Pass@1 performance is similar at the initial round but a higher initial pass@k r
 
 
 
-### ParaGator experiments
+### ParaGator Experiments
 
-We validate training our ParaGator in two regimes: competition math and scientific reasoning.
+We validate training our method ParaGator in two regimes: competition math and scientific reasoning.
 
 We compare ParaGator against a number of baselines. For each, we use the same repeated aggregation scaffold, but different training methods:
 (i) the base model only, (ii) no aggregation training, just standard Dr.GRPO training, (iii) offline pass@1 aggregation training, (iv) online pass@1 aggregation training,
@@ -201,7 +205,7 @@ ParaGator delivers the best average performance after aggregation and achieves t
 
 
 ![Method](main.png)
-*Figure: Competition math experiments. The Best values in each column bolded. Numbers = Pass@1/Pass@4.*
+*Figure: Competition math experiments. The best values in each column are bolded. Numbers = Pass@1/Pass@4.*
 
 
 We plot the reward curves for both the initial round and the aggregation round. The curves show a clear trade-off in prior baselines: Dr.GRPO attains reasonable initial-round reward but lags in aggregation-round reward, while offline aggregation training exhibits the opposite pattern, improving aggregation performance at the expense of the initial round. Online multitask training partially mitigates this mismatch by optimizing both rounds jointly, but still underperforms our method. In contrast, ParaGator consistently achieves the highest reward in both rounds, which translates into the strongest overall pass rates across aggregation steps.
@@ -211,7 +215,7 @@ We plot the reward curves for both the initial round and the aggregation round. 
 
 #### Scientific Reasoning
 
-We train on a subset of the Principia dataset, consisting of a total of 30,000 questions, and report pass@1 scores both on PrincipiaBench, consisting of 2558 questions, as well as the previous
+We train on a subset of the [Principia](https://facebookresearch.github.io/RAM/blogs/principia/) dataset, consisting of a total of 30,000 questions, and report pass@1 scores both on PrincipiaBench, consisting of 2558 questions, as well as the previous
 competition math datasets.
 We train on two different models: Qwen3-4B-Base and Qwen3-4B-Instruct-2507. 
 <!--
@@ -228,7 +232,7 @@ The results suggest that pass@k-aware training is particularly effective for dif
 
 
 ![Method](main2.png)
-*Figure: Scientific reasoning (PrincipiaBench) and competition math evaluation results. Numbers denote Pass@1. Best values per column and model group are bolded. ParaGator gives the overall best results.*
+*Figure: Scientific reasoning (PrincipiaBench) and competition math evaluation results. Numbers denote Pass@1. Best values per column and model group are bolded. *
 
 
 ![Method](rewards2.png)
@@ -239,9 +243,9 @@ The results suggest that pass@k-aware training is particularly effective for dif
 
 Scaling test-time compute is only as effective as the diversity and quality of the reasoning paths that are explored. Traditional parallel decoding and self-aggregation methods are bottlenecked by off-policy generations and mode collapse. To overcome these limitations, we introduced ParaGator, a unified online reinforcement learning framework that explicitly aligns and optimizes candidate generations with downstream aggregation.
 
-Our core insight is that generation and aggregation require distinct but complementary optimization strategies. In ParaGator, the generator actively explores a diverse, complementary set of solutions through pass@k optimization. Simultaneously, the aggregator is trained via pass@1 optimization to reliably synthesize the on-policy candidates into a final answer.
+A core insight is that generation and aggregation require distinct but complementary optimization strategies. In ParaGator, the generator actively explores a diverse, complementary set of solutions through pass@k optimization. Simultaneously, the aggregator is trained via pass@1 optimization to reliably synthesize the on-policy candidates into a final answer.
 
-Extensive evaluations across competition math and scientific reasoning benchmarks validate the strength of this approach. In both base models (e.g., Qwen3-4B-Base) and strong post-trained reasoners (e.g. Qwen3-4B-Instruct-2507), ParaGator consistently improves standard offline self-aggregation. 
+Extensive evaluations across competition math and scientific reasoning benchmarks validate the strength of this approach. In both base models (e.g., Qwen3-4B-Base) and strong post-trained reasoners (e.g. Qwen3-4B-Instruct-2507), ParaGator consistently improves over standard offline self-aggregation. 
 
 <!--
 
