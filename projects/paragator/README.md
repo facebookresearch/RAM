@@ -164,8 +164,24 @@ We plot the reward curves for both the initial round and the aggregation round. 
 
 #### Scientific Reasoning
 
+We train on a subset of the Principia dataset, consisting of a total of 30,000 questions, and report pass@1 scores both on PrincipiaBench, consisting of 2558 questions, as well as the previous
+competition math datasets.
+We train on two different models: Qwen3-4B-Base and Qwen3-4B-Instruct-2507. 
+<!--
+The former resembles the “RL-Zero" paradigm, where we
+perform RL directly on a base model that has not been post-trained. 
+The latter resembles a more practical
+setup where we enhance parallel thinking behavior on a strong post-trained model.
+-->
+
+Across both backbones, we observe the same specialization trade-off: Dr.GRPO improves the initial-round reward but under-optimizes the aggregation round, while offline aggregation training (AggLM) does the opposite. Online multitask alleviates this mismatch by optimizing both stages jointly, and the pass@k variant achieves the strongest reward in both rounds, consistent with its goal of improving the quality of the candidate set consumed by aggregation.
+
+ParaGator performs strongly in these settings. 
+The results suggest that pass@k-aware training is particularly effective for difficult math, where aggregation benefits most from a higher-quality, more solution-bearing candidate pool.
+
+
 ![Method](main2.png)
-*Figure: *
+*Figure: Scientific reasoning (PrincipiaBench) and competition math evaluation results. Numbers denote Pass@1. Best values per column and model group are bolded. ParaGator gives the overall best results.*
 
 
 ![Method](rewards2.png)
@@ -174,15 +190,18 @@ We plot the reward curves for both the initial round and the aggregation round. 
 
 ## Conclusion
 
-Scaling test-time compute is only as effective as the diversity and quality of the reasoning paths that are explored. Traditional parallel decoding and self-aggregation methods are bottlenecked by off-policy generations and mode collapse. To overcome these limitations, we introduced \method{}, a unified online reinforcement learning framework that explicitly aligns and optimizes candidate generations with downstream aggregation.
+Scaling test-time compute is only as effective as the diversity and quality of the reasoning paths that are explored. Traditional parallel decoding and self-aggregation methods are bottlenecked by off-policy generations and mode collapse. To overcome these limitations, we introduced ParaGator, a unified online reinforcement learning framework that explicitly aligns and optimizes candidate generations with downstream aggregation.
 
-Our core insight is that generation and aggregation require distinct but complementary optimization strategies. In \method{}, the generator actively explores a diverse, complementary set of solutions through pass@k optimization. Simultaneously, the aggregator is trained via pass@1 optimization to reliably synthesize the on-policy candidates into a final answer.
+Our core insight is that generation and aggregation require distinct but complementary optimization strategies. In ParaGator, the generator actively explores a diverse, complementary set of solutions through pass@k optimization. Simultaneously, the aggregator is trained via pass@1 optimization to reliably synthesize the on-policy candidates into a final answer.
 
-Extensive evaluations across competition math and scientific reasoning benchmarks validate the strength of this approach. In both base models (e.g., Qwen3-4B-Base) and strong post-trained reasoners (e.g. Qwen3-4B-Instruct-2507), \method{} consistently improves standard offline self-aggregation. The gains are particularly pronounced on highly complex tasks, such as AIME and Principia, where synthesizing diverse reasoning trajectories is critical. By co-training generation and aggregation end-to-end, \method{} provides a robust, scalable recipe for improving inference-time reasoning.
+Extensive evaluations across competition math and scientific reasoning benchmarks validate the strength of this approach. In both base models (e.g., Qwen3-4B-Base) and strong post-trained reasoners (e.g. Qwen3-4B-Instruct-2507), ParaGator consistently improves standard offline self-aggregation. 
 
+<!--
+
+The gains are particularly pronounced on highly complex tasks, where synthesizing diverse reasoning trajectories is critical. By co-training generation and aggregation end-to-end, ParaGator provides a robust, scalable recipe for improving inference-time reasoning.
 
 The main insight of ParaGator is that aggregation quality is not just an inference trick. It is a training problem. If you want aggregation to work, you need candidate pools that are diverse, on-policy, and useful for synthesis. Pass@k for generation plus pass@1 for aggregation is the paper's answer to that mismatch.
-
+-->
 
 ## Contributors
 Tianjian Li, Jingyu Zhang, Ping Yu, Swarnadeep Saha, Sainbayar Sukhbaatar, Jason Weston, Ilia Kulikov, Jack Lanchantin.
