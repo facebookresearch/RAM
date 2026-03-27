@@ -125,6 +125,7 @@ Pass@1 performance is similar at the initial round but a higher initial pass@k r
 
 
 <p align="center"><img width="80%" src="temp.png" /></p>
+
 *Figure: Model = Qwen3-4B-Thinking-2507. Effect of initial sampling temperature on decoding performance. Increasing the initial temperature leaves pass@1 nearly unchanged while improving pass@k, resulting in higher aggregation performance.*
 
 
