@@ -116,12 +116,8 @@ If the pool does not contain enough good or complementary trajectories, aggregat
 <!-- The repeated-aggregation experiments make the same point more directly: -->
 
 
-
 ![Method](passk.png)
 *Figure: repeated aggregation saturates below the initial pass@k bound, which motivates directly training the generator for better candidate diversity.*
-
-<!-- *Figure: Performance of repeated aggregation is upper bounded by the initial pass@k  <span style="color: green;">(green)</span> for both Qwen3-4B-Thinking-2507 (left) and Qwen3-4B-Instruct-2507 (right). The asymptotic performance is upper-bounded by the pass@k at the initial round.*
--->
 
 
 Changing the initial sampling temperature also validates this hypothesis. We vary the initial sampling temperature (0.6, 0.8, 1.0) while keeping the aggregation sampling temperature fixed (1.0).
@@ -137,18 +133,34 @@ Pass@1 performance is similar at the initial round but a higher initial pass@k r
 
 ### ParaGator experiments
 
-blah blah
+We validate training our ParaGator in two regimes: competition math and scientific reasoning.
+
+We compare ParaGator against a number of baselines. For each, we use the same repeated aggregation scaffold, but different training methods:
+(i) the base model only, (ii) no aggregation training, just standard Dr.GRPO training, (iii) offline pass@1 aggregation training, (iv) online pass@1 aggregation training,
+and  (v) online pass@1 multitask aggregation.
 
 <p align="center"><img width="80%" src="compare_methods.png" /></p>
+
 *Figure: Comparison of training strategies across the initial and aggregation rounds. Columns show whether model parameters are updated via pass@1 or pass@k optimization, or kept fixed.*
 
 #### Competition Math
 
+We first conduct competition math experiments, with fine-tuning starting from  Qwen3-4B-Base
+on a subset of the DeepScaleR dataset, consisting of 10k prompts
+We generate 32 solutions with the following sampling parameters: {Temp = 1.0, top-p = 1, top-k = −1} and report pass@1 for up to 3 aggregation rounds.
+
+ParaGator delivers the best average performance after aggregation and achieves the strongest results on most benchmarks, demonstrating the benefit of jointly training initial-generation and aggregation behaviors within a unified online multitask framework.
+
+
+
 ![Method](main.png)
-*Figure: *
+*Figure: Competition math experiments. The Best values in each column bolded. Numbers = Pass@1/Pass@4.*
+
+
+We plot the reward curves for both the initial round and the aggregation round. The curves show a clear trade-off in prior baselines: Dr.GRPO attains reasonable initial-round reward but lags in aggregation-round reward, while offline aggregation training exhibits the opposite pattern, improving aggregation performance at the expense of the initial round. Online multitask training partially mitigates this mismatch by optimizing both rounds jointly, but still underperforms our method. In contrast, ParaGator consistently achieves the highest reward in both rounds, which translates into the strongest overall pass rates across aggregation steps.
 
 ![Method](rewards.png)
-*Figure: *
+*Figure: Reward curves for training Qwen3-4B-Base on deepscaler using different methods. The baseline* $\color{red}{(Dr.GRPO )}$ *only optimizes the initial round, making the performance lag behind during the aggregation round. Offline aggregation only training* $\color{#FFA500}{(AggLM)}$ *only optimizes the aggregation round, making it lag behind during the initial round. Our proposed method* $\color{blue}{(ParaGator)}$ *achieves the highest reward.*
 
 #### Scientific Reasoning
 
@@ -157,7 +169,8 @@ blah blah
 
 
 ![Method](rewards2.png)
-*Figure: *
+*Figure: Reward curves for training Qwen3-4B-Base on Principia. Optimizing for pass@k during the initial round* $\color{blue}{(ParaGator)}$ *achieves the highest reward on both the initial round and the aggregation round.*
+
 
 ## Conclusion
 
