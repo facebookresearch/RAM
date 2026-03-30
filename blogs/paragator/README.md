@@ -107,7 +107,7 @@ Intuitively, the model is rewarded when at least one of its $m$ attempts solves 
 
 ### Inference
 
-During training, we optimize a single round of aggregation over one candidate pool. At inference time, however, we naturally generalize this to multiple iterations of aggregation, enabling sequential scaling in addition to the learned parallel sampling.
+During training, we optimize a single round of aggregation over one candidate pool. At inference time, however, we naturally generalize this to multiple iterations of aggregation, enabling sequential scaling in addition to the learned parallel sampling (see inference figure above).
 
 Concretely, given problem $x$, we first sample an initial pool of $m$ candidates $y_{1:m}^{(0)} \sim \mathcal{M}_\theta(y \mid x)$ and sample $m$ aggregated solutions 
 
