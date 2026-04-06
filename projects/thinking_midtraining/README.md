@@ -48,8 +48,10 @@ We introduce a two-step mid-training phase. The first is a "cold-start" supervis
 
 #### Thinking SFT Mid-training
 
-We perform supervised fine-tuning (SFT) mid-training on half of the augmented corpus, which we call $$\tilde{\mathcal{D}}_{\text{SFT}}$$ using standard next-token prediction. Given a base model $\mathcal{M}\_{\text{0}}$ parameterized by $\theta$, we optimize the following objective:
-$$\mathcal{L}_{\text{SFT}}(\theta) = -\mathbb{E}_{\tilde{c}^i \sim \tilde{\mathcal{D}}} \left[ \sum_{j=1}^{|\tilde{c}^i|} \log P_\theta(\tilde{c}^i_j \mid \tilde{c}^i_{<j}) \right]$$
+We perform supervised fine-tuning (SFT) mid-training on half of the augmented corpus, which we call $$\tilde{\mathcal{D}}_{\text{SFT}}$$ using standard next-token prediction. Given a base model $$\mathcal{M}\_{\text{0}}$$ parameterized by $\theta$, we optimize the following objective:
+$$
+\mathcal{L}_{\text{SFT}}(\theta) = -\mathbb{E}_{\tilde{c}^i \sim \tilde{\mathcal{D}}} \left[ \sum_{j=1}^{|\tilde{c}^i|} \log P_\theta(\tilde{c}^i_j \mid \tilde{c}^i_{<j}) \right]
+$$
 
 where $\tilde{c}^i_j$ denotes the $j$-th token in the augmented chunk $\tilde{c}^i$, and $\tilde{c}^i_{<j}$ represents all preceding tokens. Importantly, the loss is computed over the entire augmented sequence, including both the original content tokens $x_j$ and the generated thought tokens $\tau_j$. This allows the model to learn to produce intermediate reasoning steps alongside the original content.
 
@@ -95,6 +97,7 @@ First, we evaluate whether the proposed approach improves reasoning capabilities
 Our proposed approach, thinking mid-training with interleaved reasoning significantly improves over the base model as well as existing practice of mid-training (SFT raw). Specifically, we found that simply training on 10B tokens from raw data brings doubles the average performance, although further scaling up data sizes yields slower increase in overall performance. However, SFT on context-augmented data drastically improves average performance from 0.0264 to 0.1249. RL mid-training brings the largest improvement to 0.1896 (**9x**) despite using much less data. RL mid-training (RLMT) achieves the largest improvement. Numbers next to the training method (10k, 7k, 5k) indicate the number of training steps.
 
 ![Method](table_8_midtrain.png)
+
 *Figure: Mid-training Evaluations with Llama3-8b-Base.*
 
 We plot the RL-Midtraining rewards alongside the generated thinking length for the LLama3-8b-Base model. We observe a steady increase of rewards, correlated with a steady increase in thinking length.
