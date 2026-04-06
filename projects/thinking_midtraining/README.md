@@ -13,7 +13,7 @@ MathJax = {
 ## Our Contribution
 
 
-Our approach addresses a fundamental limitation of the current LLM training paradigm: *the absence of explicit reasoning traces during pretraining leaves models ill-prepared for the reasoning demands of post-training.*
+We address a fundamental limitation of the current LLM training paradigm: *the absence of explicit reasoning traces during pretraining leaves models ill-prepared for the reasoning demands of post-training.*
 
 We thus introduce **thinking mid-training**, an intermediate SFT+RL training phase that bridges the gap between two distinct stages: pretraining on raw text followed by post-training for instruction-following and reasoning. 
 
