@@ -37,9 +37,7 @@ We introduce a data augmentation strategy that enriches pretraining corpora with
 $\mathcal{D} = \{c^1, c^2, \ldots, c^N\}$, where each chunk $c^i$ represents a contiguous segment of text with $|c^i| \leq L$ tokens.
 
 For each chunk $c^i$, we employ an annotator language model $\mathcal{A}$ to generate an augmented version $\tilde{c}^i$ that interleaves the original content with generated thoughts: 
-$$\tilde{c}^i = \mathcal{M}_{\text{teacher}}(c^i; p_t)$$
-
-where $p_t$ represents the prompt (\autoref{fig:thinking_augmentation_prompt}) that instructs the teacher model to insert thoughts at semantically appropriate positions within $c^i$. The resulting augmented chunk $\tilde{c}^i$ takes the form: $\tilde{c}^i = [x_1, \tau_1, x_2, \tau_2, \ldots, x_K, \tau_K]$, where $x_j$ represents segments of the original text and $\tau_j$ denotes the generated thoughts, such that $\text{concat}(x_1, \ldots, x_K) = c^i$. The final augmented pretraining corpus is constructed as:
+$\tilde{c}^i = \mathcal{M}_{\text{teacher}}(c^i; p_t)$ where $p_t$ represents the prompt that instructs the teacher model to insert thoughts at semantically appropriate positions within $c^i$. The resulting augmented chunk $\tilde{c}^i$ takes the form: $\tilde{c}^i = [x_1, \tau_1, x_2, \tau_2, \ldots, x_K, \tau_K]$, where $x_j$ represents segments of the original text and $\tau_j$ denotes the generated thoughts, such that $\text{concat}(x_1, \ldots, x_K) = c^i$. The final augmented pretraining corpus is constructed as:
 $\tilde{\mathcal{D}} = \{\tilde{c}^1, \tilde{c}^2, \ldots, \tilde{c}^N\}$.
 
 ### Thinking Mid-training
@@ -62,16 +60,18 @@ This SFT mid-training phase serves as an intermediate step between initial pretr
 While SFT mid-training encourages the model to imitate the teacher's reasoning patterns, it does not directly optimize for the utility of the generated thoughts. To address this, we introduce a reinforcement learning mid-training phase to further refine the model's reasoning capabilities on pretraining data.
 
 Given the second half of the augmented pretraining corpus $\tilde{\mathcal{D}}\_{RL}$, we process each chunk $\tilde{c}^i$ by splitting it into a prefix $p^i$ and a suffix $s^i$:
-$\tilde{c}^i = [p^i, s^i]$ where $p^i$ consists of the initial $l$ tokens and $s^i$ contains the remaining tokens, with $l < |\tilde{c}^i|$. For each prefix $p^i$, the model $\mathcal{M}\_{\text{1}}$ is tasked with generating a sequence of ``thinking'' tokens $\hat{\tau}^i$ followed by a predicted suffix $\hat{s}^i$: $[\hat{\tau}^i, \hat{s}^i] = \mathcal{M}\_{\text{1}}(p^i)$, where $\hat{\tau}^i$ represents the model's intermediate reasoning steps and $\hat{s}^i$ is its prediction of the ground truth suffix $s^i$.
+$\tilde{c}^i = [p^i, s^i]$ where $p^i$ consists of the initial $l$ tokens and $s^i$ contains the remaining tokens, with $l < |\tilde{c}^i|$. For each prefix $p^i$, the model $\mathcal{M}\_{\text{1}}$ is tasked with generating a sequence of "thinking" tokens $\hat{\tau}^i$ followed by a predicted suffix $\hat{s}^i$: $[\hat{\tau}^i, \hat{s}^i] = \mathcal{M}\_{\text{1}}(p^i)$, where $\hat{\tau}^i$ represents the model's intermediate reasoning steps and $\hat{s}^i$ is its prediction of the ground truth suffix $s^i$.
 
 To evaluate the quality of the generated suffix, we employ a LLM as a judge. The judge, $\mathcal{M}\_{\text{judge}}$ receives both the generated suffix $\hat{s}^i$ and the ground truth $s^i$, and outputs a binary reward $r^i \in \{0, 1\}$ indicating whether $\hat{s}^i$ matches $s^i$ sufficiently well according to predefined criteria (e.g., semantic similarity, factual correctness, or task completion): $r^i = \mathcal{M}\_{\text{judge}}(\hat{s}^i, s^i)$.
 
 
 
 The RL objective is then to maximize the expected reward over the augmented corpus:
+
 $$
-\mathcal{L}\_{\text{RL}}(\theta) = -\mathbb{E}\_{p^i \sim \tilde{\mathcal{D}}} \left[ \mathbb{E}\_{[\hat{\tau}^i, \hat{s}^i] \sim \mathcal{M}\_{\text{1}}(\cdot \mid p^i)} [r^i] \right]
+\mathcal{L}\_{\text{RL}}(\theta) = -\mathbb{E}\_{p^i \sim \tilde{\mathcal{D}}} [ \mathbb{E}\_{[\hat{\tau}^i, \hat{s}^i] \sim \mathcal{M}\_{\text{1}}(\cdot \mid p^i)} [r^i] ]
 $$
+
 where $\theta$ are the parameters of the model. We optimize this objective using DrGRPO.
 
 By incorporating RL mid-training, our method encourages the model not only to imitate the teacher's reasoning steps, but also to generate thoughts that lead to high-quality, goal-directed completions. This approach leverages the strengths of both supervised and reinforcement learning, resulting in models that reason more effectively and produce more reliable outputs during pretraining.
@@ -81,18 +81,16 @@ By incorporating RL mid-training, our method encourages the model not only to im
 
 The final stage of the pipeline is to run standard post-training. Given a set of questions $\mathcal{Q}$ from a post-training dataset, the model $\mathcal{M}\_{\text{2}}$ generates thoughts $\tau$ and answer $\hat{y}^i$ for each question $Q^i \in \mathcal{Q}$. We employ a rule-based reward model, $\mathcal{M}\_{\text{RLVR}}$ to score the responses compare to the ground truth $y^i$: $r^i = \mathcal{M}\_{\text{RLVR}}(\hat{y}^i, y^i)$.
 
-$
-\mathcal{L}\_{\text{RLVR}}(\theta) = -\mathbb{E}\_{p^i \sim \mathcal{P}}  \mathbb{E}\_{\hat{y}^i \sim \mathcal{M}\_{\text{2}}(\cdot \mid Q^i)} [r^i] 
-$
+$$
+\mathcal{L}\_{\text{RLVR}}(\theta) = -\mathbb{E}\_{p^i \sim \mathcal{P}} [ \mathbb{E}\_{\hat{y}^i \sim \mathcal{M}\_{\text{2}}(\cdot \mid Q^i)} [r^i] ]
+$$
 
 where $\theta$ are the parameters of the model. We optimize this using DrGRPO.
 
 ## Main Experimental Results
 
 ### Mid-training Performance
-First, we evaluate whether the proposed approach improves reasoning capabilities without further finetuning on downstream tasks. 
-
-Our proposed approach, thinking mid-training with interleaved reasoning significantly improves over the base model as well as existing practice of mid-training (SFT raw). Specifically, we found that simply training on 10B tokens from raw data brings doubles the average performance, although further scaling up data sizes yields slower increase in overall performance. However, SFT on context-augmented data drastically improves average performance from 0.0264 to 0.1249. RL mid-training brings the largest improvement to 0.1896 (**9x**) despite using much less data. RL mid-training (RLMT) achieves the largest improvement. Numbers next to the training method (10k, 7k, 5k) indicate the number of training steps.
+First, we evaluate whether the proposed approach improves reasoning capabilities without further finetuning on downstream tasks. Our proposed approach, thinking mid-training with interleaved reasoning significantly improves over the base model as well as existing practice of mid-training (SFT raw). Specifically, we found that simply training on 10B tokens from raw data brings doubles the average performance, although further scaling up data sizes yields slower increase in overall performance. However, SFT on context-augmented data drastically improves average performance from 0.0264 to 0.1249. RL mid-training brings the largest improvement to 0.1896 (**9x**) despite using much less data. RL mid-training (RLMT) achieves the largest improvement. Numbers next to the training method (10k, 7k, 5k) indicate the number of training steps.
 
 ![Method](table_8_midtrain.png)
 
