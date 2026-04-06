@@ -13,10 +13,14 @@ MathJax = {
 ## Our Contribution
 
 
-We introduce *thinking mid-training*, an intermediate training phase that bridges the gap between two distinct stages: pretraining on raw text followed by post-training for instruction-following and reasoning. Our approach addresses a fundamental limitation of current LLM training paradigms: *the absence of explicit reasoning traces during pretraining leaves models ill-prepared for the reasoning demands of post-training.*
+Our approach addresses a fundamental limitation of the current LLM training paradigm: *the absence of explicit reasoning traces during pretraining leaves models ill-prepared for the reasoning demands of post-training.*
+
+We thus introduce **thinking mid-training**, an intermediate SFT+RL training phase that bridges the gap between two distinct stages: pretraining on raw text followed by post-training for instruction-following and reasoning. 
 
 
-Experiments on Llama-3-8B demonstrate that thinking mid-training substantially improves post-training effectiveness: our full pipeline achieves an average accuracy of 0.38 across challenging reasoning benchmarks (GSM8K, MATH-500, AMC23, Olympiad, GPQA-Diamond), compared to 0.12 for direct RL post-training on the base model, a 3.2x improvement, and more than doubled the existing practices of mid-training with raw data.  Our results suggest that introducing reasoning earlier in the training pipeline results in models that are not only initially better at reasoning, but also better prepared for reasoning-intensive post-training.
+Our experiments  demonstrate that thinking mid-training substantially improves post-training effectiveness: our full pipeline achieves a 3.2x improvement in average accuracy across challenging reasoning benchmarks (GSM8K, MATH-500, AMC23, Olympiad, GPQA-Diamond) compared to direct RL post-training on the base model (Llama-3-8B), and more than doubled the existing practices of mid-training with raw data.  
+
+These results suggest that introducing reasoning earlier in the training pipeline yields models that are not only initially better at reasoning, but also better prepared for reasoning-intensive post-training.
 
 ![Method](self_augmenting.png)
 
