@@ -15,7 +15,7 @@ MathJax = {
 
 We address a fundamental limitation of the current LLM training paradigm: *the absence of explicit reasoning traces during pretraining leaves models ill-prepared for the reasoning demands of post-training.*
 
-We thus introduce **thinking mid-training**, an intermediate SFT+RL training phase that bridges the gap between two distinct stages: pretraining on raw text followed by post-training for instruction-following and reasoning. 
+We thus introduce **thinking mid-training**, an intermediate SFT+RL training phase that bridges the gap between pretraining on raw text and post-training for instruction-following and reasoning. 
 
 
 Our experiments  demonstrate that thinking mid-training substantially improves post-training effectiveness: our full pipeline achieves a 3.2x improvement in average accuracy across challenging reasoning benchmarks (GSM8K, MATH-500, AMC23, Olympiad, GPQA-Diamond) compared to direct RL post-training on the base model (Llama-3-8B), and more than doubled the existing practices of mid-training with raw data.  
