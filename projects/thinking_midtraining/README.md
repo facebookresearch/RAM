@@ -24,15 +24,23 @@ These results suggest that introducing reasoning earlier in the training pipelin
 
 ![Method](self_augmenting.png)
 
-*Figure: Our approach teaches models to interleave thinking to fill implicit reasoning gaps in pretraining corpora through three steps: (1) a annotator model demonstrates augmenting pretraining data with interleaved thoughts; (2) SFT mid-training teaches a student when and what to think alongside original content; (3) RL mid-training improves thought generation via an LLM judge. The resulting model achieves stronger performance of general reasoning both before and after standard RL post-training.*
+*Figure: **Thinking Mid-training** teaches the model to interleave thinking, filling in implicit reasoning gaps in pretraining corpora via 3 steps: (1) an annotator model augments pretraining data with interleaved thoughts; (2) SFT mid-training teaches the model when and what to think alongside original content; (3) RL mid-training improves thought generation via an LLM judge. The resulting model achieves stronger general reasoning performance both before and after standard RL post-training.*
 
 ## Why This Matters
-Large language models are typically trained in two stages: pretraining on raw text followed by post-training for instruction-following and reasoning. This creates a fundamental gap where reasoning capabilities must be acquired almost entirely during post-training, as pretraining data lacks explicit reasoning traces. This gap between pretraining and post-training creates several challenges. First, post-training must simultaneously teach both task-specific formats and general reasoning skills, limiting its efficiency. Second, the raw text consumed during pretraining is presented without explicit reasoning traces, leaving models to learn only surface-level patterns rather than the underlying thought processes. Lastly, recent work on reinforcement learning with verifiable rewards (RLVR) has demonstrated that models can acquire substantial reasoning capabilities through post-training alone, but this approach may be fundamentally limited by the reasoning foundations established during earlier training phases.
 
-We hypothesize that closing this gap by introducing reasoning earlier in the training pipeline can yield models that are not only better at reasoning out of the box, but also better suited for post-training and ultimately achieve stronger reasoning capabilities. *Our key insight is that pretraining data, while lacking explicit reasoning traces, contains rich opportunities for intermediate thinking which can  be trained by RL:* mathematical derivations benefit from step-by-step explanations, factual passages invite reflection on causes and implications, and narrative text contains implicit logical progressions that can be made explicit.
+LLMs are typically trained in two stages: pretraining on raw text followed by post-training for instruction-following and reasoning. This creates a fundamental gap where reasoning capabilities must be acquired almost entirely during post-training, as pretraining data lacks explicit reasoning traces. 
+
+The gap between pretraining and post-training creates several challenges. First, post-training must simultaneously teach both task-specific formats and general reasoning skills, limiting its efficiency. Second, the raw text consumed during pretraining is presented without explicit reasoning traces, leaving models to learn only surface-level patterns rather than the underlying thought processes. Finally, recent work on reinforcement learning with verifiable rewards (RLVR) has demonstrated that models can acquire substantial reasoning capabilities through post-training alone, but this approach may be fundamentally limited by the reasoning foundations established during earlier training phases.
+
+We hypothesize that closing this gap by introducing reasoning earlier in the training pipeline can yield models that are not only better at reasoning out of the box, but also better suited for post-training and ultimately achieve stronger reasoning capabilities.
+
+*Our key insight is that pretraining data, while lacking explicit reasoning traces, contains rich opportunities for intermediate thinking which can be trained by RL:* mathematical derivations benefit from step-by-step explanations, factual passages invite reflection on causes and implications, and narrative text contains implicit logical progressions that can be made explicit.
 
 ## How does it work?
 
+Thinking Mid-training consists of three steps: data thinking augmentation, SFT Mid-training and RL Mid-training. 
+
+We will describe each of these in turn.
 
 
 ### Mid-training Data Thinking Augmentation
@@ -129,9 +137,9 @@ We further compare the effects of allocating token budgets in SFT vs. in RL. As 
 ## Conclusion
 We have presented thinking mid-training, an intermediate training phase that bridges the gap between pretraining and post-training by explicitly teaching models to reason on augmented pretraining corpora. 
 
+Our experiments demonstrate the effectiveness of thinking mid-training, creating a smooth transition from raw text compression to elaborative reasoning. On Llama-3-8B, thinking mid-training combined with RL post-training achieves a 3.2x improvement in average performance across mathematical reasoning benchmarks compared to RL post-training starting from the base model. Notably, each component of our pipeline contributes meaningfully: SFT mid-training with thought-augmented data yields a 6x improvement over the base model, and RL mid-training provides additional gains, particularly on the most challenging competition-level problems. 
 
-
-Our experiments demonstrate the effectiveness of thinking mid-training which creates a smooth transition from raw text compression to elaborative reasoning. On Llama-3-8B, thinking mid-training combined with RL post-training achieves a 3.2x improvement in average performance across mathematical reasoning benchmarks compared to RL post-training starting from a base model using existing approach. Notably, each component of our pipeline contributes meaningfully: SFT mid-training with thought-augmented data yields a 6x improvement over the base model, and RL mid-training provides additional gains, particularly on the most challenging competition-level problems. These results suggest that *reasoning capabilities benefit from being trained as native behavior earlier in the training pipeline.*
+These results suggest that *reasoning capabilities benefit from being trained as native behavior earlier in the training pipeline.*
 
 
 ## [TODO] Contributors
