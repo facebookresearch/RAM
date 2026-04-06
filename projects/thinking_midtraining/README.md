@@ -126,7 +126,9 @@ We next evaluate how well each mid-training approach prepares the model for down
 
 We show the RL post-training rewards for different Llama3-8b checkpoints. We see that the models which were RL-mid-trained not only start with higher rewards than the SFT models, but sustain the higher average reward over the course of the 1,000 post-training steps. Furthermore, we observe that as we increase the number of RL mid-training steps, the higher the resulting post-training rewards are.
 
-![Method](rl_posttraining_llama_8b_train.png)
+
+<p align="center"><img width="90%" src="rl_posttraining_llama_8b_train.png" /></p>
+
 *Figure: Llama3-8B RL Post-training Rewards. We compare RL post-training of the SFT(think) models with the SFT(think) + RLMT models at different levels of RL mid-training steps. We find that RL mid-training achieves higher rewards than the SFT only models, and in general, the more RL mid-training, the higher the post-training rewards.*
 
 
