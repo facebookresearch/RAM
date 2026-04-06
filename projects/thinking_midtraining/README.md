@@ -56,7 +56,7 @@ $\tilde{c}^i = \mathcal{M}_{\text{teacher}}(c^i; p_t)$ where $p_t$ represents th
 $\tilde{\mathcal{D}} = \{\tilde{c}^1, \tilde{c}^2, \ldots, \tilde{c}^N\}$.
 
 
-#### 2) Thinking SFT Mid-training
+### 2) Thinking SFT Mid-training
 
 We perform supervised fine-tuning (SFT) mid-training on half of the augmented corpus, which we call $$\tilde{\mathcal{D}}\_{\text{SFT}}$$ using standard next-token prediction. Given a base model $$\mathcal{M}\_{\text{0}}$$ parameterized by $\theta$, we optimize the following objective:
 $\mathcal{L}\_{\text{SFT}}(\theta) = -\mathbb{E}\_{\tilde{c}^i \sim \tilde{\mathcal{D}}} \left[ \sum_{j=1}^{|\tilde{c}^i|} \log P_\theta(\tilde{c}^i_j \mid \tilde{c}^i_{<j}) \right]$
@@ -67,7 +67,7 @@ This SFT mid-training phase serves as an intermediate step between initial pretr
 
 
 
-#### 3) Thinking RL Mid-training
+### 3) Thinking RL Mid-training
 
 While SFT mid-training encourages the model to imitate the teacher's reasoning patterns, it does not directly optimize for the utility of the generated thoughts. To address this, we introduce a reinforcement learning mid-training phase to further refine the model's reasoning capabilities on pretraining data.
 
@@ -89,7 +89,7 @@ where $\theta$ are the parameters of the model. We optimize this objective using
 By incorporating RL mid-training, our method encourages the model not only to imitate the teacher's reasoning steps, but also to generate thoughts that lead to high-quality, goal-directed completions. This approach leverages the strengths of both supervised and reinforcement learning, resulting in models that reason more effectively and produce more reliable outputs during pretraining.
 
 
-#### RL Post-Training
+### RL Post-Training
 
 The final stage of the pipeline is to run standard post-training. Given a set of questions $\mathcal{Q}$ from a post-training dataset, the model $\mathcal{M}\_{\text{2}}$ generates thoughts $\tau$ and answer $\hat{y}^i$ for each question $Q^i \in \mathcal{Q}$. We employ a rule-based reward model, $\mathcal{M}\_{\text{RLVR}}$ to score the responses compare to the ground truth $y^i$: $r^i = \mathcal{M}\_{\text{RLVR}}(\hat{y}^i, y^i)$.
 
