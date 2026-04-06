@@ -18,7 +18,7 @@ We address a fundamental limitation of the current LLM training paradigm: *the a
 We thus introduce **thinking mid-training**, an intermediate SFT+RL training phase that bridges the gap between pretraining on raw text and post-training for instruction-following and reasoning. 
 
 
-Our experiments  demonstrate that thinking mid-training substantially improves post-training effectiveness: our full pipeline achieves a 3.2x improvement in average accuracy across challenging reasoning benchmarks (GSM8K, MATH-500, AMC23, Olympiad, GPQA-Diamond) compared to direct RL post-training on the base model (Llama-3-8B), and more than doubled the existing practices of mid-training with raw data.  
+Our experiments  demonstrate that thinking mid-training substantially improves post-training effectiveness: our full pipeline achieves a 3.2x improvement in average accuracy across challenging reasoning benchmarks (GSM8K, MATH-500, AMC23, Olympiad, GPQA-Diamond) compared to direct RL post-training on the base model (Llama-3-8B), and more than doubled performance compared to the existing practice of mid-training with raw data.  
 
 These results suggest that introducing reasoning earlier in the training pipeline yields models that are not only initially better at reasoning, but also better prepared for reasoning-intensive post-training.
 
