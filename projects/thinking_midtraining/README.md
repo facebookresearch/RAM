@@ -40,10 +40,13 @@ We hypothesize that closing this gap by introducing reasoning earlier in the tra
 
 Thinking Mid-training consists of three steps: data thinking augmentation, SFT Mid-training and RL Mid-training. 
 
+First, the mid-training data is augmented with thoughts. Then, a "cold-start" supervised fine-tuning phase is used to learn how to think on the pretraining data. Finally, a reinforcement learning phase  learns how to optimally think before predicting the next sequence.
+
+
 We will describe each of these in turn.
 
 
-### Mid-training Data Thinking Augmentation
+### 1) Mid-training Data Thinking Augmentation
 
 We introduce a data augmentation strategy that enriches pretraining corpora with intermediate "thoughts". Given a pretraining corpus $\mathcal{D}$, we first partition it into chunks of length $L$:
 $\mathcal{D} = \{c^1, c^2, \ldots, c^N\}$, where each chunk $c^i$ represents a contiguous segment of text with $|c^i| \leq L$ tokens.
@@ -52,11 +55,8 @@ For each chunk $c^i$, we employ an annotator language model $\mathcal{A}$ to gen
 $\tilde{c}^i = \mathcal{M}_{\text{teacher}}(c^i; p_t)$ where $p_t$ represents the prompt that instructs the teacher model to insert thoughts at semantically appropriate positions within $c^i$. The resulting augmented chunk $\tilde{c}^i$ takes the form: $\tilde{c}^i = [x_1, \tau_1, x_2, \tau_2, \ldots, x_K, \tau_K]$, where $x_j$ represents segments of the original text and $\tau_j$ denotes the generated thoughts, such that $\text{concat}(x_1, \ldots, x_K) = c^i$. The final augmented pretraining corpus is constructed as:
 $\tilde{\mathcal{D}} = \{\tilde{c}^1, \tilde{c}^2, \ldots, \tilde{c}^N\}$.
 
-### Thinking Mid-training
 
-We introduce a two-step mid-training phase. The first is a "cold-start" supervised fine-tuning phase which learns how to think on pretraining data. The second is a reinforcement learning phase which learns how to optimally think before predicting the next sequence.
-
-#### Thinking SFT Mid-training
+#### 2) Thinking SFT Mid-training
 
 We perform supervised fine-tuning (SFT) mid-training on half of the augmented corpus, which we call $$\tilde{\mathcal{D}}\_{\text{SFT}}$$ using standard next-token prediction. Given a base model $$\mathcal{M}\_{\text{0}}$$ parameterized by $\theta$, we optimize the following objective:
 $\mathcal{L}\_{\text{SFT}}(\theta) = -\mathbb{E}\_{\tilde{c}^i \sim \tilde{\mathcal{D}}} \left[ \sum_{j=1}^{|\tilde{c}^i|} \log P_\theta(\tilde{c}^i_j \mid \tilde{c}^i_{<j}) \right]$
@@ -67,7 +67,7 @@ This SFT mid-training phase serves as an intermediate step between initial pretr
 
 
 
-#### Thinking RL Mid-training
+#### 3) Thinking RL Mid-training
 
 While SFT mid-training encourages the model to imitate the teacher's reasoning patterns, it does not directly optimize for the utility of the generated thoughts. To address this, we introduce a reinforcement learning mid-training phase to further refine the model's reasoning capabilities on pretraining data.
 
