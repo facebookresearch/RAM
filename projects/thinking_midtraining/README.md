@@ -13,10 +13,7 @@ MathJax = {
 ## Our Contribution
 
 
-We introduce *thinking mid-training*, an intermediate training phase that bridges the gap between two distinct stages: pretraining on raw text followed by post-training for instruction-following and reasoning. Our approach consists of three components: 
-- a data augmentation strategy that uses a teacher model to enrich pretraining text with interleaved "thoughts", or intermediate reasoning steps inserted at semantically appropriate positions, 
-- supervised fine-tuning on the augmented corpus to teach model how to interleave thoughts,
-- reinforcement learning with an LLM judge to optimize the utility of thoughts for predicting subsequent text. 
+We introduce *thinking mid-training*, an intermediate training phase that bridges the gap between two distinct stages: pretraining on raw text followed by post-training for instruction-following and reasoning. Our approach addresses a fundamental limitation of current LLM training paradigms: *the absence of explicit reasoning traces during pretraining leaves models ill-prepared for the reasoning demands of post-training.*
 
 
 Experiments on Llama-3-8B demonstrate that thinking mid-training substantially improves post-training effectiveness: our full pipeline achieves an average accuracy of 0.38 across challenging reasoning benchmarks (GSM8K, MATH-500, AMC23, Olympiad, GPQA-Diamond), compared to 0.12 for direct RL post-training on the base model, a 3.2x improvement, and more than doubled the existing practices of mid-training with raw data.  Our results suggest that introducing reasoning earlier in the training pipeline results in models that are not only initially better at reasoning, but also better prepared for reasoning-intensive post-training.
@@ -51,7 +48,7 @@ We introduce a two-step mid-training phase. The first is a "cold-start" supervis
 
 #### Thinking SFT Mid-training
 
-We perform supervised fine-tuning (SFT) mid-training on half of the augmented corpus, which we call $\tilde{\mathcal{D}}_{SFT}$ using standard next-token prediction. Given a base model $\mathcal{M}_{\text{0}}$ parameterized by $\theta$, we optimize the following objective:
+We perform supervised fine-tuning (SFT) mid-training on half of the augmented corpus, which we call $$\tilde{\mathcal{D}}_{\text{SFT}}$$ using standard next-token prediction. Given a base model $\mathcal{M}\_{\text{0}}$ parameterized by $\theta$, we optimize the following objective:
 $$\mathcal{L}_{\text{SFT}}(\theta) = -\mathbb{E}_{\tilde{c}^i \sim \tilde{\mathcal{D}}} \left[ \sum_{j=1}^{|\tilde{c}^i|} \log P_\theta(\tilde{c}^i_j \mid \tilde{c}^i_{<j}) \right]$$
 
 where $\tilde{c}^i_j$ denotes the $j$-th token in the augmented chunk $\tilde{c}^i$, and $\tilde{c}^i_{<j}$ represents all preceding tokens. Importantly, the loss is computed over the entire augmented sequence, including both the original content tokens $x_j$ and the generated thought tokens $\tau_j$. This allows the model to learn to produce intermediate reasoning steps alongside the original content.
@@ -127,7 +124,8 @@ We further compare the effects of allocating token budgets in SFT vs. in RL. As 
 
 
 ## Conclusion
-We have presented thinking mid-training, an intermediate training phase that bridges the gap between pretraining and post-training by explicitly teaching models to reason on augmented pretraining corpora. Our approach addresses a fundamental limitation of current LLM training paradigms: *the absence of explicit reasoning traces during pretraining leaves models ill-prepared for the reasoning demands of post-training.*
+We have presented thinking mid-training, an intermediate training phase that bridges the gap between pretraining and post-training by explicitly teaching models to reason on augmented pretraining corpora. 
+
 
 
 Our experiments demonstrate the effectiveness of thinking mid-training which creates a smooth transition from raw text compression to elaborative reasoning. On Llama-3-8B, thinking mid-training combined with RL post-training achieves a 3.2x improvement in average performance across mathematical reasoning benchmarks compared to RL post-training starting from a base model using existing approach. Notably, each component of our pipeline contributes meaningfully: SFT mid-training with thought-augmented data yields a 6x improvement over the base model, and RL mid-training provides additional gains, particularly on the most challenging competition-level problems. These results suggest that *reasoning capabilities benefit from being trained as native behavior earlier in the training pipeline.*
