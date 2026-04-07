@@ -106,7 +106,7 @@ First, we evaluate whether the proposed approach improves reasoning capabilities
 
 <p align="center"><img width="100%" src="table_8_midtrain.png" /></p>
 
-*Figure: Mid-training Evaluations with Llama3-8b-Base.*
+*Figure: Mid-training Evaluations with Llama3-8b-Base. Our full method is SFT +  RL mid-training (RLMT).*
 
 We plot the RL-Midtraining rewards alongside the generated thinking length for the LLama3-8b-Base model. We observe a steady increase of rewards, correlated with a steady increase in thinking length.
 
@@ -127,9 +127,9 @@ Notably, the gains from thinking mid-training compound with post-training: model
 <p align="center"><img width="100%" src="table_9_posttrain.png" /></p>
 
 
-*Figure: Post-training Evaluations with Llama3-8b-Base. Our proposed approach also leads to better post-training performance. We found SFT on interleaving thoughts augmentation prepares the model for more performance RL post-training, and scaling up RL mid-training (RLMT) consistently improves the downstream RL post-training (RLPT) further. Numbers next to the training method (10k, 7k, ...) indicate the number of training steps.*
+*Figure: Post-training Evaluations with Llama3-8b-Base. Our method leads to better post-training performance. We found SFT on interleaving thoughts augmentation prepares the model for more performant RL post-training, and scaling up RL mid-training (RLMT) consistently improves the downstream RL post-training (RLPT) further. Numbers next to the training method (10k, 7k, ...) indicate the number of training steps.*
 
-We show the RL post-training rewards for different Llama3-8b checkpoints. We see that the models which were RL-mid-trained not only start with higher rewards than the SFT models, but sustain the higher average reward over the course of the 1,000 post-training steps. Furthermore, we observe that as we increase the number of RL mid-training steps, the higher the resulting post-training rewards are.
+We compare the RL post-training rewards for different Llama3-8b checkpoints. We see that the models which were RL-mid-trained not only start with higher rewards than the SFT models, but sustain the higher average reward over the course of the 1,000 post-training steps. Furthermore, we observe that as we increase the number of RL mid-training steps, the higher the resulting post-training rewards are.
 
 <p align="center"><img width="90%" src="rl_posttraining_llama_8b_train.png" /></p>
 
@@ -137,7 +137,7 @@ We show the RL post-training rewards for different Llama3-8b checkpoints. We see
 
 
 ### Data Efficiency of RL Mid-training
-We further compare the effects of allocating token budgets in SFT vs. in RL. As is shown in the table above, increasing SFT token budget from 7.8B (SFT think 7k steps) to 10.5B (SFT think 10k steps) improves average accuracy from 0.3346 to 0.3480. On the other hand, scaling up RL Mid-train achieves 0.3785 average accuracy with less tokens (8.7B). As pretraining is shifting from compute-bound to data-bound, our approach demonstrates consistent improvement by effectively leveraging compute while less affected by the "data wall".
+We further compare the effects of allocating token budgets in SFT vs. in RL. As is shown in the table above, increasing SFT token budget from 7.8B (SFT think 7k steps) to 10.5B (SFT think 10k steps) improves average accuracy from 0.3346 to 0.3480. On the other hand, scaling up RL Mid-train achieves 0.3785 average accuracy with less tokens (8.7B). As pretraining is shifting from compute-bound to data-bound, our approach demonstrates consistent improvement by effectively leveraging compute while being less affected by the "data wall".
 
 
 ## Conclusion
