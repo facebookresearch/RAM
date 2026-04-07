@@ -149,18 +149,18 @@ These results suggest that *reasoning capabilities benefit from being trained as
 
 
 ## Contributors
-Jack Lanchantin, Danwei Li, Thao Nguyen, Sainbayar Sukhbaatar, Ilia Kulikov, Jason Weston, Xian Li
+Jack Lanchantin, Danwei Li, Thao Nguyen, Sainbayar Sukhbaatar, Ilia Kulikov, Jason Weston, Xian Li.
 
 
 ## More details
 More details can be found in the [full technical report](https://arxiv.org/abs/2601.21343) (see Chapter 2).
 
-## [TODO] Citation
+## Citation
 To reference the work in this blog post, please use the following BibTex entry:
 ```
 @misc{tan2026selfimprovingpretrainingusingposttrained,
       title={Self-Improving Pretraining: using post-trained models to pretrain better models}, 
-      author={Ellen Xiaoqing Tan and Shehzaad Dhuliawala and Jing Xu and Ping Yu and Sainbayar Sukhbaatar and Jason Weston and Olga Golovneva},
+      author={Ellen Xiaoqing Tan, Jack Lanchantin, Shehzaad Dhuliawala, Danwei Li, Thao Nguyen, Jing Xu, Ping Yu, Ilia Kulikov, Sainbayar Sukhbaatar, Jason Weston, Xian Li, Olga Golovneva},
       year={2026},
       eprint={2601.21343},
       archivePrefix={arXiv},
