@@ -80,7 +80,7 @@ To evaluate the quality of the generated suffix, we employ a LLM as a judge. The
 The RL objective is then to maximize the expected reward over the augmented corpus:
 
 $$
-\mathcal{L}\_{\text{RL}}(\theta) = -\mathbb{E}\_{p^i \sim \tilde{\mathcal{D}}} [ \mathbb{E}\_{[\hat{\tau}^i, \hat{s}^i] \sim \mathcal{M}\_{\text{mid}}(\cdot \mid p^i)} [r^i] ]
+\mathcal{L}\_{\text{RLVR}}(\theta) = -\mathbb{E}\_{p^i \sim \tilde{\mathcal{D}}} [ \mathbb{E}\_{[\hat{\tau}^i, \hat{s}^i] \sim \mathcal{M}\_{\text{mid}}(\cdot \mid p^i)} [r^i] ]
 $$
 
 where $\theta$ are the parameters of the model. We optimize this objective using DrGRPO.
