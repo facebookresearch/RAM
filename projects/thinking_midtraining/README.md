@@ -104,13 +104,15 @@ where $\theta$ are the parameters of the model. We optimize this using DrGRPO.
 ### Mid-training Performance
 First, we evaluate whether the proposed approach improves reasoning capabilities without further finetuning on downstream tasks. We find thinking mid-training significantly improves over the base model as well as the existing practice of mid-training (SFT raw). Specifically, we found that simply training on 10B tokens from raw data brings doubles the average performance, although further scaling up data sizes yields a slower increase in overall performance. However, SFT on context-augmented data drastically improves average performance from 0.0264 to 0.1249. RL mid-training brings the largest improvement to 0.1896 (**9x**) despite using much less data. RL mid-training (RLMT) achieves the largest improvement. Numbers next to the training method (10k, 7k, 5k) indicate the number of training steps.
 
-![Method](table_8_midtrain.png)
+<p align="center"><img width="100%" src="table_8_midtrain.png" /></p>
 
 *Figure: Mid-training Evaluations with Llama3-8b-Base.*
 
 We plot the RL-Midtraining rewards alongside the generated thinking length for the LLama3-8b-Base model. We observe a steady increase of rewards, correlated with a steady increase in thinking length.
 
-![Method](rl_midtraining_llama_8b_reward_length.png)
+
+<p align="center"><img width="100%" src="rl_midtraining_llama_8b_reward_length.png" /></p>
+
 *Figure: Average reward and thinking length (number of generated tokens before the predicted suffix)  over the course of RL mid-training steps.*
 <!--
 ![Method](rl_midtraining_llama_8b_think_length.png)
@@ -118,14 +120,16 @@ We plot the RL-Midtraining rewards alongside the generated thinking length for t
 -->
 
 ### Post-training Performance
-We next evaluate how well each mid-training approach prepares the model for downstream RL post-training. We apply standard RLVR post-training to each mid-trained checkpoint using mathematical reasoning tasks with verifiable rewards. The base Llama-3.1-8B model, when directly post-trained with RLVR without any mid-training, achieves an average score of 0.1197. In contrast, our full pipeline SFT mid-training on thinking-augmented data followed by RL mid-training achieves an average of 0.3837 after post-training, representing a 3.2x improvement. Notably, the gains from thinking mid-training compound with post-training: models that undergo SFT mid-training on thinking-augmented data alone achieve substantially higher post-training performance than those trained on raw data, confirming that reasoning patterns learned during mid-training transfer effectively to downstream tasks. These results demonstrate that thinking mid-training not only improves zero-shot reasoning capabilities but also fundamentally enhances the model's capacity to benefit from subsequent post-training.
+We next evaluate how well our approach prepares the model for downstream RL post-training. We apply standard RLVR post-training to our method and various baselines using mathematical reasoning tasks with verifiable rewards. The base Llama-3.1-8B model, when directly post-trained with RLVR without any mid-training, achieves an average score of 0.1197. In contrast, our full pipeline SFT+RL thinking mid-training achieves an average of 0.3837 after post-training, representing a 3.2x improvement. 
 
-![Method](table_9_posttrain.png)
+Notably, the gains from thinking mid-training compound with post-training: models that undergo SFT mid-training on thinking-augmented data alone achieve substantially higher post-training performance than those trained on raw data, confirming that reasoning patterns learned during mid-training transfer effectively to downstream tasks. These results demonstrate that thinking mid-training not only improves zero-shot reasoning capabilities but also fundamentally enhances the model's capacity to benefit from subsequent post-training.
+
+<p align="center"><img width="100%" src="table_9_posttrain.png" /></p>
+
 
 *Figure: Post-training Evaluations with Llama3-8b-Base. Our proposed approach also leads to better post-training performance. We found SFT on interleaving thoughts augmentation prepares the model for more performance RL post-training, and scaling up RL mid-training (RLMT) consistently improves the downstream RL post-training (RLPT) further. Numbers next to the training method (10k, 7k, ...) indicate the number of training steps.*
 
 We show the RL post-training rewards for different Llama3-8b checkpoints. We see that the models which were RL-mid-trained not only start with higher rewards than the SFT models, but sustain the higher average reward over the course of the 1,000 post-training steps. Furthermore, we observe that as we increase the number of RL mid-training steps, the higher the resulting post-training rewards are.
-
 
 <p align="center"><img width="90%" src="rl_posttraining_llama_8b_train.png" /></p>
 
