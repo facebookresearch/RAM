@@ -148,7 +148,9 @@ Our experiments demonstrate the effectiveness of thinking mid-training, creating
 These results suggest that *reasoning capabilities benefit from being trained as native behavior earlier in the training pipeline.*
 
 
-## [TODO] Contributors
+## Contributors
+Jack Lanchantin, Danwei Li, Thao Nguyen, Sainbayar Sukhbaatar, Ilia Kulikov, Jason Weston, Xian Li
+
 
 ## More details
 More details can be found in the [full technical report](https://arxiv.org/abs/2601.21343) (see Chapter 2).
