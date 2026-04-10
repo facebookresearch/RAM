@@ -7,6 +7,10 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 #### _CoT and RL_
 
+- **Prinicipia** [[paper]](https://arxiv.org/abs/2603.18886) [[blog]](https://facebookresearch.github.io/RAM/blogs/principia) [[tweet]](https://x.com/jaseweston/status/2040062089725645039) _Reasoning over Mathematical Objects._
+
+- **ParaGator** [[paper]](https://arxiv.org/abs/2603.18886) [[blog]](https://facebookresearch.github.io/RAM/blogs/paragator/) [[tweet]](https://x.com/jaseweston/status/2038609971160424748) _Train generation with pass@k, and aggregation with pass@1 on-policy, end-to-end for better results._
+
 - **AggLM** [[paper]](https://arxiv.org/abs/2509.06870) [[tweets]](https://x.com/jaseweston/status/1965233976949543194)
   _Uses RL to train an LLM solution aggregator, with strong results_.
 
@@ -76,6 +80,8 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 ## Reward Models & Evaluation
 
+- **RLLM** [[paper]](https://arxiv.org/abs/2603.18886) [[blog]](https://facebookresearch.github.io/RAM/blogs/rllm/) [[tweet]](https://x.com/jaseweston/status/2036119252214620513) Unified Post-Training via On-Policy-Trained LM-as-RM.
+
 - **HERO** [[paper]](https://arxiv.org/abs/2510.07242) [[tweets]](https://x.com/jaseweston/status/1977756142571864539)
   _Combines sparse verifiable and dense RMs into a hybrid reward to give better results_.
 
@@ -122,6 +128,18 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
   _Generalization to New Tools via Self-Verification._
 
 
+## Pre- and Mid-Training
+
+- **Thinking Mid-training: RL of Interleaved Reasoning** [[paper]](https://arxiv.org/abs/2601.21343) [[blog]](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/) [[tweet]](https://x.com/jaseweston/status/2041864833214095484)
+  _An intermediate SFT+RL mid-training phase to teach models how to think._
+
+- **Self-Improving Pretraining** [[paper]](https://arxiv.org/abs/2601.21343) [[tweet]](https://x.com/jaseweston/status/2017071377866494226)
+  _Reinvents pretraining with sequence-based RL to improve safety, quality and factuality._
+  
+- **Recycling the Web** [[paper]](https://arxiv.org/abs/2506.04689)
+  _A method to create more high quality pretraining data via rewriting low quality documents._
+
+
 ## Synthetic Data
 
 #### _synthetic data & data quality_
@@ -162,6 +180,8 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 ## (Self-)Alignment
 
 #### _(self-)alignment optimization techniques_
+
+- **CharacterFlywheel** [[paper]](https://arxiv.org/abs/2603.01973) _Continual learning in production (with humans-in-the-loop)._
 
 - **SPICE** [[paper]](https://arxiv.org/abs/2510.24684) [[tweets]](https://x.com/jaseweston/status/1983343787465150814).
   _Challenger creates tasks grounded on documents, Reasoner solves them in self-play, both trained by RL_.
