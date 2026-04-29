@@ -139,7 +139,7 @@ exhausting its step budget.
 We study the Agentic Self-Instruct iterative agentic process and evaluate if it genuinely improves data quality.
 
 **Improvement works through exploration.**
-Each agent round generates a new question from a different reasoning angle, guided by feedback on which previous questions were too easy or failed to discriminate. Only about 3\% of tasks produce a fully accepted question on the first attempt, while the iterative process raises the overall acceptance rate to 23\%. The accepted questions after the agentic loop test qualitatively different reasoning: specific technical mechanisms, multi-step derivations, and paper-specific design tradeoffs, compared to the broader, more generic questions produced without this loop.
+Each agent round generates a new question from a different reasoning angle, guided by feedback on which previous questions were too easy or failed to discriminate. Only about 2-3\% of tasks produce a fully accepted question on the first attempt, while the iterative process raises the overall acceptance rate to 23\%. The accepted questions after the agentic loop test qualitatively different reasoning: specific technical mechanisms, multi-step derivations, and paper-specific design tradeoffs, compared to the broader, more generic questions produced without this loop.
 
 **Data quality.**
 We compare the accepted Agentic Self-Instruct data against CoT Self-Instruct (standard single-shot prompted generation). Under CoT Self-Instruct, the two solvers (weak and strong) score nearly identically---weak at 71.4\% and strong at 73.3\%, a gap of only 1.9 percentage points---showing that single-shot questions fail to find challenging enough tasks for either model. Agentic Self-Instruct drives the weak score down to 43.7\% while lifting the strong score to 77.8\%, widening the gap to 34 points. The agentic data creation loop produces questions that specifically reward stronger model capabilities, rather than questions both models can answer.
@@ -147,7 +147,7 @@ We compare the accepted Agentic Self-Instruct data against CoT Self-Instruct (st
 
 <p align="center"><img width="80%" src="cs1.png" /></p>
 
-*Figure: Quality statistics for CS research QA pairs. CoT Self-Instruct is standard single-shot prompted generation; Agentic Self-Instruct is after the agentic autodata loop.*
+*Figure: Quality statistics for CS research QA pairs as measured by solution quality of the weak and strong solvers. CoT Self-Instruct is standard single-shot prompted generation; Agentic Self-Instruct is after the agentic autodata loop.*
 
 **Independent quality evaluation.**
 We evaluate quality using two independent LLM judges (Gemini 3 Pro and Opus 4) across four dimensions: question quality, reference answer quality, rubric quality, and context quality. Evaluating 135 CS papers with positional debiasing, Agentic Self-Instruct significantly outperforms standard prompted generation, with both judges agreeing on a 91\% overall win rate.
