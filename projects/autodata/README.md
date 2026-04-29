@@ -14,13 +14,14 @@ Our initial study with a specific implementation, which we call Agentic Self-Ins
 We introduce **Autodata**, a method to allow the use of AI agents to act as data scientists who
 iteratively build high quality training and evaluation data. We show how to train (meta-optimize) such
 a data scientist agent, so that it can create even stronger data. 
-This direction has the potential to change the way we build AI data.
 
 Our initial study with a specific practical implementation, *Agentic Self-Instruct*, shows strong gains on scientific reasoning problems compared
 to classical synthetic dataset creation methods.
 Further, meta-optimizing the data scientist agent itself delivers an even larger performance uplift.
 
+Agentic data creation provides a way to **convert increased inference compute into higher quality model training**.
 
+Overall, this direction has the potential to change the way we build AI data.
 
 <p align="center"><img width="90%" src="main1.png" /></p>
 
