@@ -199,7 +199,7 @@ The meta-optimizer identified several systematic failure modes through trajector
 - **Structured rubric format**: The optimizer enforced a strict JSON format for rubric criteria with integer weights, eliminating parsing errors (e.g., string weights like ``+8'' instead of the integer 8) that had caused evaluation failures in earlier iterations.
 
 
-<p align="center"><img width="70%" src="meta2.png" /></p>
+<p align="center"><img width="60%" src="meta2.png" /></p>
 
 *Figure: Meta-optimization of the data scientist agent on the CS research paper task. The optimizer iteratively improves the agent’s prompt, with each accepted iteration building on the previous best. Validation pass rate (re-evaluated) measures the fraction of generated QA pairs that successfully separate weak and strong solvers, averaged over multiple
 re-evaluations to reduce noise.*
