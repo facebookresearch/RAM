@@ -189,7 +189,7 @@ We also apply meta-optimization to the data scientist agent itself, using the sa
 
 **Setup.** We meta-optimize the CS research paper task from Section~3.2. The meta-optimizer uses Kimi-K2.6 as both the analyzer (which reads evaluation trajectories to diagnose failure patterns) and the implementer (which modifies the agent's prompts). The inner-loop agent being optimized also uses Kimi-K2.6 in a multi-agent configuration with separate challenger, main agent, and quality verifier prompts. We use 50 training papers and 25 validation papers. A generated QA pair is considered successful if the weak solver (Qwen3.5-4B) scores <=50\%, the strong solver (Qwen3.5-397B-A17B) scores >=60\%, and the gap is >=25 percentage points, as judged by rubric-based evaluation.
 
-**Results.** Starting from a baseline prompt that achieves 2\% validation pass rate, the meta-optimizer progressively discovers prompt improvements across 233 iterations, with 126 accepted changes (54\% acceptance rate). We report the average pass rate across at least 5 evals. 
+**Results.** Starting from a baseline prompt that achieves 2\% validation pass rate, the meta-optimizer progressively discovers prompt improvements across 233 iterations. We report the average pass rate across at least 4 independent evals. 
 
 The meta-optimizer identified several systematic failure modes through trajectory analysis --- examining what the weak solver actually said in its responses and identifying that generic answers and rubric format errors were the dominant causes of poor separation. The optimizer addressed these through the following prompt modifications, discovered automatically over the course of 233 iterations:
 
