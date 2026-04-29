@@ -21,7 +21,7 @@ Further, meta-optimizing the data scientist agent itself delivers an even larger
 
 Agentic data creation provides a way to **convert increased inference compute into higher quality model training**.
 
-Overall, this direction has the potential to change the way we build AI data.
+Overall, this direction has the potential to change how we build AI data.
 
 <p align="center"><img width="90%" src="main1.png" /></p>
 
