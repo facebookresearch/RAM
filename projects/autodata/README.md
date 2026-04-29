@@ -119,7 +119,7 @@ and Qwen3.5-4B as the weak solver. Success requires the strong solver to score m
 weak solver on the rubric (i.e., we set average strong ≥ 65%, weak < 50%, gap ≥ 15% across the
 solver attempts).
 
-*Pipeline overview.* The main orchestrator agent calls the challenger to generate a context-QA pair with
+*Pipeline overview.* The main LLM agent calls the challenger to generate a context-QA pair with
 rubric from a given paper. A quality verifier then checks for context leakage, rubric coverage, and question
 quality before quality gap evaluation proceeds. The question and context are sent to both weak and strong solvers (each invoked 3 times
 to reduce variance), and the judge scores their answers against the rubric on a per-criterion basis. If any
@@ -131,7 +131,7 @@ exhausting its step budget.
 
 *Scale.* We process over 10,000 CS papers from the [S2ORC corpus](https://github.com/allenai/s2orc) (2022+), producing 
  2,117 QA pairs that have an accepted quality gap, and satisfy further quality constraints 
- (which remove questions with paper-specific reference leakage, short contexts, or malformed rubrics).
+ (i.e., removing questions with paper-specific reference leakage, short contexts, or malformed rubrics).
 
 ### Results: data quality analysis
 
@@ -211,7 +211,7 @@ The progression from 2\% to 24\% validated pass rate demonstrates that meta-opti
 ## Conclusion and Next Steps
 
 
-We believe these initial experiments are just the tip of the iceberg and further exploration and optimization of this approach will bring further gains, see the next steps in the following section.
+We believe these initial experiments are just the tip of the iceberg and further exploration and optimization of this approach will bring further gains.
 
 
 **More tasks, models and baselines.** Future continued work should explore the use of this method across more diverse tasks and models. We envision the ideal system being a general agent that can be used for any kind of data (mathematics, code, general instruction following tasks, safety, and so on) from verifiable to non-verifiable, single-turn to multi-turn and with supporting documents and more complex, e.g. agentic tasks. 
