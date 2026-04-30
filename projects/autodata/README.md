@@ -317,7 +317,7 @@ We evaluate quality using two independent LLM judges (Gemini 3 Pro and Opus 4) a
 
 *Figure: Win rate of Agentic Self-Instruct over standard prompting, by judging data quality with two independent LLM judges.*
 -->
-
+<!--
 **Example executions.** Below we show two example storyboards of the agentic self-instruct process, illustrating how the agent iteratively drafts questions and evaluates weak vs. strong solver separation across multiple rounds.
 
 <p align="center">
@@ -325,6 +325,7 @@ We evaluate quality using two independent LLM judges (Gemini 3 Pro and Opus 4) a
   Your browser does not support SVG
 </object>
 </p>
+-->
 
 *Figure: Storyboard of task-174 (NeuroPlug, CS security paper). Rows are refinement rounds. Within a row: Question → Solvers → Judge. Dashed red arcs between rounds show revision feedback.*
 
