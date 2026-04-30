@@ -22,7 +22,10 @@ Agentic data creation provides a way to **convert increased inference compute in
 
 Overall, this direction has the potential to change how we build AI data.
 
+<!--
 <p align="center"><img width="90%" src="main1.png" /></p>
+-->
+<p align="center"><img width="65%" src="main2.png" /></p>
 
 *Figure: Autodata pipeline. The framework employs an autonomous agent that emulates the role of a data scientist, iteratively generating data, conducting qualitative inspection and quantitative performance evaluation, synthesizing insights, and updating the data-generation recipe. The agent itself can be trained to be better at the data scientist task using the same criteria used in the inner loop. This cyclical process aims to progressively enhance data quality; the diagram depicts the general workflow underlying possible instantiations.*
 
@@ -88,7 +91,10 @@ Here, the main agent LLM has access to four LLM subagents:
   
 The main agent LLM proceeds to create an example (an input + response pair), by sending its initial prompt including grounding data to the Challenger LLM. It then checks the quality of the Challenger LLM’s work by sending the input to the weak and strong solvers, and assigning a reward based on the verifier’s judgments.
 
-<p align="center"><img width="80%" src="asi.png" /></p>
+<!--
+<p align="center"><img width="80%" src="asi2.png" /></p>
+-->
+<p align="center"><img width="65%" src="asi2.png" /></p>
 
 
 *Figure: Weak-vs-strong Agentic Self-Instruct method. The main LLM agent directs four subagents: a Challenger LLM generates examples; Weak and Strong solvers attempt it; a Judge evaluates their outputs. The system aims to generate training data where the Strong solver succeeds while the Weak solver fails. The main LLM analyzes data and updates the Challenger prompt using the judge’s feedback and repeats the cycle, yielding challenging examples for training the weak solver.*
