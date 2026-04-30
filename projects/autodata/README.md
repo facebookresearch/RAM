@@ -307,7 +307,11 @@ array.
 We study the Agentic Self-Instruct iterative agentic process and evaluate if it genuinely improves data quality.
 
 **Improvement works through exploration.**
-Each agent round generates a new question from a different reasoning angle, guided by feedback on which previous questions were too easy or failed to discriminate. Only about 2-3\% of tasks produce a fully accepted question on the first attempt, while the iterative process raises the overall acceptance rate to 23\%. The accepted questions after the agentic loop test qualitatively different reasoning: specific technical mechanisms, multi-step derivations, and paper-specific design tradeoffs, compared to the broader, more generic questions produced without this loop.
+Each agent round generates a new question from a different reasoning angle, guided by feedback on which previous questions were too easy or failed to discriminate. 
+<!--
+Only about 2-3\% of tasks produce a fully accepted question on the first attempt, while the iterative process raises the overall acceptance rate to 23\%. 
+-->
+The accepted questions after the agentic loop test qualitatively different reasoning: specific technical mechanisms, multi-step derivations, and paper-specific design tradeoffs, compared to the broader, more generic questions produced without this loop.
 
 **Data quality.**
 We compare the accepted Agentic Self-Instruct data against CoT Self-Instruct (standard single-shot prompted generation). Under CoT Self-Instruct, the two solvers (weak and strong) score nearly identically---weak at 71.4\% and strong at 73.3\%, a gap of only 1.9 percentage points---showing that single-shot questions fail to find challenging enough tasks for either model. Agentic Self-Instruct drives the weak score down to 43.7\% while lifting the strong score to 77.8\%, widening the gap to 34 points. The agentic data creation loop produces questions that specifically reward stronger model capabilities, rather than questions both models can answer.
@@ -317,12 +321,14 @@ We compare the accepted Agentic Self-Instruct data against CoT Self-Instruct (st
 
 *Figure: Quality statistics for CS research QA pairs as measured by solution quality of the weak and strong solvers. CoT Self-Instruct is standard single-shot prompted generation; Agentic Self-Instruct is after the agentic autodata loop.*
 
+<!--
 **Independent quality evaluation.**
 We evaluate quality using two independent LLM judges (Gemini 3 Pro and Opus 4) across four dimensions: question quality, reference answer quality, rubric quality, and context quality. Evaluating 135 CS papers with positional debiasing, Agentic Self-Instruct significantly outperforms standard prompted generation, with both judges agreeing on a 91\% overall win rate.
 
 <p align="center"><img width="80%" src="cs2.png" /></p>
 
 *Figure: Win rate of Agentic Self-Instruct over standard prompting, by judging data quality with two independent LLM judges.*
+-->
 
 **Example storyboards.** Below we show two example storyboards of the agentic self-instruct process, illustrating how the agent iteratively drafts questions and evaluates weak vs. strong solver separation across multiple rounds.
 
@@ -365,15 +371,18 @@ We also apply meta-optimization to the data scientist agent itself, using the sa
 
 *Figure: Meta-optimization of the data scientist agent. An outer optimization loop evaluates the agent’s prompt on training papers, analyzes failure trajectories to identify systematic weaknesses (e.g., context leakage), implements prompt modifications via a code-editing agent, and re-evaluates on held-out validation papers. Changes are accepted only if they improve the weak-strong separation rate. This process improved validation pass rate from 2% to 24% over 126 accepted iterations out of 233 total.*
 
-
-
 *Method.* The meta-optimizer runs a loop of: 
-- (1) **Evaluate** the current agent prompt on a set of training papers, measuring the weak-strong separation rate;
+- (1) **Evaluate** the current agent harness on a set of training papers, measuring the weak-strong separation rate;
 - (2) **Analyze** the evaluation trajectories, identifying systematic failure patterns (e.g., why the weak solver scores too high on generated questions);
-- (3) **Implement** prompt modifications via a code-editing agent that rewrites the agent's instructions based on the analysis; and
-- (4) **Re-evaluate** the modified prompt on held-out validation papers, accepting the change only if it improves the separation rate. This loop runs for multiple iterations, with each accepted change building on the previous best prompt.
+- (3) **Implement** harness modification via a code-editing agent that rewrites the agent's harness based on the analysis; and
+- (4) **Re-evaluate** the modified harness on held-out validation papers, accepting the change only if it improves the separation rate. This loop runs for multiple iterations, with each accepted change building on the previous best prompt.
 
+<!--
 **Setup.** We meta-optimize the CS research paper task from Section~3.2. The meta-optimizer uses Kimi-K2.6 as both the analyzer (which reads evaluation trajectories to diagnose failure patterns) and the implementer (which modifies the agent's prompts). The inner-loop agent being optimized also uses Kimi-K2.6 in a multi-agent configuration with separate challenger, main agent, and quality verifier prompts. We use 50 training papers and 25 validation papers. A generated QA pair is considered successful if the weak solver (Qwen3.5-4B) scores <=50\%, the strong solver (Qwen3.5-397B-A17B) scores >=60\%, and the gap is >=25 percentage points, as judged by rubric-based evaluation.
+-->
+
+**Setup.** We meta-optimize the CS research paper task. The meta-optimizer uses Kimi-K2.6 as both the analyzer (which reads evaluation trajectories to diagnose failure patterns) and the implementer (which modifies the agent's prompts). The inner-loop agent being optimized also uses Kimi-K2.6 in a multi-agent configuration with separate challenger, main agent, and quality verifier prompts. We use 50 training papers and 25 validation papers. A generated QA pair is considered successful if it satisfy all of the criterion's: weak solver (Qwen3.5-4B) scores <=65\%, the best weak solver attempt score <=75\%, the strong solver (Qwen3.5-397B-A17B) scores >=60\% and <=95\%, and the gap between the strong and weak solver >=20 percentage points, as judged by rubric-based evaluation.
+
 
 **Results.** Starting from a baseline prompt that achieves 2\% validation pass rate, the meta-optimizer progressively discovers prompt improvements across 233 iterations. We report the average pass rate across at least 4 independent evals. 
 
