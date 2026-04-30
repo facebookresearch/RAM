@@ -1,3 +1,11 @@
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  }
+};
+</script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 # Autodata: an automatic data scientist to create high quality data
@@ -372,10 +380,10 @@ A generated QA pair is considered successful if it satisfy all of the criterion'
 
 The meta-optimizer identified several systematic failure modes through trajectory analysis — examining what the weak solver actually said in its responses and identifying that generic answers and rubric format errors were the dominant causes of poor separation. The optimizer addressed these through the following harness modifications, discovered automatically over the course of the iterations:
 
-- **Paper-specific insight enforcement**: The optimizer added instructions requiring that questions test knowledge *specific to the paper*, not generic ML/CS knowledge. A self-test was introduced: ``If a solver could answer correctly without reading this specific paper, the question is too easy.'' This directly addressed weak solvers achieving high scores by producing plausible-sounding generic responses.
-- **Context leak prevention**: Strict rules were added requiring the context to describe only the problem domain and setup, never the paper's proposed solution. A self-test was introduced: ``Could someone answer the question by rephrasing sentences from the context? If yes, rewrite.''
+- **Paper-specific insight enforcement**: The optimizer added instructions requiring that questions test knowledge *specific to the paper*, not generic ML/CS knowledge. A self-test was introduced: "If a solver could answer correctly without reading this specific paper, the question is too easy." This directly addressed weak solvers achieving high scores by producing plausible-sounding generic responses.
+- **Context leak prevention**: Strict rules were added requiring the context to describe only the problem domain and setup, never the paper's proposed solution. A self-test was introduced: "Could someone answer the question by rephrasing sentences from the context? If yes, rewrite."
 - **Positive-only rubric with weight capping**: The optimizer *eliminated* negative-weight rubric criteria, finding that they historically misfired and destroyed strong model scores without improving discrimination. Instead, all criteria use positive integer weights capped at 7, preventing any single criterion from dominating the score. This was a counter-intuitive discovery—penalizing errors seemed helpful in theory but hurt in practice.
-- **Structured rubric format**: The optimizer enforced a strict JSON format for rubric criteria with integer weights, eliminating parsing errors (e.g., string weights like ``+8'' instead of the integer 8) that had caused evaluation failures in earlier iterations.
+- **Structured rubric format**: The optimizer enforced a strict JSON format for rubric criteria with integer weights, eliminating parsing errors (e.g., string weights like "+8" instead of the integer 8) that had caused evaluation failures in earlier iterations.
 
 
 <p align="center"><img width="60%" src="meta3.png" /></p>
@@ -401,7 +409,7 @@ We believe these initial experiments are just the tip of the iceberg and further
 An intermediate step rather than a full dataset analysis is iterative batched analysis, i.e. generating N examples, and then deriving learnings from the current batch in order to generate the next batch.
 
 **From Self-Improvement to Co-improvement.** [Our](https://arxiv.org/abs/2510.24684), and [others](https://arxiv.org/abs/2505.03335), work on [self-play](https://arxiv.org/abs/1703.05407) also involves making a "challenger" which generates training examples for a solver, which can be optimized together with rewards and weight updates, rather than in the agentic way described above. However, a full self-improving loop could consider our autodata system as the challenger, and train it both in learnt skills and its weights – at the same time as training the solver. In this work we have explored an autoresearch-like method to meta-train our agent, but there is much more to explore in this direction. 
-Finally, removing humans completely from the loop is unlikely to be desirable in current full model training pipelines, especially when data creation is so important for model capabilities and safe behavior. Incorporating human feedback and ability to do ``co-research'' with the agent is likely a better path, called [co-improvement](https://arxiv.org/abs/2512.05356), which is a main direction of our research.
+Finally, removing humans completely from the loop is unlikely to be desirable in current full model training pipelines, especially when data creation is so important for model capabilities and safe behavior. Incorporating human feedback and ability to do "co-research" with the agent is likely a better path, called [co-improvement](https://arxiv.org/abs/2512.05356), which is a main direction of our research.
 
 
 ## Contributors
