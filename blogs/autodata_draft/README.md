@@ -1,4 +1,3 @@
-</script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 # Autodata: an automatic data scientist to create high quality data
@@ -133,7 +132,7 @@ exhausting its step budget.
  2,117 QA pairs that have an accepted quality gap, and satisfy further quality constraints 
  (i.e., removing questions with paper-specific reference leakage, short contexts, or malformed rubrics).
 
-<details>
+<details markdown="1">
 <summary>Main Agent Prompt — click to expand</summary>
 
 ````
