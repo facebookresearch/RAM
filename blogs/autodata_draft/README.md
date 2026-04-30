@@ -298,11 +298,11 @@ We study the Agentic Self-Instruct iterative agentic process and evaluate if it 
 Each agent round generates a new question from a different reasoning angle, guided by feedback on which previous questions were too easy or failed to discriminate. 
 The accepted questions after the agentic loop test qualitatively different reasoning: specific technical mechanisms, multi-step derivations, and paper-specific design tradeoffs, compared to the broader, more generic questions produced without this loop.
 <!--
-Only about 2-3\% of tasks produce a fully accepted question on the first attempt, while the iterative process raises the overall acceptance rate to 23\%. 
+Only about 2-3% of tasks produce a fully accepted question on the first attempt, while the iterative process raises the overall acceptance rate to 23%. 
 -->
 
 **Data quality.**
-We compare the accepted Agentic Self-Instruct data against CoT Self-Instruct (standard single-shot prompted generation). Under CoT Self-Instruct, the two solvers (weak and strong) score nearly identically---weak at 71.4\% and strong at 73.3\%, a gap of only 1.9 percentage points---showing that single-shot questions fail to find challenging enough tasks for either model. Agentic Self-Instruct drives the weak score down to 43.7\% while lifting the strong score to 77.8\%, widening the gap to 34 points. The agentic data creation loop produces questions that specifically reward stronger model capabilities, rather than questions both models can answer.
+We compare the accepted Agentic Self-Instruct data against CoT Self-Instruct (standard single-shot prompted generation). Under CoT Self-Instruct, the two solvers (weak and strong) score nearly identically—weak at 71.4% and strong at 73.3%, a gap of only 1.9 percentage points—showing that single-shot questions fail to find challenging enough tasks for either model. Agentic Self-Instruct drives the weak score down to 43.7% while lifting the strong score to 77.8%, widening the gap to 34 points. The agentic data creation loop produces questions that specifically reward stronger model capabilities, rather than questions both models can answer.
 
 
 <p align="center"><img width="80%" src="cs1.png" /></p>
@@ -311,7 +311,7 @@ We compare the accepted Agentic Self-Instruct data against CoT Self-Instruct (st
 
 <!--
 **Independent quality evaluation.**
-We evaluate quality using two independent LLM judges (Gemini 3 Pro and Opus 4) across four dimensions: question quality, reference answer quality, rubric quality, and context quality. Evaluating 135 CS papers with positional debiasing, Agentic Self-Instruct significantly outperforms standard prompted generation, with both judges agreeing on a 91\% overall win rate.
+We evaluate quality using two independent LLM judges (Gemini 3 Pro and Opus 4) across four dimensions: question quality, reference answer quality, rubric quality, and context quality. Evaluating 135 CS papers with positional debiasing, Agentic Self-Instruct significantly outperforms standard prompted generation, with both judges agreeing on a 91% overall win rate.
 
 <p align="center"><img width="80%" src="cs2.png" /></p>
 
@@ -343,7 +343,7 @@ We train Qwen-3.5-4B with GRPO on 2,017 examples for roughly one epoch from each
 
 ## Meta Optimization of the Data Scientist
 
-We further apply meta-optimization to the data scientist agent itself, using the same evaluation criteria from the inner loop to guide optimization of the outer loop --- the agent's harness. Concretely, we use an evolution optimization framework that treats the agent's scaffold as code to be iteratively improved.
+We further apply meta-optimization to the data scientist agent itself, using the same evaluation criteria from the inner loop to guide optimization of the outer loop — the agent's harness. Concretely, we use an evolution optimization framework that treats the agent's scaffold as code to be iteratively improved.
 
 
 <p align="center"><img width="90%" src="meta1.png" /></p>
@@ -356,11 +356,11 @@ We further apply meta-optimization to the data scientist agent itself, using the
 - (3) **Analyze** the trajectories with an LLM agent that reads the full solver exchanges and writes a root-cause analysis of systematic failure patterns;
 - (4) **Implement** harness modifications via a code-editing agent that reads the analysis, iteration history, and current harness, then produces an improved diff;
 - (5) **Re-evaluate** both parent and mutant on held-out validation papers;
-- (6) **Accept or reject** the mutant---it is added to the population only if its validation score strictly exceeds its parent's;
+- (6) **Accept or reject** the mutant—it is added to the population only if its validation score strictly exceeds its parent's;
 - (7) **Summarize** the outcome into a history log that subsequent analyzers can read. 
 
 <!--
-**Setup.** We meta-optimize the CS research paper task from Section~3.2. The meta-optimizer uses Kimi-K2.6 as both the analyzer (which reads evaluation trajectories to diagnose failure patterns) and the implementer (which modifies the agent's harness). The inner-loop agent being optimized also uses Kimi-K2.6 in a multi-agent configuration with separate challenger, main agent, and quality verifier prompts. We use 50 training papers and 25 validation papers. A generated QA pair is considered successful if the weak solver (Qwen3.5-4B) scores <=50\%, the strong solver (Qwen3.5-397B-A17B) scores >=60\%, and the gap is >=25 percentage points, as judged by rubric-based evaluation.
+**Setup.** We meta-optimize the CS research paper task from Section 3.2. The meta-optimizer uses Kimi-K2.6 as both the analyzer (which reads evaluation trajectories to diagnose failure patterns) and the implementer (which modifies the agent's harness). The inner-loop agent being optimized also uses Kimi-K2.6 in a multi-agent configuration with separate challenger, main agent, and quality verifier prompts. We use 50 training papers and 25 validation papers. A generated QA pair is considered successful if the weak solver (Qwen3.5-4B) scores <=50%, the strong solver (Qwen3.5-397B-A17B) scores >=60%, and the gap is >=25 percentage points, as judged by rubric-based evaluation.
 -->
 
 **Setup.** We meta-optimize the CS research paper task. The meta-optimizer uses Kimi-K2.6 as both the analyzer (which reads evaluation trajectories to diagnose failure patterns) and the implementer (which modifies the agent's harness). The inner-loop agent being optimized also uses Kimi-K2.6 in a multi-agent configuration with separate challenger, main agent, and quality verifier prompts. We use 50 training papers and 25 validation papers. 
@@ -368,13 +368,13 @@ We further apply meta-optimization to the data scientist agent itself, using the
 A generated QA pair is considered successful if it satisfy all of the criterion's, (e.g., weak_avg ≤ 65%, 60% ≤ strong_avg < 95%, strong_avg − weak_avg ≥ 20%, across solver attempts).
 -->
 
-**Results.** Starting from a baseline harness that achieves 12.8\% validation pass rate, the meta-optimizer progressively discovers harness improvements across 233 iterations.
+**Results.** Starting from a baseline harness that achieves 12.8% validation pass rate, the meta-optimizer progressively discovers harness improvements across 233 iterations.
 
-The meta-optimizer identified several systematic failure modes through trajectory analysis --- examining what the weak solver actually said in its responses and identifying that generic answers and rubric format errors were the dominant causes of poor separation. The optimizer addressed these through the following harness modifications, discovered automatically over the course of the iterations:
+The meta-optimizer identified several systematic failure modes through trajectory analysis — examining what the weak solver actually said in its responses and identifying that generic answers and rubric format errors were the dominant causes of poor separation. The optimizer addressed these through the following harness modifications, discovered automatically over the course of the iterations:
 
 - **Paper-specific insight enforcement**: The optimizer added instructions requiring that questions test knowledge *specific to the paper*, not generic ML/CS knowledge. A self-test was introduced: ``If a solver could answer correctly without reading this specific paper, the question is too easy.'' This directly addressed weak solvers achieving high scores by producing plausible-sounding generic responses.
 - **Context leak prevention**: Strict rules were added requiring the context to describe only the problem domain and setup, never the paper's proposed solution. A self-test was introduced: ``Could someone answer the question by rephrasing sentences from the context? If yes, rewrite.''
-- **Positive-only rubric with weight capping**: The optimizer *eliminated* negative-weight rubric criteria, finding that they historically misfired and destroyed strong model scores without improving discrimination. Instead, all criteria use positive integer weights capped at 7, preventing any single criterion from dominating the score. This was a counter-intuitive discovery---penalizing errors seemed helpful in theory but hurt in practice.
+- **Positive-only rubric with weight capping**: The optimizer *eliminated* negative-weight rubric criteria, finding that they historically misfired and destroyed strong model scores without improving discrimination. Instead, all criteria use positive integer weights capped at 7, preventing any single criterion from dominating the score. This was a counter-intuitive discovery—penalizing errors seemed helpful in theory but hurt in practice.
 - **Structured rubric format**: The optimizer enforced a strict JSON format for rubric criteria with integer weights, eliminating parsing errors (e.g., string weights like ``+8'' instead of the integer 8) that had caused evaluation failures in earlier iterations.
 
 
@@ -383,7 +383,7 @@ The meta-optimizer identified several systematic failure modes through trajector
 *Figure: Meta-optimization of the data scientist agent on the CS research paper task. The optimizer iteratively improves the agent’s harness, with each accepted iteration building on the previous best. Validation pass rate (re-evaluated) measures the fraction of generated QA pairs that successfully separate weak and strong solvers, averaged over multiple re-evaluations to reduce noise.*
 
 
-The progression from 12.8\% to 42.4\% validated pass rate demonstrates that meta-optimizing the data scientist agent's instructions can substantially improve data quality without manual harness engineering, though the modest absolute numbers also highlight the difficulty of reliably generating questions that separate models of different capability levels.
+The progression from 12.8% to 42.4% validated pass rate demonstrates that meta-optimizing the data scientist agent's instructions can substantially improve data quality without manual harness engineering, though the modest absolute numbers also highlight the difficulty of reliably generating questions that separate models of different capability levels.
 
 
 ## Conclusion and Next Steps
@@ -417,7 +417,7 @@ You can cite this blog (before the full paper is released) here:
   title   = "Autodata: an automatic data scientist to create high quality data",
   author  = {Kulikov, Ilia and Whitehouse, Chenxi and Saha, Swarnadeep and Wu, Tianhao and Yuan, Weizhe and Golovneva, Olga and Lanchantin, Jack and Bachrach, Yoram and Foerster, Jakob and Li, Xian and Fang, Han and Sukhbaatar, Sainbayar and Weston, Jason},
   year    = "2026",
-  month   = "May",
+  month   = "April",
   url     = "https://facebookresearch.github.io/RAM/blogs/autodata/"
 }
 ```
