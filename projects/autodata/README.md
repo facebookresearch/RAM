@@ -354,7 +354,7 @@ We train Qwen-3.5-4B with GRPO on 2,017 examples for roughly one epoch from each
 
 ## Meta Optimization of the Data Scientist
 
-We also apply meta-optimization to the data scientist agent itself, using the same evaluation criteria from the inner loop to guide optimization of the outer loop --- the agent's harness. Concretely, we use a evolution optimization framework that treats the agent's scaffold as code to be iteratively improved.
+We further apply meta-optimization to the data scientist agent itself, using the same evaluation criteria from the inner loop to guide optimization of the outer loop --- the agent's harness. Concretely, we use an evolution optimization framework that treats the agent's scaffold as code to be iteratively improved.
 
 
 <p align="center"><img width="90%" src="meta1.png" /></p>
