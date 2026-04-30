@@ -358,11 +358,14 @@ We also apply meta-optimization to the data scientist agent itself, using the sa
 
 *Figure: Meta-optimization of the data scientist agent. An outer optimization loop evaluates the agent’s prompt on training papers, analyzes failure trajectories to identify systematic weaknesses (e.g., context leakage), implements prompt modifications via a code-editing agent, and re-evaluates on held-out validation papers. Changes are accepted only if they improve the weak-strong separation rate. This process improved validation pass rate from 12.8% to 42.4% over 126 accepted iterations out of 233 total.*
 
-*Method.* The meta-optimizer runs a loop of: 
-- (1) **Evaluate** the current agent harness on a set of training papers, measuring the weak-strong separation rate;
-- (2) **Analyze** the evaluation trajectories, identifying systematic failure patterns (e.g., why the weak solver scores too high on generated questions);
-- (3) **Implement** harness modification via a code-editing agent that rewrites the agent's harness based on the analysis; and
-- (4) **Re-evaluate** the modified harness on held-out validation papers, accepting the change only if it improves the separation rate. This loop runs for multiple iterations, with each accepted change building on the previous best prompt.
+*Method.* The meta-optimizer maintains a population of candidate prompts, each defined by a code diff relative to the baseline repository. Each iteration proceeds as follows: 
+- (1) **Select** a parent from the population via Boltzmann sampling, where candidate $c$ is chosen with probability proportional to $\exp(s_c / T)$ with temperature $T{=}0.1$, strongly favoring high-scoring candidates while maintaining exploration;
+- (2) **Evaluate** the parent's prompt on a minibatch of training papers, collecting agent trajectories and weak/strong solver scores;
+- (3) **Analyze** the trajectories with an LLM agent that reads the full solver exchanges and writes a root-cause analysis of systematic failure patterns;
+- (4) **Implement** prompt modifications via a code-editing agent that reads the analysis, iteration history, and current prompt, then produces an improved diff;
+- (5) **Re-evaluate** both parent and mutant on held-out validation papers;
+- (6) **Accept or reject** the mutant---it is added to the population only if its validation score strictly exceeds its parent's;
+- (7) **Summarize** the outcome into a history log that subsequent analyzers can read. 
 
 <!--
 **Setup.** We meta-optimize the CS research paper task from Section~3.2. The meta-optimizer uses Kimi-K2.6 as both the analyzer (which reads evaluation trajectories to diagnose failure patterns) and the implementer (which modifies the agent's prompts). The inner-loop agent being optimized also uses Kimi-K2.6 in a multi-agent configuration with separate challenger, main agent, and quality verifier prompts. We use 50 training papers and 25 validation papers. A generated QA pair is considered successful if the weak solver (Qwen3.5-4B) scores <=50\%, the strong solver (Qwen3.5-397B-A17B) scores >=60\%, and the gap is >=25 percentage points, as judged by rubric-based evaluation.
