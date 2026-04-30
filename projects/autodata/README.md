@@ -116,28 +116,17 @@ information.
 
 ### Computer science research tasks
 
-We test the method’s ability on open-ended computer science (CS) research questions, using academic CS papers
-as source material. The challenger generates a context, a question, a reference answer, and a self-contained evaluation rubric consisting of weighted criteria
-that a judge (e.g., Kimi-K2.5) uses to score any response without access to the reference answer.
-We use Kimi-K2.5 as the main orchestrator agent, challenger, quality verifier (QV, ensureing question and context quality, such as not being over specific to papers), and judge; Qwen3.5-397B-A17B as the strong solver,
-and Qwen3.5-4B as the weak solver. Success requires the strong solver to score meaningfully higher than the
-weak solver on the rubric, sepcifically, a question is ACCEPTED only when ALL of the following are true:
-- (i) Quality Verifier passed
-- (ii) `evaluate_rubric.py --weak-only` reported WEAK_PASSED
-     (weak_avg ≤ 65%, max_weak ≤ 75%, no zeros)
-- (iii) `evaluate_rubric.py --strong-only` reported
-     strong_avg ≥ 60% AND strong_avg < 95%
-- (iv) Gap (strong_avg - weak_avg) ≥ 20%
+We test the method on open-ended computer-science (CS) research questions, using academic CS papers as source material. The challenger generates a context, a question, a reference answer, and a self-contained evaluation rubric — a list of weighted criteria that a judge (e.g., Kimi-K2.5) uses to score any response without access to the reference answer. Kimi-K2.5 serves as the main orchestrator agent, challenger, and judge; Qwen3.5-397B-A17B is the strong solver, and Qwen3.5-4B is the weak solver. A question is considered useful only when the strong solver scores meaningfully higher than the weak solver on the rubric.
 
-*Pipeline overview.* The main LLM agent calls the challenger to generate a context-QA pair with
-rubric from a given paper. A quality verifier then checks for context leakage, rubric coverage, and question
-quality before quality gap evaluation proceeds. The question and context are sent to both weak and strong solvers (each invoked 3 times
-to reduce variance), and the judge scores their answers against the rubric on a per-criterion basis. If any
-acceptance criterion fails, the agent provides targeted feedback to the challenger: which previous questions
-were too easy (with weak solver scores), which failed on the strong solver (with gap information), and which
-were rejected by the quality verifier. The challenger then generates a new question from a different reasoning
-angle. This loop typically runs several rounds per paper (median 3–5) before finding an accepted question or
-exhausting its step budget. 
+**Pipeline overview.** The orchestrator calls the challenger to generate a context-QA pair with rubric from a given paper. A quality verifier then checks for context leakage, rubric coverage, and question quality before evaluation proceeds. The question and context are sent to both the weak and strong solvers (each invoked 3 times to reduce variance), and the judge scores their answers against the rubric on a per-criterion basis. If any acceptance criterion fails, the agent provides targeted feedback to the challenger — which previous questions were too easy (with weak-solver scores), which failed on the strong solver (with gap information), and which were rejected by the QV — and the challenger generates a new question from a different reasoning angle. This loop typically runs several rounds per paper (median 3–5) before producing an accepted question or exhausting its step budget.
+
+A question is **accepted** only when **all** of the following hold:
+
+1. **Quality verifier passed** (no context leakage; valid rubric; well-formed question).
+2. **Weak solver gating** (`evaluate_rubric.py --weak-only`):  weak_avg ≤ 65%,  max(weak) ≤ 75%,  no zero scores.
+3. **Strong solver gating** (`evaluate_rubric.py --strong-only`):  60% ≤ strong_avg < 95%,  no zero scores.
+4. **Discrimination gap**:  strong_avg − weak_avg ≥ 20%.
+
 
 *Scale.* We process over 10,000 CS papers from the [S2ORC corpus](https://github.com/allenai/s2orc) (2022+), producing 
  2,117 QA pairs that have an accepted quality gap, and satisfy further quality constraints 
