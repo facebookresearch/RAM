@@ -413,7 +413,7 @@ Finally, removing humans completely from the loop is unlikely to be desirable in
 
 
 ## Contributors
-Ilia Kulikov, Chenxi Whitehouse, Swarnadeep Saha, Tianhao Wu, Weizhe Yuan, Olga Golovneva, Jack Lanchantin, Yoram Bachrach, Jakob Foerster, Xian Li, Han Fang, Sainbayar Sukhbaatar, Jason Weston
+Ilia Kulikov, Chenxi Whitehouse, Tianhao Wu, Swarnadeep Saha, Weizhe Yuan, Olga Golovneva, Jack Lanchantin, Yoram Bachrach, Jakob Foerster, Xian Li, Han Fang, Sainbayar Sukhbaatar, Jason Weston
 
 ## More details
 We plan to put a full technical report on arXiv soon.
