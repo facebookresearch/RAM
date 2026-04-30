@@ -2,8 +2,6 @@
 
 # Autodata: an automatic data scientist to create high quality data
 
-
-
 <!--
 ## Our Contribution
 We propose Autodata, a method to allow the use of AI agents to act as data scientists who iteratively build high quality training and evaluation data, analogous to how agents now iterate to write code until it is high quality. This direction has the potential to change the way we build AI training data.
