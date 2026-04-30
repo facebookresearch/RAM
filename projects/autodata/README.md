@@ -351,32 +351,32 @@ We train Qwen-3.5-4B with GRPO on 2,017 examples for roughly one epoch from each
 
 ## Meta Optimization of the Data Scientist
 
-We also apply meta-optimization to the data scientist agent itself, using the same evaluation criteria from the inner loop to guide optimization of the outer loop --- the agent's prompt and strategy. Concretely, we use a evolution optimization framework that treats the agent's scaffold as code to be iteratively improved.
+We also apply meta-optimization to the data scientist agent itself, using the same evaluation criteria from the inner loop to guide optimization of the outer loop --- the agent's harness. Concretely, we use a evolution optimization framework that treats the agent's scaffold as code to be iteratively improved.
 
 
 <p align="center"><img width="90%" src="meta1.png" /></p>
 
-*Figure: Meta-optimization of the data scientist agent. An outer optimization loop evaluates the agent’s prompt on training papers, analyzes failure trajectories to identify systematic weaknesses (e.g., context leakage), implements prompt modifications via a code-editing agent, and re-evaluates on held-out validation papers. Changes are accepted only if they improve the weak-strong separation rate. This process improved validation pass rate from 12.8% to 42.4% over 126 accepted iterations out of 233 total.*
+*Figure: Meta-optimization of the data scientist agent. An outer optimization loop evaluates the agent’s harness on training papers, analyzes failure trajectories to identify systematic weaknesses (e.g., context leakage), implements harness modifications via a code-editing agent, and re-evaluates on held-out validation papers. Changes are accepted only if they improve the weak-strong separation rate. This process improved validation pass rate from 12.8% to 42.4% over 126 accepted iterations out of 233 total.*
 
-*Method.* The meta-optimizer maintains a population of candidate prompts, each defined by a code diff relative to the baseline repository. Each iteration proceeds as follows: 
+*Method.* The meta-optimizer maintains a population of candidate harnesses, each defined by a code diff relative to the baseline repository. Each iteration proceeds as follows: 
 - (1) **Select** a parent from the population via Boltzmann sampling, where candidate $c$ is chosen with probability proportional to $\exp(s_c / T)$ with temperature $T{=}0.1$, strongly favoring high-scoring candidates while maintaining exploration;
-- (2) **Evaluate** the parent's prompt on a minibatch of training papers, collecting agent trajectories and weak/strong solver scores;
+- (2) **Evaluate** the parent's harness on a minibatch of training papers, collecting agent trajectories and weak/strong solver scores;
 - (3) **Analyze** the trajectories with an LLM agent that reads the full solver exchanges and writes a root-cause analysis of systematic failure patterns;
-- (4) **Implement** prompt modifications via a code-editing agent that reads the analysis, iteration history, and current prompt, then produces an improved diff;
+- (4) **Implement** harness modifications via a code-editing agent that reads the analysis, iteration history, and current harness, then produces an improved diff;
 - (5) **Re-evaluate** both parent and mutant on held-out validation papers;
 - (6) **Accept or reject** the mutant---it is added to the population only if its validation score strictly exceeds its parent's;
 - (7) **Summarize** the outcome into a history log that subsequent analyzers can read. 
 
 <!--
-**Setup.** We meta-optimize the CS research paper task from Section~3.2. The meta-optimizer uses Kimi-K2.6 as both the analyzer (which reads evaluation trajectories to diagnose failure patterns) and the implementer (which modifies the agent's prompts). The inner-loop agent being optimized also uses Kimi-K2.6 in a multi-agent configuration with separate challenger, main agent, and quality verifier prompts. We use 50 training papers and 25 validation papers. A generated QA pair is considered successful if the weak solver (Qwen3.5-4B) scores <=50\%, the strong solver (Qwen3.5-397B-A17B) scores >=60\%, and the gap is >=25 percentage points, as judged by rubric-based evaluation.
+**Setup.** We meta-optimize the CS research paper task from Section~3.2. The meta-optimizer uses Kimi-K2.6 as both the analyzer (which reads evaluation trajectories to diagnose failure patterns) and the implementer (which modifies the agent's harness). The inner-loop agent being optimized also uses Kimi-K2.6 in a multi-agent configuration with separate challenger, main agent, and quality verifier prompts. We use 50 training papers and 25 validation papers. A generated QA pair is considered successful if the weak solver (Qwen3.5-4B) scores <=50\%, the strong solver (Qwen3.5-397B-A17B) scores >=60\%, and the gap is >=25 percentage points, as judged by rubric-based evaluation.
 -->
 
-**Setup.** We meta-optimize the CS research paper task. The meta-optimizer uses Kimi-K2.6 as both the analyzer (which reads evaluation trajectories to diagnose failure patterns) and the implementer (which modifies the agent's prompts). The inner-loop agent being optimized also uses Kimi-K2.6 in a multi-agent configuration with separate challenger, main agent, and quality verifier prompts. We use 50 training papers and 25 validation papers. A generated QA pair is considered successful if it satisfy all of the criterion's: weak solver (Qwen3.5-4B) scores <=65\%, the best weak solver attempt score <=75\%, the strong solver (Qwen3.5-397B-A17B) scores >=60\% and <=95\%, and the gap between the strong and weak solver >=20 percentage points, as judged by rubric-based evaluation.
+**Setup.** We meta-optimize the CS research paper task. The meta-optimizer uses Kimi-K2.6 as both the analyzer (which reads evaluation trajectories to diagnose failure patterns) and the implementer (which modifies the agent's harness). The inner-loop agent being optimized also uses Kimi-K2.6 in a multi-agent configuration with separate challenger, main agent, and quality verifier prompts. We use 50 training papers and 25 validation papers. A generated QA pair is considered successful if it satisfy all of the criterion's: weak solver (Qwen3.5-4B) scores <=65\%, the best weak solver attempt score <=75\%, the strong solver (Qwen3.5-397B-A17B) scores >=60\% and <=95\%, and the gap between the strong and weak solver >=20 percentage points, as judged by rubric-based evaluation.
 
 
-**Results.** Starting from a baseline prompt that achieves 12.8\% validation pass rate, the meta-optimizer progressively discovers prompt improvements across 233 iterations. We report the average pass rate across at least 4 independent evals. 
+**Results.** Starting from a baseline harness that achieves 12.8\% validation pass rate, the meta-optimizer progressively discovers harness improvements across 233 iterations.
 
-The meta-optimizer identified several systematic failure modes through trajectory analysis --- examining what the weak solver actually said in its responses and identifying that generic answers and rubric format errors were the dominant causes of poor separation. The optimizer addressed these through the following prompt modifications, discovered automatically over the course of 233 iterations:
+The meta-optimizer identified several systematic failure modes through trajectory analysis --- examining what the weak solver actually said in its responses and identifying that generic answers and rubric format errors were the dominant causes of poor separation. The optimizer addressed these through the following harness modifications, discovered automatically over the course of 233 iterations:
 
 - **Paper-specific insight enforcement**: The optimizer added instructions requiring that questions test knowledge *specific to the paper*, not generic ML/CS knowledge. A self-test was introduced: ``If a solver could answer correctly without reading this specific paper, the question is too easy.'' This directly addressed weak solvers achieving high scores by producing plausible-sounding generic responses.
 - **Context leak prevention**: Strict rules were added requiring the context to describe only the problem domain and setup, never the paper's proposed solution. A self-test was introduced: ``Could someone answer the question by rephrasing sentences from the context? If yes, rewrite.''
@@ -386,11 +386,10 @@ The meta-optimizer identified several systematic failure modes through trajector
 
 <p align="center"><img width="60%" src="meta2.png" /></p>
 
-*Figure: Meta-optimization of the data scientist agent on the CS research paper task. The optimizer iteratively improves the agent’s prompt, with each accepted iteration building on the previous best. Validation pass rate (re-evaluated) measures the fraction of generated QA pairs that successfully separate weak and strong solvers, averaged over multiple
-re-evaluations to reduce noise.*
+*Figure: Meta-optimization of the data scientist agent on the CS research paper task. The optimizer iteratively improves the agent’s harness, with each accepted iteration building on the previous best. Validation pass rate (re-evaluated) measures the fraction of generated QA pairs that successfully separate weak and strong solvers, averaged over multiple re-evaluations to reduce noise.*
 
 
-The progression from 12.8\% to 42.4\% validated pass rate demonstrates that meta-optimizing the data scientist agent's instructions can substantially improve data quality without manual prompt engineering, though the modest absolute numbers also highlight the difficulty of reliably generating questions that separate models of different capability levels.
+The progression from 12.8\% to 42.4\% validated pass rate demonstrates that meta-optimizing the data scientist agent's instructions can substantially improve data quality without manual harness engineering, though the modest absolute numbers also highlight the difficulty of reliably generating questions that separate models of different capability levels.
 
 
 ## Conclusion and Next Steps
