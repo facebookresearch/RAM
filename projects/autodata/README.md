@@ -119,10 +119,15 @@ information.
 We test the method’s ability on open-ended computer science (CS) research questions, using academic CS papers
 as source material. The challenger generates a context, a question, a reference answer, and a self-contained evaluation rubric consisting of weighted criteria
 that a judge (e.g., Kimi-K2.5) uses to score any response without access to the reference answer.
-We use Kimi-K2.5 as the main orchestrator agent and challenger, Qwen3.5-397B-A17B as the strong solver,
+We use Kimi-K2.5 as the main orchestrator agent, challenger, quality verifier (QV, ensureing question and context quality, such as not being over specific to papers), and judge; Qwen3.5-397B-A17B as the strong solver,
 and Qwen3.5-4B as the weak solver. Success requires the strong solver to score meaningfully higher than the
-weak solver on the rubric (i.e., we set average strong ≥ 65%, weak < 50%, gap ≥ 20% across the
-solver attempts).
+weak solver on the rubric, sepcifically, a question is ACCEPTED only when ALL of the following are true:
+- (i) Quality Verifier passed
+- (ii) `evaluate_rubric.py --weak-only` reported WEAK_PASSED
+     (weak_avg ≤ 65%, max_weak ≤ 75%, no zeros)
+- (iii) `evaluate_rubric.py --strong-only` reported
+     strong_avg ≥ 60% AND strong_avg < 95%
+- (iv) Gap (strong_avg - weak_avg) ≥ 20%
 
 *Pipeline overview.* The main LLM agent calls the challenger to generate a context-QA pair with
 rubric from a given paper. A quality verifier then checks for context leakage, rubric coverage, and question
