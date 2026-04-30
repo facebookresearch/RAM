@@ -121,7 +121,7 @@ as source material. The challenger generates a context, a question, a reference 
 that a judge (e.g., Kimi-K2.5) uses to score any response without access to the reference answer.
 We use Kimi-K2.5 as the main orchestrator agent and challenger, Qwen3.5-397B-A17B as the strong solver,
 and Qwen3.5-4B as the weak solver. Success requires the strong solver to score meaningfully higher than the
-weak solver on the rubric (i.e., we set average strong ≥ 65%, weak < 50%, gap ≥ 15% across the
+weak solver on the rubric (i.e., we set average strong ≥ 65%, weak < 50%, gap ≥ 20% across the
 solver attempts).
 
 *Pipeline overview.* The main LLM agent calls the challenger to generate a context-QA pair with
