@@ -363,7 +363,7 @@ We also apply meta-optimization to the data scientist agent itself, using the sa
 
 <p align="center"><img width="90%" src="meta1.png" /></p>
 
-*Figure: Meta-optimization of the data scientist agent. An outer optimization loop evaluates the agent’s prompt on training papers, analyzes failure trajectories to identify systematic weaknesses (e.g., context leakage), implements prompt modifications via a code-editing agent, and re-evaluates on held-out validation papers. Changes are accepted only if they improve the weak-strong separation rate. This process improved validation pass rate from 2% to 24% over 126 accepted iterations out of 233 total.*
+*Figure: Meta-optimization of the data scientist agent. An outer optimization loop evaluates the agent’s prompt on training papers, analyzes failure trajectories to identify systematic weaknesses (e.g., context leakage), implements prompt modifications via a code-editing agent, and re-evaluates on held-out validation papers. Changes are accepted only if they improve the weak-strong separation rate. This process improved validation pass rate from 12.8% to 42.4% over 126 accepted iterations out of 233 total.*
 
 *Method.* The meta-optimizer runs a loop of: 
 - (1) **Evaluate** the current agent harness on a set of training papers, measuring the weak-strong separation rate;
@@ -378,7 +378,7 @@ We also apply meta-optimization to the data scientist agent itself, using the sa
 **Setup.** We meta-optimize the CS research paper task. The meta-optimizer uses Kimi-K2.6 as both the analyzer (which reads evaluation trajectories to diagnose failure patterns) and the implementer (which modifies the agent's prompts). The inner-loop agent being optimized also uses Kimi-K2.6 in a multi-agent configuration with separate challenger, main agent, and quality verifier prompts. We use 50 training papers and 25 validation papers. A generated QA pair is considered successful if it satisfy all of the criterion's: weak solver (Qwen3.5-4B) scores <=65\%, the best weak solver attempt score <=75\%, the strong solver (Qwen3.5-397B-A17B) scores >=60\% and <=95\%, and the gap between the strong and weak solver >=20 percentage points, as judged by rubric-based evaluation.
 
 
-**Results.** Starting from a baseline prompt that achieves 2\% validation pass rate, the meta-optimizer progressively discovers prompt improvements across 233 iterations. We report the average pass rate across at least 4 independent evals. 
+**Results.** Starting from a baseline prompt that achieves 12.8\% validation pass rate, the meta-optimizer progressively discovers prompt improvements across 233 iterations. We report the average pass rate across at least 4 independent evals. 
 
 The meta-optimizer identified several systematic failure modes through trajectory analysis --- examining what the weak solver actually said in its responses and identifying that generic answers and rubric format errors were the dominant causes of poor separation. The optimizer addressed these through the following prompt modifications, discovered automatically over the course of 233 iterations:
 
@@ -394,7 +394,7 @@ The meta-optimizer identified several systematic failure modes through trajector
 re-evaluations to reduce noise.*
 
 
-The progression from 2\% to 24\% validated pass rate demonstrates that meta-optimizing the data scientist agent's instructions can substantially improve data quality without manual prompt engineering, though the modest absolute numbers also highlight the difficulty of reliably generating questions that separate models of different capability levels.
+The progression from 12.8\% to 42.4\% validated pass rate demonstrates that meta-optimizing the data scientist agent's instructions can substantially improve data quality without manual prompt engineering, though the modest absolute numbers also highlight the difficulty of reliably generating questions that separate models of different capability levels.
 
 
 ## Conclusion and Next Steps
