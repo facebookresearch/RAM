@@ -116,16 +116,9 @@ information.
 
 ### Computer science research tasks
 
-We test the method on open-ended computer-science (CS) research questions, using academic CS papers as source material. The challenger generates a context, a question, a reference answer, and a self-contained evaluation rubric — a list of weighted criteria that a judge (e.g., Kimi-K2.5) uses to score any response without access to the reference answer. Kimi-K2.5 serves as the main orchestrator agent, challenger, and judge; Qwen3.5-397B-A17B is the strong solver, and Qwen3.5-4B is the weak solver. A question is considered useful only when the strong solver scores meaningfully higher than the weak solver on the rubric.
+We test the method on open-ended computer-science (CS) research questions, using academic CS papers as source material. The challenger generates a context, a question, a reference answer, and a self-contained evaluation rubric — a list of weighted criteria that a judge (e.g., Kimi-K2.5) uses to score any response without access to the reference answer. Kimi-K2.5 serves as the main orchestrator agent, challenger, and judge; Qwen3.5-397B-A17B is the strong solver, and Qwen3.5-4B is the weak solver. A question is considered useful only when the strong solver scores meaningfully higher than the weak solver on the rubric (e.g., weak_avg ≤ 65%, 60% ≤ strong_avg < 95%, strong_avg − weak_avg ≥ 20%, across solver attempts).
 
 **Pipeline overview.** The orchestrator calls the challenger to generate a context-QA pair with rubric from a given paper. A quality verifier then checks for context leakage, rubric coverage, and question quality before evaluation proceeds. The question and context are sent to both the weak and strong solvers (each invoked 3 times to reduce variance), and the judge scores their answers against the rubric on a per-criterion basis. If any acceptance criterion fails, the agent provides targeted feedback to the challenger — which previous questions were too easy (with weak-solver scores), which failed on the strong solver (with gap information), and which were rejected by the QV — and the challenger generates a new question from a different reasoning angle. This loop typically runs several rounds per paper (median 3–5) before producing an accepted question or exhausting its step budget.
-
-A question is **accepted** only when **all** of the following hold:
-
-1. **Quality verifier passed** (no context leakage; valid rubric; well-formed question).
-2. **Weak solver gating** (`evaluate_rubric.py --weak-only`):  weak_avg ≤ 65%,  max(weak) ≤ 75%,  no zero scores.
-3. **Strong solver gating** (`evaluate_rubric.py --strong-only`):  60% ≤ strong_avg < 95%,  no zero scores.
-4. **Discrimination gap**:  strong_avg − weak_avg ≥ 20%.
 
 
 *Scale.* We process over 10,000 CS papers from the [S2ORC corpus](https://github.com/allenai/s2orc) (2022+), producing 
