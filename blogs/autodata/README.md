@@ -7,6 +7,11 @@ MathJax = {
 };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+@media (max-width: 768px) {
+  img { width: 100% !important; }
+}
+</style>
 
 # Autodata: an automatic data scientist to create high quality data
 
@@ -325,20 +330,12 @@ We evaluate quality using two independent LLM judges (Gemini 3 Pro and Opus 4) a
 
 *Figure: Win rate of Agentic Self-Instruct over standard prompting, by judging data quality with two independent LLM judges.*
 -->
-<!--
-**Example executions.** Below we show two example storyboards of the agentic self-instruct process, illustrating how the agent iteratively drafts questions and evaluates weak vs. strong solver separation across multiple rounds.
+**Example execution.** Below we show an example trajectory of the agentic self-instruct process, illustrating how the agent iteratively drafts questions and evaluates weak vs. strong solver separation across multiple rounds.
 
-<p align="center"><img width="100%" src="task-174-storyboard.png" /></p>
+<p align="center"><img width="100%" src="agent_trajectory_round6.jpg" /></p>
 
-*Figure: Storyboard of task-174 (NeuroPlug, CS security paper). Rows are refinement rounds. Within a row: Question → Solvers → Judge. Dashed red arcs between rounds show revision feedback.*
+*Figure: Example agent trajectory on a CS research paper, showing the final accepted round (round 6) after 5 failed attempts. The Main Agent reflects on prior failures and prompts the Challenger Agent to generate a new question. The example is evaluated by Weak (4B) and Strong (397B) solvers, scored by a Verifier/Judge across 12 rubric criteria. Round 6 achieves a 45% gap (weak 48% vs. strong 93%) and is accepted. Learnings from rounds 1–5 feed back into the Main Agent's refinement strategy.*
 
-<details>
-<summary>Storyboard: task-135 (VSD in RAI Toolkits, HCI paper) — click to expand</summary>
-
-<p align="center"><img width="100%" src="task-135-storyboard.png" /></p>
-
-</details>
--->
 
 ### Results: RL training
 
