@@ -423,7 +423,7 @@ We plan to put a full technical report on arXiv soon.
 ## Citation
 You can cite this blog (before the full paper is released) here:
 ```
-@article{zhang2025rlm,
+@article{kulikov2026autodata,
   title   = "Autodata: an automatic data scientist to create high quality data",
   author  = {Kulikov, Ilia and Whitehouse, Chenxi and Saha, Swarnadeep and Wu, Tianhao and Yuan, Weizhe and Golovneva, Olga and Lanchantin, Jack and Bachrach, Yoram and Foerster, Jakob and Li, Xian and Fang, Han and Sukhbaatar, Sainbayar and Weston, Jason},
   year    = "2026",
