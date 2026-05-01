@@ -15,11 +15,6 @@ MathJax = {
 
 # Autodata: an automatic data scientist to create high quality data
 
-<!--
-## Our Contribution
-We propose Autodata, a method to allow the use of AI agents to act as data scientists who iteratively build high quality training and evaluation data, analogous to how agents now iterate to write code until it is high quality. This direction has the potential to change the way we build AI training data.
-Our initial study with a specific implementation, which we call Agentic Self-Instruct, shows promising gains, and we are continuing to develop this system.
--->
 
 We introduce **Autodata**, a method to allow the use of AI agents to act as data scientists who
 iteratively build high quality training and evaluation data. We show how to train (meta-optimize) such
@@ -33,9 +28,6 @@ Agentic data creation provides a way to **convert increased inference compute in
 
 Overall, this direction has the potential to change how we build AI data.
 
-<!--
-<p align="center"><img width="90%" src="main1.png" /></p>
--->
 <p align="center"><img width="65%" src="main2.png" /></p>
 
 *Figure: Autodata pipeline. The framework employs an autonomous agent that emulates the role of a data scientist, iteratively generating data, conducting qualitative inspection and quantitative performance evaluation, synthesizing insights, and updating the data-generation recipe. The agent itself can be trained to be better at the data scientist task using the same criteria used in the inner loop. This cyclical process aims to progressively enhance data quality; the diagram depicts the general workflow underlying possible instantiations.*
@@ -102,9 +94,6 @@ Here, the main agent LLM has access to four LLM subagents:
   
 The main agent LLM proceeds to create an example (an input + response pair), by sending its initial prompt including grounding data to the Challenger LLM. It then checks the quality of the Challenger LLM’s work by sending the input to the weak and strong solvers, and assigning a reward based on the verifier’s judgments.
 
-<!--
-<p align="center"><img width="80%" src="asi2.png" /></p>
--->
 <p align="center"><img width="65%" src="asi2.png" /></p>
 
 
@@ -134,10 +123,7 @@ We test the method on open-ended computer-science (CS) research questions, using
 
 **Scale.** We process over 10,000 CS papers from the [S2ORC corpus](https://github.com/allenai/s2orc) (2022+), producing 
  2,117 QA pairs that satisfy the quality constraints and performance gap.
-<!-- 
-an accepted quality gap, and satisfy further quality constraints 
- (i.e., removing questions with paper-specific reference leakage, short contexts, or malformed rubrics).
--->
+
 
 <details markdown="1">
 <summary>Main Agent Prompt — click to expand</summary>
@@ -310,9 +296,6 @@ We study the Agentic Self-Instruct iterative agentic process and evaluate if it 
 **Improvement works through exploration.**
 Each agent round generates a new question from a different reasoning angle, guided by feedback on which previous questions were too easy or failed to discriminate. 
 The accepted questions after the agentic loop test qualitatively different reasoning: specific technical mechanisms, multi-step derivations, and paper-specific design tradeoffs, compared to the broader, more generic questions produced without this loop.
-<!--
-Only about 2-3% of tasks produce a fully accepted question on the first attempt, while the iterative process raises the overall acceptance rate to 23%. 
--->
 
 **Data quality.**
 We compare the accepted Agentic Self-Instruct data against CoT Self-Instruct (standard single-shot prompted generation). Under CoT Self-Instruct, the two solvers (weak and strong) score nearly identically—weak at 71.4% and strong at 73.3%, a gap of only 1.9 percentage points—showing that single-shot questions fail to find challenging enough tasks for either model. Agentic Self-Instruct drives the weak score down to 43.7% while lifting the strong score to 77.8%, widening the gap to 34 points. The agentic data creation loop produces questions that specifically reward stronger model capabilities, rather than questions both models can answer.
@@ -322,14 +305,6 @@ We compare the accepted Agentic Self-Instruct data against CoT Self-Instruct (st
 
 *Figure: Quality statistics for CS research QA pairs as measured by solution quality of the weak and strong solvers. CoT Self-Instruct is standard single-shot prompted generation; Agentic Self-Instruct is after the agentic autodata loop.*
 
-<!--
-**Independent quality evaluation.**
-We evaluate quality using two independent LLM judges (Gemini 3 Pro and Opus 4) across four dimensions: question quality, reference answer quality, rubric quality, and context quality. Evaluating 135 CS papers with positional debiasing, Agentic Self-Instruct significantly outperforms standard prompted generation, with both judges agreeing on a 91% overall win rate.
-
-<p align="center"><img width="80%" src="cs2.png" /></p>
-
-*Figure: Win rate of Agentic Self-Instruct over standard prompting, by judging data quality with two independent LLM judges.*
--->
 **Example execution.** Below we show an example trajectory of the agentic self-instruct process, illustrating how the agent iteratively drafts questions and evaluates weak vs. strong solver separation across multiple rounds.
 
 <p align="center"><img width="100%" src="agent_trajectory_round6.jpg" /></p>
@@ -340,9 +315,6 @@ We evaluate quality using two independent LLM judges (Gemini 3 Pro and Opus 4) a
 ### Results: RL training
 
 We compare the performance of Qwen-3.5-4B trained on the examples from CoT Self-Instruct versus Agentic Self-Instruct data, using Kimi-K2.6 as the reward model to score responses against the generated rubrics. From each dataset, we hold out 100 examples as a test set and train Qwen-3.5-4B with GRPO for roughly one epoch (batch size 32, learning rate 1e-6). We evaluate each trained model on both test sets (100 examples each) to measure in-distribution and out-of distribution performance. We find the model trained on Agentic Self-Instruct CS data demonstrates a clear advantage, suggesting that the challenging training data produced by the agentic pipeline translates to stronger reasoning performance.
-<!--
-We train Qwen-3.5-4B with GRPO on 2,017 examples for roughly one epoch from each data source and evaluate on 200 held-out test sets. Scores are rubric-based, judged by Kimi-K2.6.
--->
 
 <p align="center"><img width="70%" src="cs3.png" /></p>
 
@@ -366,14 +338,7 @@ We further apply meta-optimization to the data scientist agent itself, using the
 - (6) **Accept or reject** the mutant—it is added to the population only if its validation score strictly exceeds its parent's;
 - (7) **Summarize** the outcome into a history log that subsequent analyzers can read. 
 
-<!--
-**Setup.** We meta-optimize the CS research paper task from Section 3.2. The meta-optimizer uses Kimi-K2.6 as both the analyzer (which reads evaluation trajectories to diagnose failure patterns) and the implementer (which modifies the agent's harness). The inner-loop agent being optimized also uses Kimi-K2.6 in a multi-agent configuration with separate challenger, main agent, and quality verifier prompts. We use 50 training papers and 25 validation papers. A generated QA pair is considered successful if the weak solver (Qwen3.5-4B) scores <=50%, the strong solver (Qwen3.5-397B-A17B) scores >=60%, and the gap is >=25 percentage points, as judged by rubric-based evaluation.
--->
-
 **Setup.** We meta-optimize the CS research paper task. The meta-optimizer uses Kimi-K2.6 as both the analyzer (which reads evaluation trajectories to diagnose failure patterns) and the implementer (which modifies the agent's harness). The inner-loop agent being optimized also uses Kimi-K2.6 in a multi-agent configuration with separate challenger, main agent, and quality verifier prompts. We use 50 training papers and 25 validation papers. 
-<!--
-A generated QA pair is considered successful if it satisfy all of the criterion's, (e.g., weak_avg ≤ 65%, 60% ≤ strong_avg < 95%, strong_avg − weak_avg ≥ 20%, across solver attempts).
--->
 
 **Results.** Starting from a baseline harness that achieves 12.8% validation pass rate, the meta-optimizer progressively discovers harness improvements across 233 iterations.
 
