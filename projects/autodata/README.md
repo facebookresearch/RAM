@@ -13,10 +13,10 @@ MathJax = {
 }
 </style>
 
-# Autodata: an automatic data scientist to create high quality data
+# Autodata: an automatic data scientist to create high-quality data
 
 
-We introduce **Autodata**, a method to allow the use of AI agents to act as data scientists who
+We introduce **Autodata**, a method that enables AI agents to act as data scientists who
 iteratively build high quality training and evaluation data. We show how to train (meta-optimize) such
 a data scientist agent, so that it can create even stronger data. 
 
@@ -36,15 +36,16 @@ Overall, this direction has the potential to change how we build AI data.
 ## Background
 
 The initial foundation for training current AI systems is human-written training data. However, increasingly performance improvements are derived from synthetic data created by the model itself. Synthetic data addresses several practical challenges: it facilitates the generation of edge cases and long-tail scenarios that
-are underrepresented in real corpora, reduces the difficulty and latency associated with manual labeling, and can potentially produce more challenging data than the human generated data distribution.
+are underrepresented in real corpora, reduces the difficulty and latency associated with manual labeling, and can potentially produce more challenging data than the
+human-generated data distribution.
 
-With the introduction of LLMs with ability to use in-context learning and instruction following, [Self-Instruct](https://arxiv.org/abs/2212.10560)  emerged as a method to create synthetic data through zero or few-shot prompting. Grounded Self-Instruct methods extended that to
+With the introduction of LLMs with the ability to use in-context learning and instruction following, [Self-Instruct](https://arxiv.org/abs/2212.10560)  emerged as a method to create synthetic data through zero or few-shot prompting. Grounded Self-Instruct methods extended that to
 [ground on documents](https://arxiv.org/abs/2502.13124) and [other sources](https://arxiv.org/abs/2409.08239) to reduce hallucination and increase diversity. 
 Further, methods like
 [CoT Self-Instruct](https://arxiv.org/abs/2507.23751) extended that to use Chain-of-Thought reasoning during the generation
-process to help construct more complex tasks more accurately. Finally, so called [“Self-Challenging” methods](https://arxiv.org/abs/2506.01716)
+process to help construct more complex tasks more accurately. Finally, so-called [“Self-Challenging” methods](https://arxiv.org/abs/2506.01716)
 allow a challenger agent to interact with tools before proposing a task and accompanying
-evaluation functions. However, none of those methods allowed to control the quality of the data, besides
+evaluation functions. However, none of those methods directly control data quality, except through
 [filtering](https://arxiv.org/abs/2507.23751), [evolution](https://arxiv.org/abs/2304.12244) and [refinement](https://arxiv.org/abs/2407.21009).
 
 
@@ -54,12 +55,12 @@ evaluation functions. However, none of those methods allowed to control the qual
 Autodata generalizes all the above methods. An agent acting as a data scientist is tasked with the act of constructing and curating data, performing the actions a human data scientist would in order to create high quality data: where both building benchmark data and training data are use cases. This process includes both an initial iteration of data creation, followed by an analysis phase “eyeballing” the data as well as measuring its performance, constructing learnings, and then iterating with an improved recipe to create
 better data. Further, we also show how to train (meta-optimize) this agentic system (outer loop) to be optimal as a data scientist (inner loop).
 
-The high level design is shown in the figure above, where various instantiations can be built from this template.
+The high-level design is shown in the figure above, where various instantiations can be built from this template.
 
 
 **Data Creation.** The main LLM agent grounds on provided data (e.g. specific docs e.g. from math, legal, coding
 etc. depending on the task, or another useful data source) to help create the data. The agent can then use
-tools or existing skills/learnings it has previously acquired and inference time compute to create training or
+tools or existing skills/learnings it has previously acquired and inference-time compute to create training or
 evaluation data for LLM training and benchmarking. Importantly, this creation step can be repeated after
 subsequent analysis and learnings to improve the data even further.
 
@@ -67,7 +68,7 @@ subsequent analysis and learnings to improve the data even further.
 did right and wrong, and how it can be improved. This could be at the specific example level (checking if
 an example is correct? high quality? challenging enough?), or potentially at the dataset level (is it diverse?
 improves a model if used as training data? etc.). These learnings are fed back into the data creation process
-to improve the data in the next iteration, until a stopping criteria is met.
+to improve the data in the next iteration, until a stopping criterion is met.
 
 **Overall Data Scientist Loop.** The agent loops over the data creation and data analysis until it is satisfied
 with the quality of the data, and then outputs the final training dataset or benchmark. This can include
@@ -83,13 +84,13 @@ the figure above.
 
 ## A specific instantiation: Agentic Self-Instruct
 
-In our experiments we consider a specific instantation of autodata for creating high quality data, which we call Agentic Self-Instruct.
+In our experiments we consider a specific instantiation of autodata for creating high quality data, which we call Agentic Self-Instruct.
 
 Here, the main agent LLM has access to four LLM subagents: 
 
-- (i) Challenger LLM, which creates training examples given a detailed prompt from the main LLM, 
-- (ii) "Weak" solver that is expected to generally fail to solve the created training data; and 
-- (iii) "Strong" solver that is expected to generally succeed at the created training data.
+- (i) Challenger LLM, which creates training examples given a detailed prompt from the main LLM; 
+- (ii) "Weak" solver, that is expected to generally fail to solve the created training data; 
+- (iii) "Strong" solver, that is expected to generally succeed at the created training data; and
 - (iv) Verifier/judge that given the example and a model solution, checks its quality.
   
 The main agent LLM proceeds to create an example (an input + response pair), by sending its initial prompt including grounding data to the Challenger LLM. It then checks the quality of the Challenger LLM’s work by sending the input to the weak and strong solvers, and assigning a reward based on the verifier’s judgments.
@@ -102,7 +103,7 @@ The main agent LLM proceeds to create an example (an input + response pair), by 
 For verifiable tasks (using an LLM verifier), we require that majority vote over the strong solver is correct,
 while majority vote over the weak solver is wrong. For non-verifiable tasks, we require a gap in quality as
 measured by the judge, e.g. given rubrics generated by Challenger LLM. The main agent analyzes the report
-from the judge (that includes the solver’s outputs), and if this criteria is not fulfilled, then it continues to modify
+from the judge (that includes the solver’s outputs), and if the criterion is not fulfilled, then it continues to modify
 the input prompt sent to the Challenger LLM given these new learnings, to try and make a new example
 until the criteria is met.
 
@@ -314,15 +315,15 @@ We compare the accepted Agentic Self-Instruct data against CoT Self-Instruct (st
 
 ### Results: RL training
 
-We compare the performance of Qwen-3.5-4B trained on the examples from CoT Self-Instruct versus Agentic Self-Instruct data, using Kimi-K2.6 as the reward model to score responses against the generated rubrics. From each dataset, we hold out 100 examples as a test set and train Qwen-3.5-4B with GRPO for roughly one epoch (batch size 32, learning rate 1e-6). We evaluate each trained model on both test sets (100 examples each) to measure in-distribution and out-of distribution performance. We find the model trained on Agentic Self-Instruct CS data demonstrates a clear advantage, suggesting that the challenging training data produced by the agentic pipeline translates to stronger reasoning performance.
+We compare the performance of Qwen-3.5-4B trained on the examples from CoT Self-Instruct versus Agentic Self-Instruct data, using Kimi-K2.6 as the reward model to score responses against the generated rubrics. From each dataset, we hold out 100 examples as a test set and train Qwen-3.5-4B with GRPO for roughly one epoch (batch size 32, learning rate 1e-6). We evaluate each trained model on both test sets (100 examples each) to measure in-distribution and out-of-distribution performance. We find the model trained on Agentic Self-Instruct CS data demonstrates a clear advantage, suggesting that the challenging training data produced by the agentic pipeline translates to stronger reasoning performance.
 
 <p align="center"><img width="70%" src="cs3.png" /></p>
 
-*Figure: RL training results on CS research tasks. The autodata agentic-self instruct method outperforms creating data with standard CoT Self-Instruct.*
+*Figure: RL training results on CS research tasks. The autodata Agentic Self-Instruct method outperforms creating data with standard CoT Self-Instruct.*
 
-## Meta Optimization of the Data Scientist
+## Meta-Optimization of the Data Scientist
 
-We further apply meta-optimization to the data scientist agent itself, using the same evaluation criteria from the inner loop to guide optimization of the outer loop — the agent's harness. Concretely, we use an evolution optimization framework that treats the agent's scaffold as code to be iteratively improved.
+We further apply meta-optimization to the data scientist agent itself, using the same evaluation criteria from the inner loop to guide optimization of the outer loop — the agent's harness. Concretely, we use an evolutiona-based optimization framework that treats the agent's scaffold as code to be iteratively improved.
 
 
 <p align="center"><img width="90%" src="meta1.png" /></p>
@@ -364,16 +365,16 @@ The progression from 12.8% to 42.4% validated pass rate demonstrates that meta-o
 We believe these initial experiments are just the tip of the iceberg and further exploration and optimization of this approach will bring further gains.
 
 
-**More tasks, models and baselines.** Future continued work should explore the use of this method across more diverse tasks and models. We envision the ideal system being a general agent that can be used for any kind of data (mathematics, code, general instruction following tasks, safety, and so on) from verifiable to non-verifiable, single-turn to multi-turn and with supporting documents and more complex, e.g. agentic tasks. 
+**More tasks, models, and baselines.** Future continued work should explore the use of this method across more diverse tasks and models. We envision the ideal system being a general agent that can be used for any kind of data (mathematics, code, general instruction following tasks, safety, and so on) from verifiable to non-verifiable, single-turn to multi-turn and with supporting documents and more complex, e.g. agentic tasks. 
 
-**Hacking & limitations.** We encountered instances of the agents trying to avoid doing the work correctly or trying to "cheat" the goal, e.g. by changing the prompt to the weak solver telling it to be weak, which we have partially addressed, but have plans of investigating stronger safeguards. Similarly, we wish to make sure that data is both challenging and meaningful, for example in the computer science task we found some generated questions and rubrics are overly tied to specific experimental numbers from the paper rather than testing generalizable reasoning.
+**Hacking & limitations.** We encountered instances of the agents trying to avoid doing the work correctly or trying to "cheat" the goal, e.g. by changing the prompt to the weak solver telling it to be weak, which we have partially addressed, but have plans to investigate stronger safeguards. Similarly, we wish to make sure that data is both challenging and meaningful, for example in the computer science task we found that some generated questions and rubrics were overly tied to specific experimental numbers from the paper rather than testing generalizable reasoning.
 
 
-**Full dataset analysis iteration.** Our initial experiments create quality data at the example level. As detailed at the beginning of this post we would like to expand this to dataset-level analysis in order to improve quality, for example diversity statistics and overall improvements with respect to how it interacts with existing datasets. 
+**Full dataset analysis iteration.** Our initial experiments create quality data at the example level. As detailed at the beginning of this post, we would like to expand this to dataset-level analysis in order to improve quality, for example diversity statistics and overall improvements with respect to how it interacts with existing datasets. 
 An intermediate step rather than a full dataset analysis is iterative batched analysis, i.e. generating N examples, and then deriving learnings from the current batch in order to generate the next batch.
 
-**From Self-Improvement to Co-improvement.** [Our](https://arxiv.org/abs/2510.24684), and [others](https://arxiv.org/abs/2505.03335), work on [self-play](https://arxiv.org/abs/1703.05407) also involves making a "challenger" which generates training examples for a solver, which can be optimized together with rewards and weight updates, rather than in the agentic way described above. However, a full self-improving loop could consider our autodata system as the challenger, and train it both in learnt skills and its weights – at the same time as training the solver. In this work we have explored an autoresearch-like method to meta-train our agent, but there is much more to explore in this direction. 
-Finally, removing humans completely from the loop is unlikely to be desirable in current full model training pipelines, especially when data creation is so important for model capabilities and safe behavior. Incorporating human feedback and ability to do "co-research" with the agent is likely a better path, called [co-improvement](https://arxiv.org/abs/2512.05356), which is a main direction of our research.
+**From Self-Improvement to Co-improvement.** [Our work](https://arxiv.org/abs/2506.01716), along with related work by [others](https://arxiv.org/abs/2505.03335), on [self-play](https://arxiv.org/abs/1703.05407) also involves making a "challenger" which generates training examples for a solver, which can be optimized together with rewards and weight updates, rather than in the agentic way described above. However, a full self-improving loop could consider our autodata system as the challenger, and train it both in learned skills and its weights – at the same time as training the solver. In this work we have explored an autoresearch-like method to meta-train our agent, but there is much more to explore in this direction. 
+Finally, removing humans completely from the loop is unlikely to be desirable in current full model training pipelines, especially when data creation is so important for model capabilities and safe behavior. Incorporating human feedback and the ability to do "co-research" with the agent is likely a better path, called [co-improvement](https://arxiv.org/abs/2512.05356), which is a main direction of our research.
 
 
 ## Contributors
@@ -387,7 +388,7 @@ You can cite this blog (before the full paper is released) here:
 ```
 @article{kulikov2026autodata,
   title   = "Autodata: an automatic data scientist to create high quality data",
-  author  = {Kulikov, Ilia and Whitehouse, Chenxi and Saha, Swarnadeep and Wu, Tianhao and Yuan, Weizhe and Golovneva, Olga and Lanchantin, Jack and Bachrach, Yoram and Foerster, Jakob and Li, Xian and Fang, Han and Sukhbaatar, Sainbayar and Weston, Jason},
+  author  = {Kulikov, Ilia and Whitehouse, Chenxi and Wu, Tianhao and Saha, Swarnadeep and Yuan, Weizhe and Golovneva, Olga and Lanchantin, Jack and Bachrach, Yoram and Foerster, Jakob and Li, Xian and Fang, Han and Sukhbaatar, Sainbayar and Weston, Jason},
   year    = "2026",
   month   = "April",
   url     = "https://facebookresearch.github.io/RAM/blogs/autodata/"
