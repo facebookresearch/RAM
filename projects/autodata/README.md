@@ -323,7 +323,7 @@ We compare the performance of Qwen-3.5-4B trained on the examples from CoT Self-
 
 ## Meta-Optimization of the Data Scientist
 
-We further apply meta-optimization to the data scientist agent itself, using the same evaluation criteria from the inner loop to guide optimization of the outer loop — the agent's harness. Concretely, we use an evolutiona-based optimization framework that treats the agent's scaffold as code to be iteratively improved.
+We further apply meta-optimization to the data scientist agent itself, using the same evaluation criteria from the inner loop to guide optimization of the outer loop — the agent's harness. Concretely, we use an evolution-based optimization framework that treats the agent's scaffold as code to be iteratively improved.
 
 
 <p align="center"><img width="90%" src="meta1.png" /></p>
