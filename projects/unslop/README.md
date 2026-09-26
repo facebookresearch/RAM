@@ -317,6 +317,6 @@ You can cite this blog (before the full paper is released) here:
   author  = {Weston, Jason and Kulikov, Ilia and Saha, Swarnadeep},
   year    = "2026",
   month   = "September",
-  url     = "https://facebookresearch.github.io/RAM/blogs/unslop_ai/"
+  url     = "https://facebookresearch.github.io/RAM/blogs/unslop/"
 }
 ```
