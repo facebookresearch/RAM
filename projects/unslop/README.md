@@ -1,3 +1,8 @@
+---
+title: Unslopping AI
+description: Reinforcement learning from eXpert-Aligned Rubrics for expert-level text generation.
+---
+
 <script>
 MathJax = {
   tex: {
