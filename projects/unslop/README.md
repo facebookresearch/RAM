@@ -69,8 +69,8 @@ Our findings are described below.
 
 
 **A direct pairwise judge prefers the model.** A common protocol is to show a judge
-two candidates and ask which is better, e.g.,   given the rubric-free prompt &ldquo;which version is the better section? Reason step by step, then
-decide&rdquo;---with each call scored in both A/B orders to cancel position bias. This judge prefers the _models_  over the expert human in the majority of cases, between 63.5%-84.6%, depending on the writer and judge setup.
+two candidates and ask which is better, e.g.,   given the rubric-free prompt “which version is the better section? Reason step by step, then
+decide”---with each call scored in both A/B orders to cancel position bias. This judge prefers the _models_  over the expert human in the majority of cases, between 63.5%-84.6%, depending on the writer and judge setup.
 
 **A standard rubric does not register the gap either.**  While there are many ways to build rubrics here, we prompted GPT-5.6 to build a meta-prompt that given a paper missing the section, generates rubrics specific for judging that section. Switching to these rubric-based  judgments instead shows even more extreme results, with the model being selected as higher scoring 100% of the time.
 
@@ -111,7 +111,7 @@ We begin with an initial _meta-prompt_:  given an example context, it asks an LL
 
 Our  optimization procedure then iterates a simple refinement loop over a fixed number of iterations. At each
 iteration we show an _optimizer_ LLM the current meta-prompt, the human-model gap it
-achieves on the training set, and the specific examples where it fails, and ask it to propose  a revision that would widen the gap &ldquo;for genuine-quality reasons, not superficial tells&rdquo;.  The meta-prompt is held to a bounded length, so the optimizer must consolidate criteria, rather than
+achieves on the training set, and the specific examples where it fails, and ask it to propose  a revision that would widen the gap “for genuine-quality reasons, not superficial tells”.  The meta-prompt is held to a bounded length, so the optimizer must consolidate criteria, rather than
 adding ever more requirements. After optimization is complete, we keep the best performing candidate from across the iterations.
 
 
@@ -129,14 +129,14 @@ The learned rubrics fix the failure of the pairwise judge and standard rubrics.
 <p align="center"><img width="80%" src="fig2.png" /></p>
 
 <p><em>Figure: <strong>Meta-rubric optimization.</strong> Left: mean expert human-model (Muse Spark 1.1) gap by iteration for the <em>train</em> and <em>valid</em> splits; the validation
-  gap (solid) climbs from -4.2 to +2.76, crossing zero (i.e., where humans are judged on average superior to the model) at iteration 4 and peaking at iteration 5, and roughly tracks the training gap (dashed) throughout&mdash;generalization to held-out papers, without overfitting. Right: validation absolute means&mdash;the gap increases from both
+  gap (solid) climbs from -4.2 to +2.76, crossing zero (i.e., where humans are judged on average superior to the model) at iteration 4 and peaking at iteration 5, and roughly tracks the training gap (dashed) throughout—generalization to held-out papers, without overfitting. Right: validation absolute means—the gap increases from both
   directions, with the human's score <em>rising</em> (3.4 to 5.0) as the model's falls (7.6 to 2.7).</em></p>
 
 
 
 ### Analysis of the Learned Rubrics
 The initial rubrics, before learning, tend to cover the paper's specific content---naming the concrete claims, methods, and
-results a section must convey---so they yield long, paper-specific coverage checklists. We observe this has the unfortunate effect of creating a &ldquo;mini-paper&rdquo; within each written section. Such criteria reward fluent imitation, which restates material from across the whole paper, while
+results a section must convey---so they yield long, paper-specific coverage checklists. We observe this has the unfortunate effect of creating a “mini-paper” within each written section. Such criteria reward fluent imitation, which restates material from across the whole paper, while
 penalizing the selective human original for the detail it deliberately omits. Over the iterations the optimizer rewrites the guidance that  mis-scores
 expert prose: docking the human for principled omissions, crediting a compressed summary as fluency, and mistaking surface polish for craft. The learned rubrics thus also tend to reward sectional ownership (i.e., not a miniature of the whole paper), disciplined selection, economy, and precise on-scope detail rather than breadth of coverage. Because the meta-prompt is length-bounded, the criteria settle into a small, stable, relatively paper-independent set that tends to sharpen what it rewards instead of accumulating requirements.
 
@@ -179,13 +179,13 @@ RL-XAR carries our 27B model to the top of this leaderboard among all writers: i
 
 **Expert Human Evaluation** We confirm these automatic gains by evaluating on the author's own papers, of which they are clearly expert. In a blind expert
 side-by-side comparison of the RL-XAR model against the baseline Qwen3.5-27B on held-out sections, the RL-XAR writer was preferred by 16 to 2 (an 89% win rate), showing that the rubric-measured improvement corresponds to writing that expert readers actually judge better. We found that RL-XAR wins because the baseline generally has weak 
-sectional focusing often creating a &ldquo;mini-paper&rdquo;, and simultaneously contains too many unnecessary details, e.g. numerical results when unneeded. Nevertheless, we did not find the RL-XAR generations to be perfect either, and expect better rubric optimization and graders could find more flaws -- which could be reinforced during training, i.e. using our approach with frontier models, rather than Qwen3.5-27B as a writer and Qwen3.8-2.4T-A95B as a judge.
+sectional focusing often creating a “mini-paper”, and simultaneously contains too many unnecessary details, e.g. numerical results when unneeded. Nevertheless, we did not find the RL-XAR generations to be perfect either, and expect better rubric optimization and graders could find more flaws -- which could be reinforced during training, i.e. using our approach with frontier models, rather than Qwen3.5-27B as a writer and Qwen3.8-2.4T-A95B as a judge.
 
 
 <details>
 <summary>See examples</summary>
   <p align="center"><img width="90%" src="side_by_side1.png" /></p>
-  <p><em>Figure: <strong>Example of paper introduction writing (excerpt).</strong> The baseline Qwen3.5-27B (left) tends to write an over-scoped &ldquo;mini-paper&rdquo; for the introduction, including future work, whereas RL-XAR (right) scopes appropriately.</em></p>
+  <p><em>Figure: <strong>Example of paper introduction writing (excerpt).</strong> The baseline Qwen3.5-27B (left) tends to write an over-scoped “mini-paper” for the introduction, including future work, whereas RL-XAR (right) scopes appropriately.</em></p>
 
   <p align="center"><img width="90%" src="side_by_side2.png" /></p>
   <p><em>Figure: <strong>Example of paper abstract writing.</strong> The baseline Qwen3.5-27B (left) tends to write too many unimportant details in the abstract, whereas RL-XAR (right) scopes appropriately, following the style of the rest of the paper.</em></p>
