@@ -301,7 +301,7 @@ between expert human text and current model generations, iterating until no disc
 remains; standard RL against the resulting rubrics then improves writing quality. Across three
 domains---writing academic paper sections, Pulitzer- and Nobel-grade story continuation, and Wikipedia
 section writing---RL-XAR yields large gains over the base model.
-
+Our hope is that if AIs can be better communicators with humans, we can all benefit.
 
 ## Contributors
 Jason Weston, Ilia Kulikov, Swarnadeep Saha
