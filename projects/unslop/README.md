@@ -136,7 +136,8 @@ The learned rubrics fix the failure of the pairwise judge and standard rubrics.
 
 ### Analysis of the Learned Rubrics
 The initial rubrics, before learning, tend to cover the paper's specific content---naming the concrete claims, methods, and
-results a section must convey---so they yield long, paper-specific coverage checklists. We observe this has the unfortunate effect of creating a “mini-paper” within each written section. Such criteria reward fluent imitation, which restates material from across the whole paper, while
+results a section must convey---so they yield long, paper-specific coverage checklists. We observe this has the unfortunate effect of rewarding
+a “mini-paper” within each written section. Such criteria reward fluent imitation, which restates material from across the whole paper, while
 penalizing the selective human original for the detail it deliberately omits. Over the iterations the optimizer rewrites the guidance that  mis-scores
 expert prose: docking the human for principled omissions, crediting a compressed summary as fluency, and mistaking surface polish for craft. The learned rubrics thus also tend to reward sectional ownership (i.e., not a miniature of the whole paper), disciplined selection, economy, and precise on-scope detail rather than breadth of coverage. Because the meta-prompt is length-bounded, the criteria settle into a small, stable, relatively paper-independent set that tends to sharpen what it rewards instead of accumulating requirements.
 
@@ -169,7 +170,7 @@ evaluate every writer against *all three* sets of meta-optimized rubrics and ran
 _minimum_ of the three human-normalized scores---the worst rubric, allowing no
 cherry-picking. We use GPT-5.6 as a rubric judge for evaluation, so we do not evaluate with the same judge used for training.  
 RL-XAR carries our 27B model to the top of this leaderboard among all writers: its strongest checkpoint reaches a worst-rubric score of 9.60
-(human=10), ahead of every external frontier model. While we believe these rubrics are still potentially biased towards our model (having trained on the first two iterations) and still do not capture a fully accurate measurement of expert human writing, we believe they still reflect improved performance.
+(human=10), ahead of every external frontier model. While these rubrics are still potentially biased towards our model (having trained on the first two iterations) and still do not capture a fully accurate measurement of expert human writing, we believe they still reflect improved performance.
 
 
 <p align="center"><img width="90%" src="fig3.png" /></p>
