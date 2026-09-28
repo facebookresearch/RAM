@@ -178,7 +178,7 @@ RL-XAR carries our 27B model to the top of this leaderboard among all writers: i
 *Figure: **Test performance on academic paper section writing.** Overall score is the <em>minimum</em> of the three iterations of expert-aligned rubrics using a GPT-5.6 judge, with human-normalized scores.  RL-XAR training of Qwen3.5-27B gives superior performance to its direct baseline Qwen3.5-27B and various frontier models according to these rubrics. The last column is an Opus 4.8 derived assessment of the core failing of each model given their rubric scores.*
 
 
-**Expert Human Evaluation** We confirm these automatic gains by evaluating on the author's own papers, of which they are clearly expert. In a blind expert
+**Expert Human Evaluation** We confirm these automatic metric gains by evaluating on the author's own papers, of which they are clearly expert. In a blind expert
 side-by-side comparison of the RL-XAR model against the baseline Qwen3.5-27B on held-out sections, the RL-XAR writer was preferred by 16 to 2 (an 89% win rate), showing that the rubric-measured improvement corresponds to writing that expert readers actually judge better. We found that RL-XAR wins because the baseline generally has weak 
 sectional focusing often creating a “mini-paper”, and simultaneously contains too many unnecessary details, e.g. numerical results when unneeded. Nevertheless, we did not find the RL-XAR generations to be perfect either, and expect better rubric optimization and graders could find more flaws -- which could be reinforced during training, i.e. using our approach with frontier models, rather than Qwen3.5-27B as a writer and Qwen3.8-2.4T-A95B as a judge.
 
@@ -209,8 +209,8 @@ We use 2,290 examples for training, 310 for validation. Each pairing consists of
 **Rubric Evaluation.** We evaluate under the same story rubrics, but switch the judge to GPT-5.6, and report human-normalized scores. 
 RL-XAR lifts Qwen3.5-27B from 2.8 to 8.2---the top of all writers, ahead of every frontier model (next best Claude 5 Opus, 6.8). 
 
-**Human Evaluation** We confirm these automatic gains by human evaluation. In a blind  side-by-side comparison of the RL-XAR model against the baseline Qwen3.5-27B on held-out story continuations, the RL-XAR writer was preferred by 19 to 1 (an $95\%$ win rate), showing that the
-rubric-measured improvement corresponds to writing that readers actually judge better. We found the baseline to be poor by not following the style of the story well. One noticeable feature is that it often falls back to clich\'ed or poor-quality  similes, e.g. *"the air hung over the table like a warm cloth"* and  *"the wind rustled the leaves, sounding like a whisper of warning, or perhaps a laugh"* that do not match the author's work.
+**Human Evaluation** We confirm these automatic metric gains by human evaluation. In a blind  side-by-side comparison of the RL-XAR model against the baseline Qwen3.5-27B on held-out story continuations, the RL-XAR writer was preferred by 19 to 1 (an $95\%$ win rate), showing that the
+rubric-measured improvement corresponds to writing that readers actually judge better. We found the baseline to be poor by not following the style of the story well. One noticeable feature is that it often falls back to clich&eacute;d or poor-quality  similes, e.g. *"the air hung over the table like a warm cloth"* and  *"the wind rustled the leaves, sounding like a whisper of warning, or perhaps a laugh"* that do not match the author's work.
 
 
 
@@ -238,7 +238,7 @@ the same memorization techniques as mentioned previously. We provide 1,187 train
 ## Analysis, Ablations & Additional Experiments
 
 
-**The Judge matters** Our results so far show the rubrics matter. Here, we show the quality of the LLM judge evaluating those rubrics is just as important. A weak judge simply cannot differentiate between expert human and model writing.
+**The Judge matters.** Our results so far show the rubrics matter. Here, we show the quality of the LLM judge evaluating those rubrics is just as important. A weak judge simply cannot differentiate between expert human and model writing.
 
 
 
@@ -247,7 +247,7 @@ the same memorization techniques as mentioned previously. We provide 1,187 train
 *Figure: **Comparison of Judges, averaged over XAR-optimized rubrics.** Mean human-model gap (writer = Muse Spark 1.1; positive = human favored) for each judge,   with judges in decreasing capability order. On Story and Wikipedia Qwen3.5-27B (red) is the only judge to turn <em>negative</em>, ranking the model  <em>above</em>  human writing (-0.55 story, -0.39 wiki); on Paper the four judges are close and all human-favoring. A weak grader is incapable of seeing the gap.*
     
 
-**The Meta-Optimizer matters** 
+**The Meta-Optimizer matters.** 
 We compare Muse Spark 1.1, Opus 5 and Kimi K2.6 as rubric meta-optimizers, each averaged over 3 seeds, reporting the human-model validation gap of Muse Spark 1.1 as a paper section writer. We find that Kimi and Opus can find a positive gap, but Muse Spark 1.1 struggles. Likely, weaker models struggle even more. 
 Finally, we note we used a simple iterative refinement meta-optimization method, when many [other methods](https://github.com/stanfordnlp/dspy) exist. We conducted preliminary experiments on a GEPA optimization variant, but it did not yield superior results to our main reported results, and we leave such investigations for future work.
 
@@ -260,11 +260,11 @@ Finally, we note we used a simple iterative refinement meta-optimization method,
 
 
 
-**Expert humans matter** Using examples of expert human writing matters for rubric optimization. We validate this by using papers judged to be low, medium and high quality human writing, and evaluating them against our learned rubrics. Comparing humans to GPT-5.6 we observe a gap of +1.39 for high quality human writers, +0.95 for medium quality and only +0.37 for low quality. Hence, using low quality writing against a strong model writer would likely be unable to find useful rubrics or a human-model gap. Additionally, if the learned rubric measures genuine quality, the human-model gap should be larger for better written human papers and smaller for weak ones, which is what we observe.
+**Expert humans matter.** Using examples of expert human writing matters for rubric optimization. We validate this by using papers judged to be low, medium and high quality human writing, and evaluating them against our learned rubrics. Comparing humans to GPT-5.6 we observe a gap of +1.39 for high quality human writers, +0.95 for medium quality and only +0.37 for low quality. Hence, using low quality writing against a strong model writer would likely be unable to find useful rubrics or a human-model gap. Additionally, if the learned rubric measures genuine quality, the human-model gap should be larger for better written human papers and smaller for weak ones, which is what we observe.
 
 <p align="center"><img width="60%" src="fig7.png" /></p>
 
-*Figure: **Expert humans matter**. Human-model gap by paper human writing-quality bin (low/medium/high, light to  dark), comparing with two models (Muse Spark 1.1 and GPT-5.6).  If the learned rubric is measuring genuine quality, the human-model gap should be larger for better written human papers and shrink for weak ones, which is what we observe.*
+*Figure: **Expert humans matter.**. Human-model gap by paper human writing-quality bin (low/medium/high, light to  dark), comparing with two models (Muse Spark 1.1 and GPT-5.6).  If the learned rubric is measuring genuine quality, the human-model gap should be larger for better written human papers and shrink for weak ones, which is what we observe.*
 
 
 
@@ -287,8 +287,8 @@ In early experiments we found that standard models, given the task of paper sect
 For paper section writing, we note that in the first iteration of RL-XAR training an evaluation of (11.0, 7.0, 8.4) is obtained across the three rounds of rubrics. Round 1 rubrics are optimized, giving a high score, but at the cost of round 2 rubrics, which are not optimized -- a score of 7.0 being far below the starting point 10.4 of Qwen3.5-27B. Iteration 2 training restores the performance of round 2 rubrics to baseline model performance, while scoring highly across the other two sets of rubrics. 
 
 **Training rubrics online.**
-We also briefly experiment with a fully online (co-training) objective where the writing generator is optimizing for the rubrics, and the rubrics are simultaneously being trained to optimize the human-model gap for the current policy -- for the latter, generated rubrics are rewarded by the normalized gap.
-While we leave subsequent experiments for future work, our first results in this direction on the story task are positive, with a gain from 2.8 (Qwen3.5-27B) to 6.0 (online RL-XAR) using the same fixed (learnt) rubric applied in our earlier experiments.
+We also briefly experiment with a fully online (co-training) objective where the writing generator is optimizing for the rubrics, and the rubrics are simultaneously being trained by GRPO (not meta-optimization) to optimize the human-model gap for the current policy -- for the latter, generated rubrics are rewarded by the normalized gap.
+While we leave subsequent experiments for future work, our first results in this direction on the story task are positive, with a gain from 2.8 (Qwen3.5-27B) to 6.0 (online RL-XAR) when testing with the same fixed (learnt) rubric applied in our earlier experiments.
 
 
 <p align="center"><img width="50%" src="online1.png" /><img width="50%" src="online2.png" /></p>
@@ -297,11 +297,12 @@ While we leave subsequent experiments for future work, our first results in this
 ## Conclusion 
 We introduced **RL-XAR**, Reinforcement Learning from eXpert-Aligned Rubrics, a recipe that
 turns readily available expert human writing into a learned, expert-aligned reward and then optimizes
-against it. Its key step meta-optimizes a rubric generator to maximize the gap
+against it. Its key step optimizes a rubric generator to maximize the gap
 between expert human text and current model generations, iterating until no discernible gap
 remains; standard RL against the resulting rubrics then improves writing quality. Across three
 domains---writing academic paper sections, Pulitzer- and Nobel-grade story continuation, and Wikipedia
-section writing---RL-XAR yields large gains over the base model.
+section writing---RL-XAR yields large gains over the base model. 
+Our hope is that if AIs can be better communicators with humans, we can all benefit.
 
 
 ## Contributors
