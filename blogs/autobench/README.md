@@ -36,7 +36,7 @@ A low solver score on its own is weak evidence, because a broken task, an unsati
 
 The loop retains its best accepted checkpoint and checks difficulty against external solvers.
 
-<details>
+<details markdown="1">
 <summary>Implementation details</summary>
 
 **Autodata Loop.** Inspired by Autodata ([Kulikov et al., 2026][kulikov2026autodata]), in AutoBenchmark, the research agent alternates creation and analysis until the iteration budget is exhausted. Each iteration is seeded from the best checkpoint so far, so a revision that (1) the judges reject, or (2) that makes the solver achieve a higher score compared to previous iterations, does not become the checkpoint of the next revision. Feedback is exposed as file-system memory: frozen snapshots, trajectories, answers, rubric judgments, and verdicts are written to disk and the prompt names the paths, so the accumulated history grows over iterations.
@@ -67,7 +67,7 @@ The research agent is given grounding materials by the harness supplying a corpu
 
 1. **Graveyard Bench (ideation): Can AI assistants avoid proposing dead-end ideas?** The benchmark is grounded in documented negative results, namely research directions that the scientific record shows were pursued and abandoned. Graveyard Bench asks a research agent to propose a research direction and tests whether it avoids directions that existing evidence has already undermined.
 
-   <details>
+   <details markdown="1">
    <summary>Grounding data</summary>
 
    We draw on the medical-reversals supplement of [Herrera-Perez et al. (2019)][herreraperez2019reversals], which catalogs clinical practices later overturned by subsequent randomized trials; registry records from ClinicalTrials.gov ([U.S. National Library of Medicine][clinicaltrialsgov]) together with their aggregated form in AACT ([Clinical Trials Transformation Initiative][aact]), which document trials whose reported outcomes fail to support the hypothesis under test; and the Reproducibility Project: Psychology ([Open Science Collaboration, 2015][opensciencecollaboration2015]), which records effects that do not survive direct replication.
@@ -75,7 +75,7 @@ The research agent is given grounding materials by the harness supplying a corpu
 
 2. **SilentTrain Bench (experimentation): Can AI assistants patch buggy code that silently degrades performance?** The benchmark is grounded in defects that leave a training run executable while lowering the metric it reports, so that no error trace is available to localize the fault. An agent is tasked to produce a patch that fixes the buggy code and is scored on whether its patch restores the performance.
 
-   <details>
+   <details markdown="1">
    <summary>Grounding data</summary>
 
    We source these from the silent-error corpus released with TrainCheck ([Jiang et al., 2025][jiang2025traincheck]), and from the commit histories of two kinds of repository. The first are widely used training frameworks and libraries: PyTorch ([Paszke et al., 2019][paszke2019pytorch]), TensorFlow ([Abadi et al., 2016][abadi2016tensorflow]), HuggingFace Transformers ([Wolf et al., 2020][wolf2020transformers]) and Accelerate ([Gugger et al., 2022][gugger2022accelerate]), DeepSpeed ([Rasley et al., 2020][rasley2020deepspeed]), PyTorch Lightning ([Falcon and The PyTorch Lightning team, 2019][falcon2019lightning]), torchvision ([TorchVision maintainers and contributors, 2016][torchvision]) and timm ([Wightman, 2019][wightman2019timm]), Detectron2 ([Wu et al., 2019][wu2019detectron2]), vLLM ([Kwon et al., 2023][kwon2023vllm]), LitGPT ([Lightning AI, 2023][litgpt]), Mosaic Composer ([The Mosaic ML Team, 2021][mosaic_composer]), OpenNMT-py ([Klein et al., 2017][klein2017opennmt]), and lmms-eval ([Zhang et al., 2024][lmmseval]). The second are self-contained research codebases, whose narrower scope makes a degradation attributable to a single defect: nanoGPT ([Karpathy, 2022][nanogpt]) for language-model pretraining, ring-flash-attention ([Zhu, 2024][ringflashattention]) for long-context attention, opinf ([McQuarrie et al.][mcquarrie2023opinf]) for operator inference on dynamical systems, GrowNet ([Badirli et al., 2020][badirli2020grownet]) for gradient-boosted neural networks, stable-continual-learning ([Mirzadeh et al., 2020][mirzadeh2020stable]) for continual learning under varying training regimes, Human-Path-Prediction ([Mangalam et al., 2021][mangalam2021ynet]) for pedestrian trajectory forecasting, turboquant-pro (zan, 2026) for KV-cache quantization, and mrpro ([MRpro Team][mrpro]) for MR image reconstruction. The GH Archive event stream ([Grigorik][gharchive]) is used to locate the relevant commits and issue threads, and training runs are executed on Imagenette ([Howard, 2019][imagenette]).
@@ -83,7 +83,7 @@ The research agent is given grounding materials by the harness supplying a corpu
 
 3. **Rebuttal Bench (assessment): Can AI assistants determine whether a paper rebuttal resolves the weakness raised against a claim?** The benchmark is grounded in public review threads, which pair a reviewer’s stated weakness with the authors’ response and with the reviewer’s subsequent reply. An agent is tasked to produce a file that marks if each claim within the rebuttal from the author resolves the weakness mentioned by the reviewer, and is scored on whether it correctly judges.
 
-   <details>
+   <details markdown="1">
    <summary>Grounding data</summary>
 
    We use DISAPERE ([Kennard et al., 2022][kennard2022disapere]), which annotates review and rebuttal sentences with their discourse function and the authors’ stance toward each review argument, and PRRCA ([Wu et al., 2022][wu2022prrca]), which pairs reviews with rebuttal counter-arguments, alongside raw threads from three venues that publish their review correspondence: initial and final reviewer scores from ICLR 2024 ([OpenReview][openreview]), the transparent peer-review files of Nature Communications ([Nature Communications][naturecomms_peerreview]), and the decision letters and point-by-point responses of eLife ([eLife Sciences Publications][elife_decisionletters]).
@@ -93,7 +93,7 @@ The research agent is given grounding materials by the harness supplying a corpu
 
 Every run produces a benchmark with ten instances over ten iterations, and each solver attempts every task once per iteration. Each point in Figure 2 (Rebuttal Bench and Graveyard Bench) and Figure 3 (SilentTrain Bench) reports a solver's mean score across the ten tasks at that iteration. Scores are displayed on a 0–100 scale. Lower scores indicate a harder (better) benchmark.
 
-<details>
+<details markdown="1">
 <summary>Execution and admission settings</summary>
 
 Solvers receive the same execution contract in every iteration (4 CPUs, 16 GiB of memory, and a 24-hour agent budget per task, with a separate verifier container for grading the solver’s submission), so scores stay comparable across iterations. Before any solver is run, the harness executes the agent’s own reference solution against the real verifier and admits the submission only when it scores at least 0.9, returning the iteration for a repair session otherwise, with at most ten submission attempts per iteration.
@@ -121,16 +121,16 @@ At the selected checkpoints in Figure 2, Nemotron-3.5-Lightning-30B-A3B scores 3
 
 <p align="center"><em>Table 1. Claude Opus-5 score on the best checkpoints. Lower scores mean that the benchmark is harder. Fine-grained human feedback helps.</em></p>
 
-<table align="center">
+<table align="center" style="display: table; width: auto; margin-left: auto; margin-right: auto;">
   <thead>
     <tr><th>Proposal human feedback setting</th><th align="right">Opus-5 Score (↓)</th></tr>
   </thead>
   <tbody>
     <tr><td>No feedback</td><td align="right">98.0</td></tr>
     <tr><td>Rebuttal Bench, coarse-grained human feedback</td><td align="right">83.1</td></tr>
-    <tr><td>Rebuttal Bench, fine-grained human feedback</td><td align="right">65.9</td></tr>
+    <tr><td>Rebuttal Bench, fine-grained human feedback</td><td align="right"><strong>65.9</strong></td></tr>
     <tr><td>Graveyard Bench, coarse-grained human feedback</td><td align="right">90.7</td></tr>
-    <tr><td>Graveyard Bench, fine-grained human feedback</td><td align="right">84.4</td></tr>
+    <tr><td>Graveyard Bench, fine-grained human feedback</td><td align="right"><strong>84.4</strong></td></tr>
   </tbody>
 </table>
 
