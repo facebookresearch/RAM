@@ -173,6 +173,26 @@ Our takeaway is that for current models human feedback helps at two points, and 
 
 Looking ahead, constructing high-quality challenging benchmarks is and will be central to AI model development, and it becomes harder as the models themselves become more capable. As recursive self-improvement draws increasing attention, this raises the question of which parts of benchmark construction should be delegated to agents and which should remain with human researchers. Substantial technical work remains on the agent side, including training the proposer to widen the proposer–solver gap and meta-optimizing its agentic harness. The more difficult and important question, however, concerns the human side: deciding which problems are meaningful and worth making difficult is a judgment we do not yet know how to delegate, and integrating it into the loop is, in our view, the most important direction for future work. The AutoBenchmark recipe can be used to monitor this progress as models improve.
 
+
+## Contributors
+Seungone Kim, Chuanyang Jin, Tianjian Li, Chenxi Whitehouse, Jason Weston, Weizhe Yuan, Ilia Kulikov, Swarnadeep Saha, Jack Lanchantin
+
+
+## More details
+We plan to put a full technical report on arXiv soon.
+
+## Citation
+You can cite this blog (before the full paper is released) here:
+```
+@article{kim2026autobench,
+  title   = "AutoBenchmark: benchmark creation and the role of humans",
+  author  = {Kim, Seungone and Jin, Chuanyang and Li, Tianjian and Whitehouse, Chenxi and Weston, Jason and Yuan, Weizhe and Kulikov, Ilia and Saha, Swarnadeep and Lanchantin, Jack},
+  year    = "2026",
+  month   = "September",
+  url     = "https://facebookresearch.github.io/RAM/blogs/autobench/"
+}
+
+
 <!-- Links for the citations above; identifiers follow the original LaTeX citation keys. -->
 [yin2025godel]: https://doi.org/10.18653/v1/2025.acl-long.1354
 [when_ai_builds_itself]: https://www.anthropic.com/institute/recursive-self-improvement
