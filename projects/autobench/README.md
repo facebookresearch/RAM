@@ -191,7 +191,7 @@ You can cite this blog (before the full paper is released) here:
   month   = "September",
   url     = "https://facebookresearch.github.io/RAM/blogs/autobench/"
 }
-
+```
 
 <!-- Links for the citations above; identifiers follow the original LaTeX citation keys. -->
 [yin2025godel]: https://doi.org/10.18653/v1/2025.acl-long.1354
