@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1026" viewBox="0 0 1600 1026" role="img" aria-labelledby="title desc">
   <title id="title">Three examples of LLM judge critiques</title>
-  <desc id="desc">Critiques identify answer leakage, memorized textbook bugs, and a source cited without being retrieved. Full selectable text appears beneath the figure in the blog post.</desc>
+  <desc id="desc">Three critiques from the benchmark verifier, each shown as a heading and a verbatim quote: answer keys leaking into evidence files the solver can read, a construct built from memorized textbook bugs that fails to separate the solvers, and a source the creator cites but never retrieved into the benchmark.</desc>
   <rect width="1600" height="1026" fill="#ffffff"/>
   <rect x="16" y="16" width="1568" height="994" rx="16" fill="none" stroke="#aebed2" stroke-width="2"/>
   <rect x="46" y="54" width="1508" height="382" rx="12" fill="#f8f9fc" stroke="#cfd7e3" stroke-width="2"/>
