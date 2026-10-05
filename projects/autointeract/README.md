@@ -8,6 +8,68 @@ MathJax = {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+<style>
+.autointeract-figure {
+  overflow-x: auto;
+  margin: 1rem auto;
+  overscroll-behavior-inline: contain;
+  text-align: center;
+  -webkit-overflow-scrolling: touch;
+}
+
+.autointeract-figure > a {
+  display: block;
+}
+
+.autointeract-figure img {
+  display: block;
+  width: var(--desktop-width, 100%);
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+  cursor: zoom-in;
+}
+
+.autointeract-figure--95 {
+  --desktop-width: 95%;
+}
+
+.autointeract-figure--90 {
+  --desktop-width: 90%;
+}
+
+.autointeract-figure--80 {
+  --desktop-width: 80%;
+}
+
+.autointeract-figure--data {
+  --mobile-width: 900px;
+}
+
+.autointeract-figure__hint {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .autointeract-figure img {
+    width: var(--mobile-width, 760px);
+    max-width: none;
+    margin-inline: 0;
+  }
+
+  .autointeract-figure__hint {
+    position: sticky;
+    left: 0;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding-top: 0.35rem;
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+}
+</style>
+
 # AutoInteract: Training agents to interact with humans
 
 ## Overview
@@ -16,7 +78,12 @@ MathJax = {
 
 An obvious direction is thus to train models to be better at agent-human interactions. However, common training recipes are not designed for an interactive setup: real interaction logs are scarce, costly, and difficult to convert into reproducible training examples ([Baumann et al., 2026][baumann2026swe]). An alternative is to simulate interactions, but these can be miscalibrated against real user behavior or collapse a heterogeneous user population onto a generic persona ([Cheng et al., 2023][cheng2023compost]). Moreover, ensuring task diversity, factual grounding, and executable verification in synthesized interactions is itself not straightforward. The problem for synthetic data is therefore to construct interaction data that is realistic, grounded in verifiable tasks with high-quality reference solutions, and calibrated in difficulty to the model being trained.
 
-<p align="center"><img width="95%" src="autointeract.png" alt="AutoInteract two-phase framework" /></p>
+<div class="autointeract-figure autointeract-figure--95">
+  <a href="autointeract.png" aria-label="Open the full-size AutoInteract framework figure">
+    <img src="autointeract.png" alt="AutoInteract two-phase framework" decoding="async" />
+  </a>
+  <span class="autointeract-figure__hint">Swipe horizontally or tap the image to view it full size.</span>
+</div>
 
 <em>Figure 1. **AutoInteract** is a framework for generating realistic, high-quality multi-turn interaction trajectories from verified tasks based on real user histories. In Phase 1, AutoInteract build user models: modeling how users react by optimizing a history-conditioned user behavior prompt and building a diverse set of user profiles. In Phase 2, an agent combines verified source tasks with its user models to generate candidate tasks with multi-turn interaction trajectories,  and selects them to be challenging, valid, realistic, coherent and profile consistent. If the checks fail, it revises the controller's instruction until a task passes all checks or the retry budget is exhausted.</em>
 
@@ -66,7 +133,12 @@ We build the user profile population in three steps: build (prompt an LLM to sum
 
 
 
-<p align="center"><img width="80%" src="user_simulator_prompt_refined.png" alt="The user-simulator prompt" /></p>
+<div class="autointeract-figure autointeract-figure--80">
+  <a href="user_simulator_prompt_refined.png" aria-label="Open the full-size user-simulator prompt figure">
+    <img src="user_simulator_prompt_refined.png" alt="The user-simulator prompt" loading="lazy" decoding="async" />
+  </a>
+  <span class="autointeract-figure__hint">Swipe horizontally or tap the image to view it full size.</span>
+</div>
 
 <em>Figure 2. **The user-simulator prompt used to generate each user turn.** It combines the learned user behavior prompt and a user profile sampled in Phase 1 with the interaction history and the privileged task context. After a failed attempt, the controller may also add revised role-playing guidance based on the trajectory evaluator's feedback.</em>
 
@@ -145,12 +217,22 @@ Each trajectory begins with a verified source task. The controller pairs the tas
 
 <em>Table 1: **Evaluation on algorithmic benchmarks.** We report Pass@1 on LiveCodeBench-Pro and its multi-turn variant, broken down by difficulty. Avg is the unweighted mean of the two **Overall** scores, and $\Delta$ vs Base is its absolute pp gain over the corresponding baseline performance; green subscripts denote per-benchmark pp gains over the same baseline performance. The Hard subset is omitted because accuracy is consistently 0. Best per column within each backbone block in **bold**, second best <u>underlined</u>. AutoInteract achieves the best average at both model scales.</em>
 
-<p align="center"><img width="90%" src="table2.png" alt="LiveCodeBench results" /></p>
+<div class="autointeract-figure autointeract-figure--90 autointeract-figure--data">
+  <a href="table2.png" aria-label="Open the full-size LiveCodeBench-Pro results table">
+    <img src="table2.png" alt="LiveCodeBench-Pro and multi-turn LiveCodeBench-Pro results" loading="lazy" decoding="async" />
+  </a>
+  <span class="autointeract-figure__hint">Swipe horizontally or tap the image to view it full size.</span>
+</div>
 
 
 <em>Table 2. **Evaluation on SWE-Together.** SWE-Together evaluates multi-turn repository-level issue resolution in collaboration with a simulated user. Each task is run twice, and a run counts as correct when the judge scores it at least $0.85$. Pass@1 is the percentage of correct runs, Pass^2 the percentage of tasks correct on both runs, and SSR the percentage of tasks whose two-run average reaches the threshold. Mean Judge is the average continuous correctness score, with no-patch runs scored $0$. U-Corr is user correction effort, computed as corrections plus $0.2\times$ nudges from an LLM tagger that labels each follow-up user message. Tok./Task and Min./Task are task-averaged output and reasoning tokens and wall-clock minutes across the two runs. Green subscripts denote gains over the same baseline performance. Best and second-best correctness results within each backbone block are in **bold** and <u>underlined</u>, respectively. AutoInteract outperforms all baselines on every correctness metric.</em>
 
-<p align="center"><img width="90%" src="table3.png" alt="LiveCodeBench results" /></p>
+<div class="autointeract-figure autointeract-figure--90 autointeract-figure--data">
+  <a href="table3.png" aria-label="Open the full-size SWE-Together results table">
+    <img src="table3.png" alt="SWE-Together evaluation results" loading="lazy" decoding="async" />
+  </a>
+  <span class="autointeract-figure__hint">Swipe horizontally or tap the image to view it full size.</span>
+</div>
 
 ## Experimental Results
 
@@ -165,13 +247,28 @@ Our main results are given in Table 1 for LiveCodeBench-Pro and Multi-turn LiveC
 
 <em>Table 3. **Multi-turn interaction data, grounded user models, and executable verification are all necessary in AutoInteract.** We evaluate Qwen3.5-4B on the same three benchmarks as Tables 1 and 2 for various ablations. *w/o multi-turn* runs the full pipeline but builds each verified task as a single turn instead of a user–assistant interaction; *w/o user models* drops Phase 1 (Section [Building User Models from Real Histories](#building-user-models-from-real-histories)) and simulates the user with one fixed prompt instead of the behavior-grounded profile population; *w/o executable verification* does not execute solver answers against the source verifier during data generation and instead uses an LLM judge to compare them with the ground truth; and *w/o all three components* combines these three ablations. The SWE-Together **Avg** is the unweighted mean of Pass@1, SSR, and Pass^2; the rightmost Avg is the unweighted mean of the two **Overall** scores and the SWE-Together **Avg**.</em>
 
-<p align="center"><img width="100%" src="table4.png" alt="Ablation results" /></p>
+<div class="autointeract-figure autointeract-figure--data">
+  <a href="table4.png" aria-label="Open the full-size AutoInteract ablation results table">
+    <img src="table4.png" alt="AutoInteract component ablation results" loading="lazy" decoding="async" />
+  </a>
+  <span class="autointeract-figure__hint">Swipe horizontally or tap the image to view it full size.</span>
+</div>
 
-<p align="center"><img width="99%" src="training_reward.png" alt="Training reward versus optimization step" /></p>
+<div class="autointeract-figure autointeract-figure--data">
+  <a href="training_reward.png" aria-label="Open the full-size training reward figure">
+    <img src="training_reward.png" alt="Training reward versus optimization step" loading="lazy" decoding="async" />
+  </a>
+  <span class="autointeract-figure__hint">Swipe horizontally or tap the image to view it full size.</span>
+</div>
 
 <em>Figure 3. **Training on AutoInteract tasks does not saturate as quickly as training on the source data.** Training reward versus optimization step for Qwen3.5-4B RL runs on the source data (blue) and on AutoInteract tasks (orange). In the algorithmic domain (left), AutoInteract starts from lower reward but continues improving and eventually reaches a higher reward than source-task training. In the SWE domain (right), AutoInteract also continues improving and reaches substantially higher reward, while source-task training saturates much earlier.</em>
 
-<p align="center"><img width="99%" src="task_evolution.png" alt="An example task across three revision stages" /></p>
+<div class="autointeract-figure autointeract-figure--data">
+  <a href="task_evolution.png" aria-label="Open the full-size task evolution figure">
+    <img src="task_evolution.png" alt="An example task across three revision stages" loading="lazy" decoding="async" />
+  </a>
+  <span class="autointeract-figure__hint">Swipe horizontally or tap the image to view it full size.</span>
+</div>
 
 <em>Figure 4. **AutoInteract makes challenging multi-turn interaction data through revisions.** The source task, learned user behavior prompt, and sampled profile remain fixed. Stage 1 points directly to the likely code change, making the trajectory too easy: the weak solver scores 67%, above the 40% limit. Evaluator feedback leads Stage 2 to remove that clue, but the revision also omits the example file and expected behavior, leaving too little evidence: the strong solver scores 67\%, below the 70% target. Stage 3 restores this evidence, identifies the relevant code area, and adds follow-up requirements without revealing the solution. The final trajectory is accepted with weak- and strong-solver scores of 25% and 100% and passes all validity, leakage, and realism checks.</em>
 
