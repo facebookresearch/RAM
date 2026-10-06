@@ -215,7 +215,8 @@ Each trajectory begins with a verified source task. The controller pairs the tas
 
 **Evaluation Benchmarks.** For algorithmic coding, we first evaluate on **LiveCodeBench-Pro** ([Zheng et al., 2026][zheng2026livecodebench]), a challenging benchmark for competitive programming. We use all 706 tasks with executable test cases: 391 easy, 251 medium, and 64 hard Codeforces problems. Models produce C++ solutions, which are scored by exact acceptance under the benchmark's test cases and original time and memory limits. We additionally construct **Multi-turn LiveCodeBench-Pro** from the same task pool to isolate interaction-following ability from underlying problem difficulty. For each source problem, we generate a conversation using one of the five interaction scenarios previously described and retain only conversations that pass validity and realism checks. The original problem identity and test suite are preserved, so the final C++ response is judged by the unchanged LiveCodeBench-Pro verifier. For repository-level SWE, we use **SWE-Together** ([Wu et al., 2026][wu2026swe]), a benchmark of 109 sandboxed repository tasks reconstructed from real user–agent sessions. Its reactive user simulator continues the interaction according to the original user's intent, allowing evaluation of both task correctness and how much corrective effort the user must provide.
 
-<em>Table 1: **Evaluation on algorithmic benchmarks.** We report Pass@1 on LiveCodeBench-Pro and its multi-turn variant, broken down by difficulty. Avg is the unweighted mean of the two **Overall** scores, and $\Delta$ vs Base is its absolute pp gain over the corresponding baseline performance; green subscripts denote per-benchmark pp gains over the same baseline performance. The Hard subset is omitted because accuracy is consistently 0. Best per column within each backbone block in **bold**, second best <u>underlined</u>. AutoInteract achieves the best average at both model scales.</em>
+
+## Experimental Results
 
 <div class="autointeract-figure autointeract-figure--90 autointeract-figure--data">
   <a href="table2.png" aria-label="Open the full-size LiveCodeBench-Pro results table">
@@ -224,8 +225,8 @@ Each trajectory begins with a verified source task. The controller pairs the tas
   <span class="autointeract-figure__hint">Swipe horizontally or tap the image to view it full size.</span>
 </div>
 
+<em>Table 1: **Evaluation on algorithmic benchmarks.** We report Pass@1 on LiveCodeBench-Pro and its multi-turn variant, broken down by difficulty. Avg is the unweighted mean of the two **Overall** scores, and $\Delta$ vs Base is its absolute pp gain over the corresponding baseline performance; green subscripts denote per-benchmark pp gains over the same baseline performance. The Hard subset is omitted because accuracy is consistently 0. Best per column within each backbone block in **bold**, second best <u>underlined</u>. AutoInteract achieves the best average at both model scales.</em>
 
-<em>Table 2. **Evaluation on SWE-Together.** SWE-Together evaluates multi-turn repository-level issue resolution in collaboration with a simulated user. Each task is run twice, and a run counts as correct when the judge scores it at least $0.85$. Pass@1 is the percentage of correct runs, Pass^2 the percentage of tasks correct on both runs, and SSR the percentage of tasks whose two-run average reaches the threshold. Mean Judge is the average continuous correctness score, with no-patch runs scored $0$. U-Corr is user correction effort, computed as corrections plus $0.2\times$ nudges from an LLM tagger that labels each follow-up user message. Tok./Task and Min./Task are task-averaged output and reasoning tokens and wall-clock minutes across the two runs. Green subscripts denote gains over the same baseline performance. Best and second-best correctness results within each backbone block are in **bold** and <u>underlined</u>, respectively. AutoInteract outperforms all baselines on every correctness metric.</em>
 
 <div class="autointeract-figure autointeract-figure--90 autointeract-figure--data">
   <a href="table3.png" aria-label="Open the full-size SWE-Together results table">
@@ -234,7 +235,10 @@ Each trajectory begins with a verified source task. The controller pairs the tas
   <span class="autointeract-figure__hint">Swipe horizontally or tap the image to view it full size.</span>
 </div>
 
-## Experimental Results
+
+<em>Table 2. **Evaluation on SWE-Together.** SWE-Together evaluates multi-turn repository-level issue resolution in collaboration with a simulated user. Each task is run twice, and a run counts as correct when the judge scores it at least $0.85$. Pass@1 is the percentage of correct runs, Pass^2 the percentage of tasks correct on both runs, and SSR the percentage of tasks whose two-run average reaches the threshold. Mean Judge is the average continuous correctness score, with no-patch runs scored $0$. U-Corr is user correction effort, computed as corrections plus $0.2\times$ nudges from an LLM tagger that labels each follow-up user message. Tok./Task and Min./Task are task-averaged output and reasoning tokens and wall-clock minutes across the two runs. Green subscripts denote gains over the same baseline performance. Best and second-best correctness results within each backbone block are in **bold** and <u>underlined</u>, respectively. AutoInteract outperforms all baselines on every correctness metric.</em>
+
+
 
 ### Main Results
 
@@ -289,7 +293,7 @@ Our main results are given in Table 1 for LiveCodeBench-Pro and Multi-turn LiveC
 
 ## Conclusion
 
-We presented AutoInteract, a framework that aims to improve agent-human interaction by creating realistic, grounded multi-turn tasks calibrated to the model being trained. It combines user models learned from real interaction histories with an agentic data creation loop that uses judge and execution feedback to control data quality and difficulty. Across algorithmic and software engineering tasks, training on these data significantly improves RL performance over baselines. Overall, AutoInteract shifts the focus from training agents to solve verifiable tasks independently to training them to collaborate with users on those tasks, incorporating clarifications, feedback, and evolving requirements across multiple turns to arrive at correct solutions. This approach can be generalized to a broader set of tasks, offering a path toward more effective human-agent interaction in the future.  In particular, leveraging humans and AIs complementary skills for research, termed *co-improvement* (rather than self-improvement) looks like [the fastest and safest way towards superintelligence](https://arxiv.org/abs/2512.05356), and any advancement in this interaction ability will thus be beneficial. 
+We presented AutoInteract, a framework that aims to improve agent-human interaction by creating realistic, grounded multi-turn tasks calibrated to the model being trained. It combines user models learned from real interaction histories with an agentic data creation loop that uses judge and execution feedback to control data quality and difficulty. Across algorithmic and software engineering tasks, training on these data significantly improves RL performance over baselines. Overall, AutoInteract shifts the focus from training agents to solve verifiable tasks independently to training them to collaborate with users on those tasks, incorporating clarifications, feedback, and evolving requirements across multiple turns to arrive at correct solutions. Our approach generalizes to a broader set of tasks, offering a path toward more effective human-agent interaction in the future.  In particular, leveraging humans and AIs complementary skills for research, termed *co-improvement* (rather than self-improvement) looks like [the fastest and safest way towards superintelligence](https://arxiv.org/abs/2512.05356), and any advancement in this interaction ability will thus be beneficial. 
 
 
 ## Contributors
