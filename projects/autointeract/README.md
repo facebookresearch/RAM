@@ -140,7 +140,7 @@ We build the user profile population in three steps: build (prompt an LLM to sum
   <span class="autointeract-figure__hint">Swipe horizontally or tap the image to view it full size.</span>
 </div>
 
-<em>Figure 2. **The user-simulator prompt used to generate each user turn.** It combines the learned user behavior prompt and a user profile sampled in Phase 1 with the interaction history and the privileged task context. After a failed attempt, the controller may also add revised role-playing guidance based on the trajectory evaluator's feedback.</em>
+<em>Figure 2. **The user-simulator prompt used to generate each user turn.** It combines the learned user behavior prompt and a sampled user profile sampled from Phase 1 with the interaction history and the privileged task context. After a failed attempt, the controller may also add revised role-playing guidance based on the trajectory evaluator's feedback.</em>
 
 ### AutoInteract Phase 2: Building Interactions with an Agentic Loop
 
@@ -155,11 +155,11 @@ Phase 2 builds interaction trajectories with an agent controlling  the user simu
 Together, these modules form a data generation loop: the controller proposes an interaction, the generator produces it, and the evaluator determines whether to keep it or return it for revision.
 
 Trajectories that fail go back to the controller, which reflects on the failure, revises the instruction, and retries.
-Initial generation does not guarantee that a trajectory is realistic, valid, or useful for training. Like Autodata's agentic data scientist, which improves synthetic data through solver and judge feedback ([Kulikov et al., 2026][kulikov2026autodata]), AutoInteract repeatedly generates, evaluates, and revises candidates, but focuses the improvement process on multi-turn trajectories and grounds it in executable verification.
+Initial generation does not guarantee that a trajectory is realistic, valid, or useful for training. Like Autodata's agentic data scientist, which improves synthetic data through solver and judge feedback ([Kulikov et al., 2026][kulikov2026autodata]), AutoInteract repeatedly generates, evaluates, and revises candidates, but focuses the improvement process on multi-turn trajectories with a user (model) and grounds it in executable verification.
 
 **Multi-objective trajectory evaluation.** The evaluator checks three properties: the task is valid and does not leak private information; the interaction is realistic, coherent, and consistent with the sampled profile; and the difficulty is calibrated so that the target model struggles while a stronger solver succeeds. Solver responses are scored with the source task's executable verifier. This combines semantic checks with execution-based evidence, and a trajectory is kept only when all checks pass.
 
-**Trajectory self-reflection.** When a check fails, the evaluator identifies whether the trajectory is invalid, unrealistic, inconsistent with the profile, too easy for the target model, too difficult for the stronger solver, or overly revealing. The controller turns this diagnosis into guidance for the next rollout. The source task, learned user behavior prompt, and sampled profile remain fixed across attempts, so the controller revises only how the same task unfolds. This generate–evaluate–revise loop continues until the trajectory passes or the retry budget is exhausted.
+**Trajectory self-reflection.** When a check fails, the evaluator identifies whether the trajectory is invalid, unrealistic, inconsistent with the profile, too easy for the target model, too difficult for the stronger solver, or overly revealing. The controller turns this diagnosis into guidance for the next rollout. The source task, learned user behavior prompt, and sampled profile remain fixed across attempts, so the controller revises only the task interaction. This generate–evaluate–revise loop continues until the trajectory passes or the retry budget is exhausted.
 
 
 
