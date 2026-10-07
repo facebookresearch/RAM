@@ -290,7 +290,7 @@ We presented AutoInteract, a framework that aims to improve agent-human interact
 
 
 ## Contributors
-Chuanyang Jin, Seungone Kim, Tong Chen, Eryk Helenowski. Ping Yu, Jason Weston, Swarnadeep Saha, Ilia Kulikov
+Chuanyang Jin, Seungone Kim, Tong Chen, John Hoffman, Eryk Helenowski. Ping Yu, Jason Weston, Swarnadeep Saha, Ilia Kulikov
 
 ## More details
 We plan to put a full technical report on arXiv soon.
@@ -300,7 +300,7 @@ You can cite this blog (before the full paper is released) here:
 ```
 @misc{jin2026autointeract,
   title   = "AutoInteract: Training agents to interact with humans",
-  author  = {Jin, Chuanyang and Kim, Seungone and Chen, Tong and  Helenowski, Eryk  and Yu, Ping and Weston, Jason and Saha, Swarnadeep and Kulikov, Ilia},
+  author  = {Jin, Chuanyang and Kim, Seungone and Chen, Tong and Hoffman, John and  Helenowski, Eryk  and Yu, Ping and Weston, Jason and Saha, Swarnadeep and Kulikov, Ilia},
   year    = "2026",
   month   = "October",
   url     = "https://facebookresearch.github.io/RAM/blogs/autointeract/"
