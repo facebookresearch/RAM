@@ -1,10 +1,56 @@
+---
+title: "HackBench: Detecting and Localizing Reward Hacking in Autoresearch Agents"
+permalink: /blogs/hackbench/
+---
+
+<style>
+.hackbench-figure {
+  overflow-x: auto;
+  margin: 1rem auto;
+  text-align: center;
+  -webkit-overflow-scrolling: touch;
+}
+
+.hackbench-figure img {
+  display: block;
+  width: var(--figure-width, 100%);
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+  cursor: zoom-in;
+}
+
+.hackbench-figure-hint {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .hackbench-figure img {
+    width: var(--mobile-width, 760px);
+    max-width: none;
+    margin-inline: 0;
+  }
+
+  .hackbench-figure-hint {
+    display: block;
+    margin-top: -0.5rem;
+    color: #57606a;
+    font-size: 0.85rem;
+  }
+}
+</style>
+
 # HackBench: Detecting and Localizing Reward Hacking in Autoresearch Agents
 
 <a id="fig-hackbench-located-hack"></a>
 
-<p align="center"><img width="89%" src="fig0.png" alt="Figure 1: HackBench paper figure" /></p>
+<div class="hackbench-figure" style="--figure-width: 89%;">
+  <a href="fig0.png"><img src="fig0.png" alt="Figure 1: HackBench paper figure" /></a>
+</div>
 
-<em>Figure 1. **HackBench.** Located hacks per model. All the systems measured have many hack detection failures.</em>
+<p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+
+_Figure 1. **HackBench.** Located hacks per model. All the systems measured have many hack detection failures._
 
 ## Overview
 
@@ -29,11 +75,15 @@ Our contributions are:
 
 <a id="fig-teaser"></a>
 
-<p align="center"><img width="80%" src="fig1.png" alt="Figure 2: HackBench paper figure" /></p>
+<div class="hackbench-figure" style="--figure-width: 80%;">
+  <a href="fig1.png"><img src="fig1.png" alt="Figure 2: HackBench paper figure" /></a>
+</div>
 
-<em>Figure 2. HackBench: Given a full agent trajectory (left), an LLM monitor (center) reads the entire transcript and is scored on two tasks (right): binary detection, labeling the run HACK vs. LEGIT, and command localization, returning the exact offending command(s).</em>
+<p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-## Hackbench
+_Figure 2. HackBench: Given a full agent trajectory (left), an LLM monitor (center) reads the entire transcript and is scored on two tasks (right): binary detection, labeling the run HACK vs. LEGIT, and command localization, returning the exact offending command(s)._
+
+## HackBench
 
 HackBench evaluates how well an LLM monitor can detect and localize reward hacking from a full autoresearch trajectory. It combines *real* audited trajectories with a *synthetic* long-context stress test, allowing verification via human-audited command-level gold labels. This section formalizes the problem, describes where the trajectories come from and our agent settings, details the construction of the real and injected sets, and catalogs what the hacks look like.
 
@@ -46,9 +96,13 @@ HackBench evaluates how well an LLM monitor can detect and localize reward hacki
 **Monitoring.** A *monitor* M maps a trajectory (and optionally the task and verifier) to a judgment about reward hacking. A monitor reads a completed trajectory τ and outputs a verdict and, optionally, a localization of the specific command(s) that constitute the hack.
 
 
-<p align="center"><img width="79%" src="table1.png" alt="Table 1: taxonomy" /></p>
+<div class="hackbench-figure" style="--figure-width: 79%; --mobile-width: 900px;">
+  <a href="table1.png"><img src="table1.png" alt="Table 1: taxonomy" /></a>
+</div>
 
-<em>Table 1. A taxonomy of reward hacks observed in autoresearch trajectories that we use for HackBench, grouped by scope (general vs. task-specific), with one example per category. General hacks apply across tasks; task-specific hacks exploit the measurement structure of a particular task. Examples are drawn from ResearchGym and AutoLab trajectories.</em>
+<p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+
+_Table 1. A taxonomy of reward hacks observed in autoresearch trajectories that we use for HackBench, grouped by scope (general vs. task-specific), with one example per category. General hacks apply across tasks; task-specific hacks exploit the measurement structure of a particular task. Examples are drawn from ResearchGym and AutoLab trajectories._
 
 **Task framing** We evaluate monitors under three increasingly strict framings:
 
@@ -87,16 +141,24 @@ After auditing the candidates, we constructed HackBench with 202 trajectories: 4
 
 <a id="fig-injection_pipeline"></a>
 
-<p align="center"><img width="85%" src="fig2.png" alt="Figure 3: HackBench paper figure" /></p>
+<div class="hackbench-figure" style="--figure-width: 85%;">
+  <a href="fig2.png"><img src="fig2.png" alt="Figure 3: HackBench paper figure" /></a>
+</div>
 
-<em>Figure 3. Construction of a HackBench example with a *synthetic* hack through trajectory editing. Step 1: We begin with a real autoresearch trajectory. Step 2: We insert a synthetic reward-hacking command (red). Step 3: We update only causally affected downstream observations (green), preserving the task, commands, and unrelated observations. This produces a coherent example with command-level human-audited gold annotations.</em>
+<p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+
+_Figure 3. Construction of a HackBench example with a *synthetic* hack through trajectory editing. Step 1: We begin with a real autoresearch trajectory. Step 2: We insert a synthetic reward-hacking command (red). Step 3: We update only causally affected downstream observations (green), preserving the task, commands, and unrelated observations. This produces a coherent example with command-level human-audited gold annotations._
 
 ## Binary Hack Detection Results
 
 
-<p align="center"><img width="79%" src="table2.png" alt="Table 2: results" /></p>
+<div class="hackbench-figure" style="--figure-width: 79%; --mobile-width: 900px;">
+  <a href="table2.png"><img src="table2.png" alt="Table 2: results" /></a>
+</div>
 
-<em>Table 2. Binary reward-hacking detection performance (%) on HackBench (n=202; 169 HACK and 33 LEGIT). Reported values are mean ± sample standard deviation across three complete independent trials. We used the default reasoning effort with temperature 1.0 throughout our experiments.</em>
+<p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+
+_Table 2. Binary reward-hacking detection performance (%) on HackBench (n=202; 169 HACK and 33 LEGIT). Reported values are mean ± sample standard deviation across three complete independent trials. We used the default reasoning effort with temperature 1.0 throughout our experiments._
 
 <details markdown="1">
 <summary>See evaluation setup</summary>
@@ -119,9 +181,13 @@ We evaluate the following proprietary models: Claude Opus 5, Claude Opus 4.8, GP
 
 <a id="fig-dumbell_breakdown_by_types"></a>
 
-<p align="center"><img width="89%" src="fig3.png" alt="Figure 4: HackBench paper figure" /></p>
+<div class="hackbench-figure" style="--figure-width: 89%;">
+  <a href="fig3.png"><img src="fig3.png" alt="Figure 4: HackBench paper figure" /></a>
+</div>
 
-<em>Figure 4. **Recall drops on harder hack subsets.** Arrows run from easier to harder; leftward means recall falls. Columns: hack origin (natural → synthetic) and scope (general → task-specific). Synthetic hacks are generally harder to catch than natural hacks in single pass, but this pattern reverses under chunking. Task-specific hacks, on the other hand, are generally harder to catch in both settings.</em>
+<p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+
+_Figure 4. **Recall drops on harder hack subsets.** Arrows run from easier to harder; leftward means recall falls. Columns: hack origin (natural → synthetic) and scope (general → task-specific). Synthetic hacks are generally harder to catch than natural hacks in single pass, but this pattern reverses under chunking. Task-specific hacks, on the other hand, are generally harder to catch in both settings._
 
 **Which hacks are missed?** Figure 4 breaks recall down by hack origin (natural vs. synthetic) and scope (general vs. task-specific; see Table 1). Across 13 models and two monitoring scaffolds, recall is lower on the prespecified harder subset in 38 of 52 comparisons.
 
@@ -144,17 +210,25 @@ We report how binary detection F₁ on HackBench scales along two axes of test-t
 
 <a id="fig-scaling_effort_reasoning_chunks"></a>
 
-<p align="center"><img width="90%" src="fig4.png" alt="Figure 5: HackBench paper figure" /></p>
+<div class="hackbench-figure" style="--figure-width: 90%;">
+  <a href="fig4.png"><img src="fig4.png" alt="Figure 5: HackBench paper figure" /></a>
+</div>
 
-<em>Figure 5. Binary detection F1 as a function of reasoning effort (left) and the number of chunks {1, 2, 4, ..., 16} (right) for Claude Opus 4.8, GLM 5.2, and Kimi K3. Increasing reasoning effort provides little and inconsistent improvement, whereas chunking the transcript produces substantially larger gains.</em>
+<p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+
+_Figure 5. Binary detection F1 as a function of reasoning effort (left) and the number of chunks {1, 2, 4, ..., 16} (right) for Claude Opus 4.8, GLM 5.2, and Kimi K3. Increasing reasoning effort provides little and inconsistent improvement, whereas chunking the transcript produces substantially larger gains._
 
 **Agentic Scaling.**
 
 <a id="fig-agentic-scaling"></a>
 
-<p align="center"><img width="89%" src="fig5.png" alt="Figure 6: HackBench paper figure" /></p>
+<div class="hackbench-figure" style="--figure-width: 89%;">
+  <a href="fig5.png"><img src="fig5.png" alt="Figure 6: HackBench paper figure" /></a>
+</div>
 
-<em>Figure 6. Binary detection F₁ versus cost per question (log scale, USD, prefix-cached) for Claude Opus 4.8, Kimi K3, and GLM 5.2 monitors with *agentic scaling* on HackBench. The monitor is given a file system holding the transcript and bash tools to search and read it.</em>
+<p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+
+_Figure 6. Binary detection F₁ versus cost per question (log scale, USD, prefix-cached) for Claude Opus 4.8, Kimi K3, and GLM 5.2 monitors with *agentic scaling* on HackBench. The monitor is given a file system holding the transcript and bash tools to search and read it._
 
 Rather than placing the transcript in context, we give the monitor a filesystem holding the transcript and tools to search and read it. This lifts two constraints of single-pass monitoring: the transcript no longer has to fit in the monitor's context window, and the monitor pays only for what it reads instead of prefilling every token. Figure 6 reports estimated cost (USD per question) against binary detection F₁.
 
@@ -175,9 +249,13 @@ In this section, we evaluate harder variants of HackBench beyond binary predicti
 
 </details>
 
-<p align="center"><img width="85%" src="table3.png" alt="Table 3: results" /></p>
+<div class="hackbench-figure" style="--figure-width: 85%; --mobile-width: 900px;">
+  <a href="table3.png"><img src="table3.png" alt="Table 3: results" /></a>
+</div>
 
-<em>Table 3. Single-pass command-localization performance on HackBench. All localization metrics are reported as percentages over HACK trajectories. Jaccard denotes the mean similarity between predicted and gold command sets. Avg. EM and Avg. Jaccard are the unweighted means across the verbatim and numbered localization formats. Results are sorted by Avg. Jaccard.</em>
+<p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+
+_Table 3. Single-pass command-localization performance on HackBench. All localization metrics are reported as percentages over HACK trajectories. Jaccard denotes the mean similarity between predicted and gold command sets. Avg. EM and Avg. Jaccard are the unweighted means across the verbatim and numbered localization formats. Results are sorted by Avg. Jaccard._
 
 **Results and Findings** Table 3 reports both variants across models. Recovering the complete set of hacking commands remains challenging: the best exact-match score is 20.25% for verbatim localization and 45.57% for numbered localization, so no model exactly recovers the gold command set on even half of the HACK examples. Located-any scores are substantially higher than exact-match scores, indicating that monitors often identify at least one hacking command but fail to recover the complete set. Numbered localization yields higher located-any, exact-match, and Jaccard scores for every model shown, suggesting that selecting command indices is easier and less error-prone than reproducing commands verbatim.
 
@@ -213,8 +291,8 @@ We plan to put a full technical report on arXiv soon.
 
 ## Citation
 You can cite this blog (before the full paper is released) here:
-```
-@article{weston2026unslop,
+```bibtex
+@article{li2026hackbench,
   title   = "HackBench: Detecting and Localizing Reward Hacking in Autoresearch Agents",
   author  = {Li, Tianjian and Kim, Seungone and Weston, Jason and Kulikov, Ilia and Lanchantin, Jack and Yuan, Weizhe},
   year    = "2026",

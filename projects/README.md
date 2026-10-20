@@ -80,6 +80,9 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 ## Reward Models & Evaluation
 
+- **HackBench** [[blog]](https://facebookresearch.github.io/RAM/blogs/hackbench/) [[dataset]](https://huggingface.co/datasets/facebook/hackbench)
+  _Detecting and localizing reward hacking in autoresearch agents._
+
 - **RLLM** [[paper]](https://arxiv.org/abs/2603.18886) [[blog]](https://facebookresearch.github.io/RAM/blogs/rllm/) [[tweet]](https://x.com/jaseweston/status/2036119252214620513) Unified Post-Training via On-Policy-Trained LM-as-RM.
 
 - **HERO** [[paper]](https://arxiv.org/abs/2510.07242) [[tweets]](https://x.com/jaseweston/status/1977756142571864539)
