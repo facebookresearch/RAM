@@ -247,7 +247,7 @@ In this section, we evaluate harder variants of HackBench beyond binary predicti
 
 - **Located-any** (localization recall): the fraction of hacking transcripts for which the monitor recovers *at least one* gold item---one of the hacking commands (verbatim) or indices (numbered). It measures whether the monitor can point to the hack at all, and is insensitive to over-flagging.
 - **Exact-match** (strict localization): the fraction of hacking transcripts for which the predicted set of commands/indices is *exactly* the gold set. This is the strictest criterion, penalizing both misses and over-inclusion.
-- **Jaccard** (set level similarity): let P be the monitor's predicted set of hack commands and G the ground-truth set of hack commands. Jaccard is defined as (|P ∩ G|) / (|P ∪ G|), the set-level similarity between P and G.
+- **Jaccard** (set level similarity): let P be the monitor's predicted set of hack commands and G the ground-truth set of hack commands. Jaccard is defined as (\|P ∩ G\|) / (\|P ∪ G\|), the set-level similarity between P and G.
 
 </details>
 
