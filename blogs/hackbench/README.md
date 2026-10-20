@@ -286,7 +286,7 @@ Autoresearch agents reward-hack because we ask them to maximize metrics, and the
 
 
 ## Contributors
-Tianjian Li, Seungone Kim, Jason Weston, Ilia Kulikov, Jack Lanchantin, Weizhe Yuan
+Tianjian Li, Seungone Kim, Eryk Helenowski, Jason Weston, Ilia Kulikov, Jack Lanchantin, Weizhe Yuan
 
 ## More details
 We plan to put a full technical report on arXiv soon.
@@ -297,7 +297,7 @@ You can cite this blog (before the full paper is released) here:
 ```bibtex
 @article{li2026hackbench,
   title   = "HackBench: Detecting and Localizing Reward Hacking in Autoresearch Agents",
-  author  = {Li, Tianjian and Kim, Seungone and Weston, Jason and Kulikov, Ilia and Lanchantin, Jack and Yuan, Weizhe},
+  author  = {Li, Tianjian and Kim, Seungone and Helenowski, Eryk and Weston, Jason and Kulikov, Ilia and Lanchantin, Jack and Yuan, Weizhe},
   year    = "2026",
   month   = "October",
   url     = "https://facebookresearch.github.io/RAM/blogs/hackbench/"
