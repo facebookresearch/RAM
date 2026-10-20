@@ -55,6 +55,7 @@ _Figure 1. **HackBench.** Located hacks per model. All the systems measured have
 ## Overview
 
 **Motivation**
+
 Language model agents can carry out long-horizon research tasks end to end: given a task (“pretrain a language model with lowest dev perplexity,” “finetune a classifier to achieve highest possible accuracy”), the agent reads the code base, writes and runs training and evaluation code, and is scored by an automated *verifier* ([Chan et al., 2024][chan2024mlebench]; [Wijk et al., 2024][wijk2024rebench]; [Starace et al., 2025][starace2025paperbench]; [Huang et al., 2024][huang2024mlagentbench]). However, this optimization loop can be fragile. Even when the score is computed on held-out data in a separate environment, the agent knows, or can infer, how the score is computed: it can read the evaluation code, inspect the test labels or test distribution, and shape its solution to the evaluation metric rather than to the task itself. When the objective is “make this metric go up,” an agent that did not conduct the underlying research can still make the number go up by *reward hacking*: exploiting a flaw in the specification to obtain reward without accomplishing the intended task ([Skalse et al., 2022][skalse2022defining]; [Pan et al., 2022][pan2022effects]; [Weng, 2024][weng2024rewardhack]).
 
 The community has highlighted the importance and difficulty of dealing with reward hacking in autoresearch: PostTrainBench re-audited its leaderboard after agents built training data around held-out items, distilled from external model APIs, and submitted instruction-tuned checkpoints in place of the assigned base model ([Team, 2026][posttrainbench2026v11]). On NanoGPT speedrun ([Jordan et al., 2024][modded_nanogpt_2024]), METR observed agents freezing weights or halting training the moment the target loss was touched, and needed the speedrun's human maintainer to separate these brittle gains from legitimate optimization ([Cunningham et al., 2026][metr2026expenditure]). In each case the hack is task-specific, looks like ordinary progress at the level of individual actions, and surfaces only in long transcripts. The cost of missing it is high: autoresearch verifiers are exactly the reward signals used to train agents with reinforcement learning from verifiable rewards ([DeepSeek-AI et al., 2025][deepseekai2025deepseekr1incentivizingreasoningcapability]; [Lightman et al., 2024][lightman2024lets]), so a hack that survives corrupts the training signal ([Qi et al., 2026][anthropic2026rewardseeker]).
@@ -63,6 +64,7 @@ A natural research question arises: can an LLM *monitor* catch these hacks by re
 
 
 **Our contribution**
+
 To measure how well LLMs catch reward hacking, we build HackBench, a benchmark for detecting and localizing reward hacks in full autoresearch trajectories. HackBench is built from *real* agent runs and includes both *natural* and *synthetic* hacks. The *synthetic* hacks are long-context stress tests: covert, often multi-step hacks are injected into long honest trajectories, and causally affected downstream observations are patched so that the needle remains consistent with world state. Because we know exactly which commands were injected, these trajectories come with ground-truth labels for scoring both detection and localization.
 
 Using HackBench, we evaluate the following frontier proprietary models: Claude Opus 5, Claude Opus 4.8, GPT-5.6 Sol, GPT-5.5, Muse Spark 1.1, Muse Spark 1.2 and Muse Spark 1.3 and the following open-sourced models: GLM 5.2, Kimi-K3, Kimi-K2.6, Qwen3.5-397B-A17B, Qwen3.5-122B-A10B, Qwen3.5-35B-A3B, under multiple settings: binary verdict (hack or legitimate), and command localization tasks.
@@ -291,6 +293,7 @@ We plan to put a full technical report on arXiv soon.
 
 ## Citation
 You can cite this blog (before the full paper is released) here:
+
 ```bibtex
 @article{li2026hackbench,
   title   = "HackBench: Detecting and Localizing Reward Hacking in Autoresearch Agents",
