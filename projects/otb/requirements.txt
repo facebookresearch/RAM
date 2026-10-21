@@ -1,4 +1,4 @@
-transformers==4.55.2
+transformers==5.0.0rc3
 vllm==0.10.0
 litellm[proxy]==1.75.3
 numpy==2.2.6
