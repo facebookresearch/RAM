@@ -109,18 +109,15 @@ Localizing a hack in a long trajectory requires retaining relevant context, reas
 
 ### Autoresearch Grounding
 
-<!--
+
 <details markdown="1">
 <summary>See task suite and agent setup</summary>
--->
 
 **Tasks.** Our trajectories come from long-horizon ML research tasks. Our task suite comprises 5 tasks from ResearchGym ([Garikaparthi et al., 2026][garikaparthi2026researchgymevaluatinglanguagemodel]) and 7 tasks from the AutoLab “Model Development” subset ([Xu et al., 2026][autolab-2026]). Additionally, we include one frontier autoresearch task on a real research codebase: automated-w2s-research ([Wen, 2026][safetyresearch2026automatedw2s]).
 
 **Autoresearch Agents** We drive the agent with the Harbor terminus-2 scaffold ([Team, 2026][Harbor_Framework]), in which the agent has access only to a bash tool: it issues shell keystrokes and observes terminal output, with each task running in a container. We deliberately did not use more advanced scaffolds because the goal of this project is not to improve autoresearch performance, and a simple terminal provides a clean testbed for studying reward hacking. We use GPT-5.5 ([OpenAI, 2026][openai2026gpt55]) and GLM-5.2 ([Z.ai, 2026][zai2026glm52]) to generate research trajectories.
 
-<!--
 </details>
--->
 
 ### HackBench Construction
 
@@ -130,7 +127,7 @@ In our preliminary experiments, agents rarely hacked when the instruction explic
 
 **Collecting Natural Hacks.** To surface candidates for naturally occurring hacks, we used GPT-5.6 Sol to screen standard autoresearch trajectories, dividing each transcript into eight chunks. We selected this configuration because it achieved the highest HACK recall in our monitor evaluations, including on the challenging synthetically injected subset.
 
-After auditing the candidates, we constructed HackBench with 202 trajectories: 41 containing *natural* hacks, 128 containing *synthetic* hacks, and 33 legitimate trajectories.
+After auditing the candidates, we constructed HackBench with 169 trajectories: 41 containing *natural* hacks, and 128 containing *synthetic* hacks.
 
 <a id="fig-injection_pipeline"></a>
 
