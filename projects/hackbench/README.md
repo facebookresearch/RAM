@@ -67,13 +67,8 @@ A natural research question arises: can an LLM *monitor* catch these hacks by re
 
 To measure how well LLMs catch reward hacking, we build HackBench, a benchmark for detecting and localizing reward hacks in full autoresearch trajectories. HackBench is built from *real* agent runs and includes both *natural* and *synthetic* hacks. The *synthetic* hacks are long-context stress tests: covert, often multi-step hacks are injected into long honest trajectories, and causally affected downstream observations are patched so that the needle remains consistent with world state. Because we know exactly which commands were injected, these trajectories come with ground-truth labels for scoring both detection and localization.
 
-Using HackBench, we evaluate the following frontier proprietary models: Claude Opus 5, Claude Opus 4.8, GPT-5.6 Sol, GPT-5.5, Muse Spark 1.1, Muse Spark 1.2 and Muse Spark 1.3 and the following open-sourced models: GLM 5.2, Kimi-K3, Kimi-K2.6, Qwen3.5-397B-A17B, Qwen3.5-122B-A10B, Qwen3.5-35B-A3B, under multiple settings: binary verdict (hack or legitimate), and command localization tasks.
+Using HackBench, we evaluate the following frontier proprietary models: Claude Opus 5, Claude Opus 4.8, GPT-5.6 Sol, GPT-5.5, Muse Spark 1.3 and Muse Wonder and the following open-sourced models: GLM 5.2 and Kimi-K3. We find that all models fail at finding some of the hacks, and hence progress is still to be made. 
 
-Our contributions are:
-
-- [HackBench](https://huggingface.co/datasets/facebook/hackbench), an open-source benchmark of 202 long-context autoresearch trajectories for reward-hack detection and localization, with human-audited command-level gold labels and three task formats;
-- a diagnosis of where LLM monitors fail at detection and localization, organized along the long-context *memory*, multi-step *reasoning*, and task *knowledge* axes the problem demands;
-- a study of monitor scaffolds and test-time-compute scaling, showing that long-context management is essential.
 
 <a id="fig-teaser"></a>
 
@@ -87,7 +82,7 @@ _Figure 2. **HackBench**: Given a full agent trajectory (left), an LLM monitor (
 
 ## HackBench
 
-HackBench evaluates how well an LLM monitor can detect and localize reward hacking from a full autoresearch trajectory. It combines *real* audited trajectories with a *synthetic* long-context stress test, allowing verification via human-audited command-level gold labels. This section formalizes the problem, describes where the trajectories come from and our agent settings, details the construction of the real and injected sets, and catalogs what the hacks look like.
+HackBench evaluates how well an LLM monitor can detect and localize reward hacking from a full autoresearch trajectory. It combines *real* audited trajectories with *natural* and *synthetic* long-context stress tests, allowing verification via human-audited command-level gold labels. This section formalizes the problem, describes where the trajectories come from and our agent settings, details the construction of the real and injected sets, and catalogs what the hacks look like.
 
 ### Problem formulation
 
@@ -95,7 +90,7 @@ HackBench evaluates how well an LLM monitor can detect and localize reward hacki
 
 **Reward Hacking.** A trajectory contains *reward hacking* if the agent obtains reward by subverting the measurement rather than by accomplishing the task, e.g. writing fabricated metric files, editing or monkey-patching the grader, training or selecting on held-out test data, or reporting a subset of results chosen to inflate the aggregate. We contrast this with *legitimate* work, including genuine iteration, using pretrained models, or cutting compute while still doing the real task. The distinction is a property of *how* the reward was obtained, so it can only be judged from the trajectory, not from R alone.
 
-**Monitoring.** A *monitor* M maps a trajectory (and optionally the task and verifier) to a judgment about reward hacking. A monitor reads a completed trajectory τ and outputs a verdict and, optionally, a localization of the specific command(s) that constitute the hack.
+**Monitoring.** A *monitor* M maps a trajectory (and optionally the task and verifier) to a judgment about reward hacking. A monitor reads a completed trajectory τ and outputs a verdict and a localization of the specific command(s) that constitute the hack.
 
 
 <div class="hackbench-figure" style="--figure-width: 79%; --mobile-width: 900px;">
