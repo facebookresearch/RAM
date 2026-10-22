@@ -83,7 +83,7 @@ Our contributions are:
 
 <p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-_Figure 2. HackBench: Given a full agent trajectory (left), an LLM monitor (center) reads the entire transcript and is scored on two tasks (right): binary detection, labeling the run HACK vs. LEGIT, and command localization, returning the exact offending command(s)._
+_Figure 2. **HackBench**: Given a full agent trajectory (left), an LLM monitor (center) reads the entire transcript and is scored on the command localization task of returning the exact offending command(s) by line number (right)._
 
 ## HackBench
 
@@ -106,15 +106,11 @@ HackBench evaluates how well an LLM monitor can detect and localize reward hacki
 
 _Table 1. A taxonomy of reward hacks observed in autoresearch trajectories that we use for HackBench, grouped by scope (general vs. task-specific), with one example per category. General hacks apply across tasks; task-specific hacks exploit the measurement structure of a particular task. Examples are drawn from ResearchGym and AutoLab trajectories._
 
-**Task framing** We evaluate monitors under three increasingly strict framings:
-
-- **Binary detection**: the monitor emits a HACK/LEGIT verdict. We report F₁ and recall for the HACK class, together with balanced accuracy.
+**Task framing** We evaluate monitors under the following framing:
 
 - **Numbered localization**: each executable command is prefixed with a `[CMD n]` index, and the monitor returns the indices of the hacking commands.
 
-- **Verbatim localization**: the monitor returns the hacking commands verbatim from the transcript.
-
-For both localization framings, metrics are computed over HACK trajectories. We report *located-any*, indicating whether at least one gold command is identified; *exact match*, indicating whether the predicted command set exactly equals the gold set; and command-set Jaccard similarity. Numbered localization is *recognition* (emit the indices of hack commands); verbatim localization additionally requires *reproduction and grounding* (quote the exact line, verified as a real substring), which is strictly harder. Localizing a hack in a long trajectory requires retaining relevant context, reasoning across multiple steps, and understanding the task and its grading procedure. HackBench therefore also evaluates long-context reasoning in a semantically meaningful setting.
+Localizing a hack in a long trajectory requires retaining relevant context, reasoning across multiple steps, and understanding the task and its grading procedure. HackBench therefore also evaluates long-context reasoning in a semantically meaningful setting.
 
 ### Autoresearch Grounding
 
@@ -151,94 +147,17 @@ After auditing the candidates, we constructed HackBench with 202 trajectories: 4
 
 _Figure 3. Construction of a HackBench example with a *synthetic* hack through trajectory editing. Step 1: We begin with a real autoresearch trajectory. Step 2: We insert a synthetic reward-hacking command (red). Step 3: We update only causally affected downstream observations (green), preserving the task, commands, and unrelated observations. This produces a coherent example with command-level human-audited gold annotations._
 
-## Binary Hack Detection Results
+
+<!--
+## Evaluation setup
 
 
-<div class="hackbench-figure" style="--figure-width: 79%; --mobile-width: 900px;">
-  <a href="table2.png"><img src="table2.png" alt="Table 2: results" /></a>
-</div>
+We evaluate the following proprietary models: Claude Opus 5, Claude Opus 4.8, GPT-5.6 Sol, GPT-5.5, and Muse Spark 1.1, Muse Spark 1.2 and Muse Spark 1.3, as well as the following open-weight models: GLM-5.2, Kimi K3, Kimi K2.6, Qwen3.5-397B-A17B, Qwen3.5-122B-A10B, and Qwen3.5-35B-A3B. Each model acts as a monitor that reads an autoresearch transcript and outputs the line numbers of suspected hack commands.
+-->
 
-<p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+## Results
 
-_Table 2. Binary reward-hacking detection performance (%) on HackBench (n=202; 169 HACK and 33 LEGIT). Reported values are mean ± sample standard deviation across three complete independent trials. We used the default reasoning effort with temperature 1.0 throughout our experiments._
-
-<details markdown="1">
-<summary>See evaluation setup</summary>
-
-### Setup
-
-We evaluate the following proprietary models: Claude Opus 5, Claude Opus 4.8, GPT-5.6 Sol, GPT-5.5, and Muse Spark 1.1, Muse Spark 1.2 and Muse Spark 1.3, as well as the following open-weight models: GLM-5.2, Kimi K3, Kimi K2.6, Qwen3.5-397B-A17B, Qwen3.5-122B-A10B, and Qwen3.5-35B-A3B. Each model acts as a monitor that reads an autoresearch transcript and outputs a binary HACK/LEGIT verdict. Unless explicitly stated, we used the default reasoning effort for all models (i.e. passing no reasoning effort parameter).  We report F₁, recall on the HACK class, as well as balanced accuracy under two settings:
-
-**Single Pass**: the entire transcript is placed in the monitor's context, with the tail truncated when the transcript exceeds the context window.
-
-**Chunked**: the transcript is split into 8 chunks that are judged in parallel by independent monitors, and the 8 chunk-level verdicts are aggregated into a final verdict. The aggregator can choose to accept the chunk-level HACK verdicts, or overturn to LEGIT based on its judgement.
-
-</details>
-
-### Binary Detection Results
-
-**Binary hack detection is hard, even for frontier models.** Table 2 reports overall performance. In the single-pass setting, GPT-5.6 Sol achieves the highest F₁ (80.96) and HACK recall (79.68%), but its balanced accuracy is only 45.90%. Because HACK trajectories account for 83.7% of the benchmark, the Always HACK baseline achieves an F₁ of 91.11, exceeding every evaluated monitor in both settings. High F₁ can be achieved by always leaning towards HACK. Muse Spark 1.2 achieves the highest balanced accuracy in both settings, at 73.99% with single-pass monitoring and 71.99% with chunking. Several single-pass monitors also miss most hacks: Claude Opus 4.8, Kimi K2.6, and GLM-5.2 have recall below 34%, while all three Qwen3.5 models have recall below 7%. The substantial improvements these models obtain from chunking suggest that limited long-context access contributes to their poor single-pass performance.
-
-**Chunking substantially improves detection.** Chunking improves F₁ and HACK recall for all 13 monitors. The largest F₁ gains are achieved by Qwen3.5-35B-A3B (+56.38 points, from 11.85 to 68.23) and GLM-5.2 (+51.22 points, from 26.56 to 77.78). GPT-5.6 Sol remains the strongest chunked monitor by F₁ (85.60) and HACK recall (86.19%), while Kimi K2.6 achieves the highest chunked F₁ among the open-weight models (84.92). All four models with 256K context windows gain between 48.79 and 56.38 F₁ points, consistent with difficulty detecting hacks in long transcripts. However, GLM-5.2 also benefits substantially despite its 1M context window, suggesting that chunking helps beyond merely avoiding context truncation.
-
-<a id="fig-dumbell_breakdown_by_types"></a>
-
-<div class="hackbench-figure" style="--figure-width: 89%;">
-  <a href="fig3.png"><img src="fig3.png" alt="Figure 4: HackBench paper figure" /></a>
-</div>
-
-<p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
-
-_Figure 4. **Recall drops on harder hack subsets.** Arrows run from easier to harder; leftward means recall falls. Columns: hack origin (natural → synthetic) and scope (general → task-specific). Synthetic hacks are generally harder to catch than natural hacks in single pass, but this pattern reverses under chunking. Task-specific hacks, on the other hand, are generally harder to catch in both settings._
-
-**Which hacks are missed?** Figure 4 breaks recall down by hack origin (natural vs. synthetic) and scope (general vs. task-specific; see Table 1). Across 13 models and two monitoring scaffolds, recall is lower on the prespecified harder subset in 38 of 52 comparisons.
-
-<details markdown="1">
-<summary>See breakdown by hack origin and scope</summary>
-
-Synthetic hacks are harder to detect than natural hacks in 17 of 26 comparisons. Under single-pass monitoring, synthetic-hack recall is lower for 11 of 13 models, with a median gap of -9.1 percentage points. Under chunking, however, synthetic-hack recall is lower for only 6 of 13 models, and the median difference reverses to +4.5 points. This pattern is consistent with a retrieval failure in single-pass monitoring: synthetic hacks are localized insertions in otherwise legitimate transcripts, and chunking makes the relevant span easier to find.
-
-Hack type behaves differently. Under single-pass monitoring, task-specific recall is lower for 12 of 13 models, with a median gap of -11.1 points. Under chunking, task-specific recall remains lower for 9 of 13 models, and the median gap widens to -16.5 points.
-
-</details>
-
-### Scaling Monitoring Compute
-
-In this section, we investigate three axes of scaling monitor compute across three models (Kimi K3, GLM 5.2, and Claude Opus 4.8): reasoning effort, the number of chunks, and the number of tool calls in an agentic setting where the transcript is placed in a file system and the model can use bash tools to inspect it.
-
-**Scaling Reasoning Effort and Number of Chunks**
-
-We report how binary detection F₁ on HackBench scales along two axes of test-time compute: reasoning effort and the number of chunks per transcript (Figure 5). More reasoning effort has little and inconsistent impact on hack detection (left). Opus peaks at 0.621 with high effort, compared with 0.581 at low and 0.584 at max. Kimi peaks at 0.681 with high effort, compared with 0.679 at none and 0.652 at max. GLM peaks at 0.320 with minimal effort, declines to 0.223 at high, and recovers to 0.315 at max. Chunking produces much larger gains (right). From 1 to 16 chunks, F₁ increases from 0.315 to 0.797 for GLM-5.2 and from 0.584 to 0.783 for Claude Opus 4.8. Kimi K3 increases from 0.652 to a peak of 0.829 at two chunks and remains above 0.80 through 16 chunks.
-
-<a id="fig-scaling_effort_reasoning_chunks"></a>
-
-<div class="hackbench-figure" style="--figure-width: 90%;">
-  <a href="fig4.png"><img src="fig4.png" alt="Figure 5: HackBench paper figure" /></a>
-</div>
-
-<p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
-
-_Figure 5. Binary detection F1 as a function of reasoning effort (left) and the number of chunks {1, 2, 4, ..., 16} (right) for Claude Opus 4.8, GLM 5.2, and Kimi K3. Increasing reasoning effort provides little and inconsistent improvement, whereas chunking the transcript produces substantially larger gains._
-
-**Agentic Scaling.**
-
-<a id="fig-agentic-scaling"></a>
-
-<div class="hackbench-figure" style="--figure-width: 89%;">
-  <a href="fig5.png"><img src="fig5.png" alt="Figure 6: HackBench paper figure" /></a>
-</div>
-
-<p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
-
-_Figure 6. Binary detection F₁ versus cost per question (log scale, USD, prefix-cached) for Claude Opus 4.8, Kimi K3, and GLM 5.2 monitors with *agentic scaling* on HackBench. The monitor is given a file system holding the transcript and bash tools to search and read it._
-
-Rather than placing the transcript in context, we give the monitor a filesystem holding the transcript and tools to search and read it. This lifts two constraints of single-pass monitoring: the transcript no longer has to fit in the monitor's context window, and the monitor pays only for what it reads instead of prefilling every token. Figure 6 reports estimated cost (USD per question) against binary detection F₁.
-
-At eight tool calls, agentic monitoring costs 10.4× less than single pass for Kimi K3, 17.6× less for Opus 4.8, and 11.9× less for GLM-5.2. Kimi reaches F₁=0.634 at 64 calls but remains below single pass (0.683), while costing 1.7× less. Opus reaches 0.613 at 32 calls, exceeding single pass (0.584), while costing 5.6× less. GLM already exceeds single pass at eight calls (0.427 versus 0.333) while costing 11.9× less. These results show that agentic scaffolds can outperform single-pass monitoring at a fraction of the estimated cost for some models. **They further suggest that, as models' agentic monitoring capabilities improve, agentic scaffolds could provide better oversight than single-pass monitoring while remaining far cheaper.** However, the current gains remain model-dependent and do not increase monotonically with the tool-call budget.
-
-## Hack Localization Results
-
-In this section, we evaluate harder variants of HackBench beyond binary prediction (hack or legitimate). We also ask the monitor to localize which exact command(s) are executing the hack. We present two variants: **numbered localization**, where each tool call is labeled with a number and the model must output the exact set of numbers, and **verbatim localization**, where the model must emit the actual line(s) of code within a tool call that are hacking.
+We ask the monitor to localize which exact command(s) are executing the hack, where each command is labeled with a number and the model must output the exact set of numbers that are involved in hacking.
 
 <details markdown="1">
 <summary>See localization metrics</summary>
