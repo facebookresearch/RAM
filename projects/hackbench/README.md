@@ -163,12 +163,12 @@ We ask the monitor to localize which exact command(s) are executing the hack, wh
 </details>
 
 <div class="hackbench-figure" style="--figure-width: 85%; --mobile-width: 900px;">
-  <a href="table3.png"><img src="table3.png" alt="Table 3: results" /></a>
+  <a href="table3.png"><img src="fig_f1.png" alt="Table 3: results" /></a>
 </div>
 
 <p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-_Table 3. Single-pass command-localization performance on HackBench. All localization metrics are reported as percentages over HACK trajectories. Jaccard denotes the mean similarity between predicted and gold command sets. Avg. EM and Avg. Jaccard are the unweighted means across the verbatim and numbered localization formats. Results are sorted by Avg. Jaccard._
+_Table 3. Hack localization performance on HackBench. For each hacked trajectory, precision, recall, and F1 compare the monitor’s predicted set of hacking command indices with the human-audited gold set._
 
 **Results and Findings** Table 3 reports both variants across models. Recovering the complete set of hacking commands remains challenging: the best exact-match score is 20.25% for verbatim localization and 45.57% for numbered localization, so no model exactly recovers the gold command set on even half of the HACK examples. Located-any scores are substantially higher than exact-match scores, indicating that monitors often identify at least one hacking command but fail to recover the complete set. Numbered localization yields higher located-any, exact-match, and Jaccard scores for every model shown, suggesting that selecting command indices is easier and less error-prone than reproducing commands verbatim.
 
