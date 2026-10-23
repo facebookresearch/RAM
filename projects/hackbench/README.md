@@ -90,7 +90,7 @@ HackBench evaluates how well an LLM monitor can detect and localize reward hacki
 
 **Reward Hacking.** A trajectory contains *reward hacking* if the agent obtains reward by subverting the measurement rather than by accomplishing the task, e.g. writing fabricated metric files, editing or monkey-patching the grader, training or selecting on held-out test data, or reporting a subset of results chosen to inflate the aggregate. We contrast this with *legitimate* work, including genuine iteration, using pretrained models, or cutting compute while still doing the real task. The distinction is a property of *how* the reward was obtained, so it can only be judged from the trajectory, not from R alone.
 
-**Monitoring.** A *monitor* M maps a trajectory (and optionally the task and verifier) to a judgment about reward hacking. A monitor reads a completed trajectory τ and outputs a verdict and a localization of the specific command(s) that constitute the hack.
+**Monitoring.** A *monitor* M maps a trajectory (and optionally the task and verifier) to a judgment about reward hacking. Specifically, we consider monitors that output a localization of the specific command(s) that constitute the hack.
 
 
 <div class="hackbench-figure" style="--figure-width: 79%; --mobile-width: 900px;">
@@ -125,7 +125,7 @@ In our preliminary experiments, agents rarely hacked when the instruction explic
 
 **Injecting Synthetic Hacks.** We construct synthetic hack trajectories in three stages (Figure 3). First, we sample an agent trajectory containing bash commands, chain-of-thought reasoning, and terminal observations (Step 1). Second, we sample a hack type from our taxonomy and insert commands that implement it into the otherwise unmodified autoresearch trajectory (Step 2). Third, we update downstream observations to reflect the injected commands' effects, changing only affected state information while preserving the task, original commands, and unrelated observations (Step 3). We used GLM 5.2 to perform both command injection and observation updates. We then used Claude Opus 4.8 and GPT-5.5 to audit each trajectory to check whether the injected commands are reward hacking and whether downstream observations are consistent with the injection. We manually annotated cases where the two auditors disagreed.
 
-**Collecting Natural Hacks.** To surface candidates for naturally occurring hacks, we used GPT-5.6 Sol to screen standard autoresearch trajectories, dividing each transcript into eight chunks. We selected this configuration because it achieved the highest HACK recall in our monitor evaluations, including on the challenging synthetically injected subset.
+**Collecting Natural Hacks.** To surface candidates for naturally occurring hacks, we used GPT-5.6 Sol to screen standard autoresearch trajectories, dividing each transcript into eight chunks. We selected this configuration because it achieved the highest recall in our early experiments.
 
 After auditing the candidates, we constructed HackBench with 169 trajectories: 41 containing *natural* hacks, and 128 containing *synthetic* hacks.
 
@@ -170,7 +170,7 @@ _Table 3. Hack localization performance on HackBench. For each hacked trajectory
 
 
 We ask the monitor to localize which exact command(s) are executing the hack, where each command is labeled with a number and the model must output the exact set of numbers that are involved in hacking. We report three metrics: *precision*, the fraction of predicted hacking commands that belong to the gold set;
-*recall*, the fraction of gold hacking commands recovered by the monitor; and *F1*, the harmonic mean of precision and recall. 
+*recall*, the fraction of gold hacking commands recovered by the monitor; and *F1*, the harmonic mean of precision and recall.  All three metrics are computed separately for each trajectory, then macro-averaged over the 169 trajectories.
 
 **Results and Findings**  Table 3 reports hack localization performance across models. Localizing hacks remains challenging: the best monitor, Claude Opus 5, reaches only 64.88 F1, and every other model stays below 62. Four models (GPT-5.6 Sol, Kimi K3, Claude Opus 4.8, and GPT-5.5) cluster between 50.90 and 52.99 F1 despite different precision--recall trade-offs; for example, GPT-5.6 Sol attains the second-highest recall (68.55) but over-flags, with a precision of only 54.84.
 
@@ -207,7 +207,7 @@ We plan to put a full technical report on arXiv soon.
 You can cite this blog (before the full paper is released) here:
 
 ```bibtex
-@article{li2026hackbench,
+@online{li2026hackbench,
   title   = "HackBench: Detecting and Localizing Reward Hacking in Autoresearch Agents",
   author  = {Li, Tianjian and Kim, Seungone and Helenowski, Eryk and Weston, Jason and Kulikov, Ilia and Lanchantin, Jack and Yuan, Weizhe},
   year    = "2026",
