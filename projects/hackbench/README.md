@@ -140,6 +140,16 @@ After auditing the candidates, we constructed HackBench with 169 trajectories: 4
 _Figure 3. Construction of a HackBench example with a *synthetic* hack through trajectory editing. Step 1: We begin with a real autoresearch trajectory. Step 2: We insert a synthetic reward-hacking command (red). Step 3: We update only causally affected downstream observations (green), preserving the task, commands, and unrelated observations. This produces a coherent example with command-level human-audited gold annotations._
 
 
+
+<div class="hackbench-figure" style="--figure-width: 85%; --mobile-width: 900px;">
+  <a href="table3.png"><img src="fig_stats.png" alt="Table 3: results" /></a>
+</div>
+
+<p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+
+_Table 3. **Hacks are sparse within long trajectories.** Per-trajectory statistics across the 169 trajectories in HackBench. Trajectories contain a median of over one million characters and 264 commands, yet a median of only one hacked command (a median of 0.6% of their commands are hacked), so a monitor must find needles in a long-context._
+
+
 <!--
 ## Evaluation setup
 
@@ -149,18 +159,6 @@ We evaluate the following proprietary models: Claude Opus 5, Claude Opus 4.8, GP
 
 ## Results
 
-We ask the monitor to localize which exact command(s) are executing the hack, where each command is labeled with a number and the model must output the exact set of numbers that are involved in hacking.
-
-<details markdown="1">
-<summary>See localization metrics</summary>
-
-**Setup** We report the following three scores for models with 1M context window on hack localization:
-
-- **Located-any** (localization recall): the fraction of hacking transcripts for which the monitor recovers *at least one* gold item---one of the hacking commands (verbatim) or indices (numbered). It measures whether the monitor can point to the hack at all, and is insensitive to over-flagging.
-- **Exact-match** (strict localization): the fraction of hacking transcripts for which the predicted set of commands/indices is *exactly* the gold set. This is the strictest criterion, penalizing both misses and over-inclusion.
-- **Jaccard** (set level similarity): let P be the monitor's predicted set of hack commands and G the ground-truth set of hack commands. Jaccard is defined as (\|P ∩ G\|) / (\|P ∪ G\|), the set-level similarity between P and G.
-
-</details>
 
 <div class="hackbench-figure" style="--figure-width: 85%; --mobile-width: 900px;">
   <a href="table3.png"><img src="fig_f1.png" alt="Table 3: results" /></a>
@@ -168,10 +166,14 @@ We ask the monitor to localize which exact command(s) are executing the hack, wh
 
 <p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-_Table 3. Hack localization performance on HackBench. For each hacked trajectory, precision, recall, and F1 compare the monitor’s predicted set of hacking command indices with the human-audited gold set._
+_Table 4. Hack localization performance on HackBench. For each hacked trajectory, precision, recall, and F1 compare the monitor’s predicted set of hacking command indices with the human-audited gold set._
 
-**Results and Findings** Table 3 reports both variants across models. Recovering the complete set of hacking commands remains challenging: the best exact-match score is 20.25% for verbatim localization and 45.57% for numbered localization, so no model exactly recovers the gold command set on even half of the HACK examples. Located-any scores are substantially higher than exact-match scores, indicating that monitors often identify at least one hacking command but fail to recover the complete set. Numbered localization yields higher located-any, exact-match, and Jaccard scores for every model shown, suggesting that selecting command indices is easier and less error-prone than reproducing commands verbatim.
 
+We ask the monitor to localize which exact command(s) are executing the hack, where each command is labeled with a number and the model must output the exact set of numbers that are involved in hacking. We report three metrics: *precision*, the fraction of predicted hacking commands that belong to the gold set;
+*recall*, the fraction of gold hacking commands recovered by the monitor; and *F1*, the harmonic mean of precision and
+recall. 
+
+**Results and Findings**  Table 4 reports hack localization performance across models. Localizing hacks remains challenging: the best monitor, Claude Opus 5, reaches only 64.88 F1, and every other model stays below 62. Four models (GPT-5.6 Sol, Kimi K3, Claude Opus 4.8, and GPT-5.5) cluster between 50.90 and 52.99 F1 despite different precision--recall trade-offs; for example, GPT-5.6 Sol attains the second-highest recall (68.55) but over-flags, with a precision of only 54.84.
 
 
 <details markdown="1">
