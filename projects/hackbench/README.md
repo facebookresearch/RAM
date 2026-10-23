@@ -142,7 +142,7 @@ _Figure 3. Construction of a HackBench example with a *synthetic* hack through t
 
 
 <div class="hackbench-figure" style="--figure-width: 85%; --mobile-width: 900px;">
-  <a href="table3.png"><img src="fig_stats.png" alt="Table 3: results" /></a>
+  <a href="fig_stats.png"><img src="fig_stats.png" alt="Table 3: results" /></a>
 </div>
 
 <p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
@@ -161,7 +161,7 @@ We evaluate the following proprietary models: Claude Opus 5, Claude Opus 4.8, GP
 
 
 <div class="hackbench-figure" style="--figure-width: 70%; --mobile-width: 900px;">
-  <a href="table3.png"><img src="fig_f1.png" alt="Table 3: results" /></a>
+  <a href="fig_f1.png"><img src="fig_f1.png" alt="Table 3: results" /></a>
 </div>
 
 <p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
