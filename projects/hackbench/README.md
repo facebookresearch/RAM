@@ -142,12 +142,12 @@ _Figure 3. Construction of a HackBench example with a *synthetic* hack through t
 
 
 <div class="hackbench-figure" style="--figure-width: 85%; --mobile-width: 900px;">
-  <a href="fig_stats.png"><img src="fig_stats.png" alt="Table 3: results" /></a>
+  <a href="fig_stats.png"><img src="fig_stats.png" alt="Table 2: stats" /></a>
 </div>
 
 <p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-_Table 3. **Hacks are sparse within long trajectories.** Per-trajectory statistics across the 169 trajectories in HackBench. Trajectories contain a median of over one million characters and 264 commands, yet a median of only one hacked command (a median of 0.6% of their commands are hacked), so a monitor must find needles in a long-context._
+_Table 2. **Hacks are sparse within long trajectories.** Per-trajectory statistics across the 169 trajectories in HackBench. Trajectories contain a median of over one million characters and 264 commands, yet a median of only one hacked command (a median of 0.6% of their commands are hacked), so a monitor must find needles in a long-context._
 
 
 <!--
@@ -166,14 +166,13 @@ We evaluate the following proprietary models: Claude Opus 5, Claude Opus 4.8, GP
 
 <p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-_Table 4. Hack localization performance on HackBench. For each hacked trajectory, precision, recall, and F1 compare the monitor’s predicted set of hacking command indices with the human-audited gold set._
+_Table 3. Hack localization performance on HackBench. For each hacked trajectory, precision, recall, and F1 compare the monitor’s predicted set of hacking command indices with the human-audited gold set._
 
 
 We ask the monitor to localize which exact command(s) are executing the hack, where each command is labeled with a number and the model must output the exact set of numbers that are involved in hacking. We report three metrics: *precision*, the fraction of predicted hacking commands that belong to the gold set;
-*recall*, the fraction of gold hacking commands recovered by the monitor; and *F1*, the harmonic mean of precision and
-recall. 
+*recall*, the fraction of gold hacking commands recovered by the monitor; and *F1*, the harmonic mean of precision and recall. 
 
-**Results and Findings**  Table 4 reports hack localization performance across models. Localizing hacks remains challenging: the best monitor, Claude Opus 5, reaches only 64.88 F1, and every other model stays below 62. Four models (GPT-5.6 Sol, Kimi K3, Claude Opus 4.8, and GPT-5.5) cluster between 50.90 and 52.99 F1 despite different precision--recall trade-offs; for example, GPT-5.6 Sol attains the second-highest recall (68.55) but over-flags, with a precision of only 54.84.
+**Results and Findings**  Table 3 reports hack localization performance across models. Localizing hacks remains challenging: the best monitor, Claude Opus 5, reaches only 64.88 F1, and every other model stays below 62. Four models (GPT-5.6 Sol, Kimi K3, Claude Opus 4.8, and GPT-5.5) cluster between 50.90 and 52.99 F1 despite different precision--recall trade-offs; for example, GPT-5.6 Sol attains the second-highest recall (68.55) but over-flags, with a precision of only 54.84.
 
 
 <details markdown="1">
@@ -187,7 +186,7 @@ recall.
 
 **Oversight, monitoring, and control.** Detecting misbehavior from a model's behavior or reasoning is central to scalable oversight ([Bowman et al., 2022][bowman2022measuring]), weak-to-strong generalization ([Burns et al., 2023][burns2023weaktostrong]), and AI control ([Greenblatt et al., 2024][greenblatt2024control]). Chain-of-thought monitoring can catch reward hacking but is fragile if optimized against ([Baker et al., 2025][baker2025monitoring]), and reasoning traces are not always faithful ([Turpin et al., 2023][turpin2023language]); frontier models can scheme and hide intent when incentivized ([Meinke et al., 2024][meinke2024scheming]; [Hubinger et al., 2024][hubinger2024sleeper]). To monitor agents, [Kutasov et al. (2025)][kutasov2025shadearenaevaluatingsabotagemonitoring] propose asking agents to perform both a main task and a covert side task in general agentic settings (e.g. booking an airplane ticket), then checking whether monitors catch the side task. [Libon et al. (2026)][libon2026researcharenaevaluatingsabotagemonitoring] extends the main/side task red teaming protocol to autoresearch settings. However, [Martin et al. (2026)][martin2026classifiercontextrotmonitor] and [Jotautaitė et al. (2026)][jotautaitė2026monitoringbenchsemiautomatedredteamingagent] find that existing monitoring benchmarks may overestimate monitor performance because they evaluate monitors on relatively short trajectories and a narrow range of hacks. In our work, we mitigate these limitations by injection red-teaming --- directly asking a model to inject different hack commands into long agent transcripts.
 
-**LLM judges and long context.** We build on LLM-as-a-judge methods ([Zheng et al., 2023][zheng2023judging]; [Li et al., 2023][alpaca_eval]; [Dubois et al., 2024][dubois2024lcwr]), using LLMs to assess whether agent trajectories contain reward hacking. Because these trajectories can be very long, monitoring is subject to known failure modes such as lost-in-the-middle effects and context-window limits ([Liu et al., 2023][liu2023lost]; [Hsieh et al., 2024][hsieh2024ruler]). We therefore apply test-time scaling ([Wang et al., 2022][wang2022self]; [Snell et al., 2024][snell2024scalingllmtesttimecompute]): we either divide each trajectory into chunks and aggregate the resulting judgments, or allow an agentic monitor to search the transcript. Relatedly, [Kale et al. (2025)][kale2025reliableweaktostrongmonitoringllm] and [sfereido (2026)][sfereido2026chunked] show that chunking can improve recall when monitoring for misaligned behavior.
+**LLM judges and long context.** We build on LLM-as-a-judge methods ([Zheng et al., 2023][zheng2023judging]; [Li et al., 2023][alpaca_eval]; [Dubois et al., 2024][dubois2024lcwr]), using LLMs to assess whether agent trajectories contain reward hacking. Because these trajectories can be very long, monitoring is subject to known failure modes such as lost-in-the-middle effects and context-window limits ([Liu et al., 2023][liu2023lost]; [Hsieh et al., 2024][hsieh2024ruler]). 
 
 
 </details>
@@ -195,7 +194,7 @@ recall.
 
 ## Conclusion
 
-Autoresearch agents reward-hack because we ask them to maximize metrics, and they do so without proper regard to other implicit constraints, i.e. performing actions humans would consider acceptable. We thus built HackBench, a benchmark that measures whether hacks inside autoresearch trajectories can be detected, and showed that current frontier models do not fully succeed at this task. As agents take on more of the research loop, monitoring reward hacking is not an add-on but a prerequisite; to support future work, we [release trajectories](https://huggingface.co/datasets/facebook/hackbench) containing naturally occurring and synthetically injected hacks, together with human-audited command-level gold labels.
+Autoresearch agents reward-hack because we ask them to maximize metrics, and they do so without proper regard to other implicit constraints, i.e. they should also perform actions humans would consider acceptable. We thus built HackBench, a benchmark that measures whether hacks inside autoresearch trajectories can be detected, and showed that current frontier models do not fully succeed at this task. As agents take on more of the research loop, monitoring reward hacking is not an add-on but a prerequisite; to support future work, we [release trajectories](https://huggingface.co/datasets/facebook/hackbench) containing naturally occurring and synthetically injected hacks, together with human-audited command-level gold labels.
 
 
 ## Contributors
