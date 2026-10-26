@@ -67,7 +67,7 @@ A natural research question arises: can an LLM *monitor* catch these hacks by re
 
 To measure how well LLMs catch reward hacking, we build HackBench, a benchmark for detecting and localizing reward hacks in full autoresearch trajectories. HackBench is built from *real* agent runs and includes both *natural* and *synthetic* hacks. The *synthetic* hacks are long-context stress tests: covert, often multi-step hacks are injected into long honest trajectories, and causally affected downstream observations are patched so that the needle remains consistent with world state. Because we know exactly which commands were injected, these trajectories come with ground-truth labels for scoring both detection and localization.
 
-Using HackBench, we evaluate the following frontier proprietary models: Claude Opus 5, Claude Opus 4.8, GPT-5.6 Sol, GPT-5.5, Muse Spark 1.3 and Muse Wonder and the following open-sourced models: GLM 5.2 and Kimi-K3. We find that all models fail at finding some of the hacks, and hence progress is still to be made. 
+Using HackBench, we evaluate the following frontier proprietary models: Claude Opus 5, Claude Opus 4.8, GPT-5.6 Sol, GPT-5.5, Muse Spark 1.3 and Muse Wonder and the following open-sourced models: GLM 5.2 and Kimi-K3. We find that all models fail at finding some of the hacks, and hence progress is still to be made. HackBench is available [here](https://huggingface.co/datasets/facebook/hackbench).
 
 
 <a id="fig-teaser"></a>
