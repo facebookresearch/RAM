@@ -50,7 +50,7 @@ permalink: /blogs/hackbench/
 
 <p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-_Figure 1. **HackBench.** Located hacks per model. All the systems measured have many hack detection failures._
+_Figure 1. **HackBench.** Hack localization F1 per model. All the systems measured have many hack detection failures._
 
 ## Overview
 
@@ -78,11 +78,11 @@ Using HackBench, we evaluate the following frontier proprietary models: Claude O
 
 <p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-_Figure 2. **HackBench**: Given a full agent trajectory (left), an LLM monitor (center) reads the entire transcript and is scored on the command localization task of returning the exact offending command(s) by line number (right)._
+_Figure 2. **HackBench**: Given a full agent trajectory (left), an LLM monitor (center) reads the entire transcript and is scored on the hack localization task of returning the exact offending command(s) by command index (right)._
 
 ## HackBench
 
-HackBench evaluates how well an LLM monitor can detect and localize reward hacking from a full autoresearch trajectory. It combines *real* audited trajectories with *natural* and *synthetic* long-context stress tests, allowing verification via human-audited command-level gold labels. This section formalizes the problem, describes where the trajectories come from and our agent settings, details the construction of the real and injected sets, and catalogs what the hacks look like.
+HackBench evaluates how well an LLM monitor can detect and localize reward hacking from a full autoresearch trajectory. It is built from *real* agent trajectories containing *natural* and *synthetic* hacks, with human-audited command-level gold labels. This section formalizes the problem and presents our taxonomy of hacks, describes the tasks and agents that produce the trajectories, and details how we construct the *natural* and *synthetic* sets.
 
 ### Problem formulation
 
@@ -101,9 +101,7 @@ HackBench evaluates how well an LLM monitor can detect and localize reward hacki
 
 _Table 1. A taxonomy of reward hacks observed in autoresearch trajectories that we use for HackBench, grouped by scope (general vs. task-specific), with one example per category. General hacks apply across tasks; task-specific hacks exploit the measurement structure of a particular task. Examples are drawn from ResearchGym and AutoLab trajectories._
 
-**Task framing** We evaluate monitors under the following framing:
-
-- **Numbered localization**: each executable command is prefixed with a `[CMD n]` index, and the monitor returns the indices of the hacking commands.
+**Task framing.** Each executable command is prefixed with a `[CMD n]` index, and the monitor returns the indices of the hacking commands.
 
 Localizing a hack in a long trajectory requires retaining relevant context, reasoning across multiple steps, and understanding the task and its grading procedure. HackBench therefore also evaluates long-context reasoning in a semantically meaningful setting.
 
