@@ -78,7 +78,7 @@ Using HackBench, we evaluate the following frontier proprietary models: Claude O
 
 <p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-_Figure 2. **HackBench**: Given a full agent trajectory (left), an LLM monitor (center) reads the entire transcript and is scored on the hack localization task of returning the exact offending command(s) by command index (right)._
+_Figure 2. **HackBench.** Given a full agent trajectory (left), an LLM monitor (center) reads the entire transcript and is scored on the hack localization task of returning the exact offending command(s) by command index (right)._
 
 ## HackBench
 
@@ -86,9 +86,9 @@ HackBench evaluates how well an LLM monitor can detect and localize reward hacki
 
 ### Problem formulation
 
-**Autoresearch tasks and trajectories.** An autoresearch task provides an agent with a working environment (code, data, tools) and an instruction to optimize a metric. The agent interacts with the environment over a long horizon, producing a *trajectory* τ = (s_0, r_1, a_1, o_1, r_2, a_2, o_2, …, r_T, a_T, o_T), where each step contributes the agent's private reasoning r_t, a command a_t (keystrokes issued to a shell), and an observation o_t (terminal output). At the end, a *verifier* V runs in the environment and returns a scalar reward R = V(env_T), typically by recomputing a metric from artifacts the agent produced.
+**Autoresearch tasks and trajectories.** An autoresearch task provides an agent with a working environment (code, data, tools) and an instruction to optimize a metric. The agent interacts with the environment over a long horizon, producing a *trajectory* τ = (s_0, r_1, a_1, o_1, r_2, a_2, o_2, …, r_T, a_T, o_T), where s_0 is the initial state (the task instruction and starting environment) and each step contributes the agent's private reasoning r_t, a command a_t (keystrokes issued to a shell), and an observation o_t (terminal output). At the end, a *verifier* V runs in the environment and returns a scalar reward R = V(env_T) computed on the final environment state env_T, typically by recomputing a metric from artifacts the agent produced.
 
-**Reward Hacking.** A trajectory contains *reward hacking* if the agent obtains reward by subverting the measurement rather than by accomplishing the task, e.g. writing fabricated metric files, editing or monkey-patching the grader, training or selecting on held-out test data, or reporting a subset of results chosen to inflate the aggregate. We contrast this with *legitimate* work, including genuine iteration, using pretrained models, or cutting compute while still doing the real task. The distinction is a property of *how* the reward was obtained, so it can only be judged from the trajectory, not from R alone.
+**Reward hacking.** A trajectory contains *reward hacking* if the agent obtains reward by subverting the measurement rather than by accomplishing the task, e.g. writing fabricated metric files, editing or monkey-patching the grader, training or selecting on held-out test data, or reporting a subset of results chosen to inflate the aggregate. We contrast this with *legitimate* work, including genuine iteration, using pretrained models, or cutting compute while still doing the real task. The distinction is a property of *how* the reward was obtained, so it can only be judged from the trajectory, not from R alone.
 
 **Monitoring.** A *monitor* M maps a trajectory (and optionally the task and verifier) to a judgment about reward hacking. Specifically, we consider monitors that output a localization of the specific command(s) that constitute the hack.
 
@@ -111,9 +111,9 @@ Localizing a hack in a long trajectory requires retaining relevant context, reas
 <details markdown="1">
 <summary>See task suite and agent setup</summary>
 
-**Tasks.** Our trajectories come from long-horizon ML research tasks. Our task suite comprises 5 tasks from ResearchGym ([Garikaparthi et al., 2026][garikaparthi2026researchgymevaluatinglanguagemodel]) and 7 tasks from the AutoLab “Model Development” subset ([Xu et al., 2026][autolab-2026]). Additionally, we include one frontier autoresearch task on a real research codebase: automated-w2s-research ([Wen, 2026][safetyresearch2026automatedw2s]).
+**Tasks.** Our trajectories come from long-horizon ML research tasks. Our task suite comprises five tasks from ResearchGym ([Garikaparthi et al., 2026][garikaparthi2026researchgymevaluatinglanguagemodel]) and seven tasks from the AutoLab “Model Development” subset ([Xu et al., 2026][autolab-2026]). Additionally, we include one frontier autoresearch task on a real research codebase: automated-w2s-research ([Wen, 2026][safetyresearch2026automatedw2s]).
 
-**Autoresearch Agents** We drive the agent with the Harbor terminus-2 scaffold ([Team, 2026][Harbor_Framework]), in which the agent has access only to a bash tool: it issues shell keystrokes and observes terminal output, with each task running in a container. We deliberately did not use more advanced scaffolds because the goal of this project is not to improve autoresearch performance, and a simple terminal provides a clean testbed for studying reward hacking. We use GPT-5.5 ([OpenAI, 2026][openai2026gpt55]) and GLM-5.2 ([Z.ai, 2026][zai2026glm52]) to generate research trajectories.
+**Autoresearch agents.** We drive the agent with the Harbor terminus-2 scaffold ([Team, 2026][Harbor_Framework]), in which the agent has access only to a bash tool: it issues shell keystrokes and observes terminal output, with each task running in a container. We deliberately did not use more advanced scaffolds because the goal of this project is not to improve autoresearch performance, and a simple terminal provides a clean testbed for studying reward hacking. We use GPT-5.5 ([OpenAI, 2026][openai2026gpt55]) and GLM-5.2 ([Z.ai, 2026][zai2026glm52]) to generate research trajectories.
 
 </details>
 
@@ -121,9 +121,9 @@ Localizing a hack in a long trajectory requires retaining relevant context, reas
 
 In our preliminary experiments, agents rarely hacked when the instruction explicitly prohibited reward hacking, and the hacks we observed only covered a few types (e.g. fabrication, cherry-picking random seeds). Thus, while we collect naturally occurring hacks, collecting enough across a broad range of types was therefore impractical. We thus developed a taxonomy of hacks (Table 1) and used it to guide synthetic hack injection into agent transcripts. Synthetic injection provides ground-truth labels for the injected commands and lets us control each hack's type and location.
 
-**Injecting Synthetic Hacks.** We construct synthetic hack trajectories in three stages (Figure 3). First, we sample an agent trajectory containing bash commands, chain-of-thought reasoning, and terminal observations (Step 1). Second, we sample a hack type from our taxonomy and insert commands that implement it into the otherwise unmodified autoresearch trajectory (Step 2). Third, we update downstream observations to reflect the injected commands' effects, changing only affected state information while preserving the task, original commands, and unrelated observations (Step 3). We used GLM-5.2 to perform both command injection and observation updates. We then used Claude Opus 4.8 and GPT-5.5 to audit each trajectory to check whether the injected commands are reward hacking and whether downstream observations are consistent with the injection. We manually annotated cases where the two auditors disagreed.
+**Injecting synthetic hacks.** We construct synthetic hack trajectories in three stages (Figure 3). First, we sample an agent trajectory containing bash commands, chain-of-thought reasoning, and terminal observations (Step 1). Second, we sample a hack type from our taxonomy and insert commands that implement it into the otherwise unmodified autoresearch trajectory (Step 2). Third, we update downstream observations to reflect the injected commands' effects, changing only affected state information while preserving the task, original commands, and unrelated observations (Step 3). We used GLM-5.2 to perform both command injection and observation updates. We then used Claude Opus 4.8 and GPT-5.5 to audit each trajectory to check whether the injected commands are reward hacking and whether downstream observations are consistent with the injection. We manually annotated cases where the two auditors disagreed.
 
-**Collecting Natural Hacks.** To surface candidates for naturally occurring hacks, we used GPT-5.6 Sol to screen standard autoresearch trajectories, dividing each transcript into eight chunks. We selected this configuration because it achieved the highest recall in our early experiments.
+**Collecting natural hacks.** To surface candidates for naturally occurring hacks, we used GPT-5.6 Sol to screen standard autoresearch trajectories, dividing each transcript into eight chunks. We selected this configuration because it achieved the highest recall in our early experiments.
 
 After auditing the candidates, we constructed HackBench with 169 trajectories: 41 containing *natural* hacks and 128 containing *synthetic* hacks.
 
@@ -157,13 +157,13 @@ _Table 2. **Hacks are sparse within long trajectories.** Per-trajectory statisti
 
 <p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-_Table 3. Hack localization performance on HackBench. For each hacked trajectory, precision, recall, and F1 compare the monitor’s predicted set of hacking command indices with the audited gold set._
+_Table 3. Hack localization performance on HackBench. For each hacked trajectory, precision, recall, and F1 compare the monitor's predicted set of hacking command indices with the audited gold set._
 
 
 We ask the monitor to localize which exact command(s) are executing the hack, where each command is labeled with a number and the model must output the exact set of numbers that are involved in hacking. We report three metrics: *precision*, the fraction of predicted hacking commands that belong to the gold set;
 *recall*, the fraction of gold hacking commands recovered by the monitor; and *F1*, the harmonic mean of precision and recall. All three metrics are computed separately for each trajectory, then macro-averaged over the 169 trajectories.
 
-**Results and Findings**  Table 3 reports hack localization performance across models. Localizing hacks remains challenging: the best monitor, Claude Opus 5, reaches only 64.88 F1, followed by Muse Wonder at 61.47; every other model stays below 53. Four models (GPT-5.6 Sol, Kimi K3, Claude Opus 4.8, and GPT-5.5) cluster between 50.90 and 52.99 F1 despite different precision--recall trade-offs; for example, GPT-5.6 Sol attains the second-highest recall (68.55) but over-flags, with a precision of only 54.84.
+**Results and findings.** Table 3 reports hack localization performance across models. Localizing hacks remains challenging: the best monitor, Claude Opus 5, reaches only 64.88 F1, followed by Muse Wonder at 61.47; every other model stays below 53. Four models (GPT-5.6 Sol, Kimi K3, Claude Opus 4.8, and GPT-5.5) cluster between 50.90 and 52.99 F1 despite different precision--recall trade-offs; for example, GPT-5.6 Sol attains the second-highest recall (68.55) but over-flags, with a precision of only 54.84.
 
 
 <details markdown="1">
