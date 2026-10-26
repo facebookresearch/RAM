@@ -151,7 +151,7 @@ _Table 2. **Hacks are sparse within long trajectories.** Per-trajectory statisti
 ## Results
 
 
-<div class="hackbench-figure" style="--figure-width: 70%; --mobile-width: 900px;">
+<div class="hackbench-figure" style="--figure-width: 60%; --mobile-width: 900px;">
   <a href="fig_f1.png"><img src="fig_f1.png" alt="Table 3: results" /></a>
 </div>
 
