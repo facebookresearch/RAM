@@ -50,7 +50,7 @@ permalink: /blogs/hackbench/
 
 <p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-_Figure 1. **HackBench.** Hack localization F1 per model. All the systems measured have many hack detection failures._
+_Figure 1. **HackBench.** Hack localization F1 per model. All monitors miss many hacks._
 
 ## Overview
 
@@ -65,7 +65,7 @@ A natural research question arises: can an LLM *monitor* catch these hacks by re
 
 **Our contribution**
 
-To measure how well LLMs catch reward hacking, we build HackBench, a benchmark for detecting and localizing reward hacks in full autoresearch trajectories. HackBench is built from *real* agent runs and includes both *natural* and *synthetic* hacks. The *synthetic* hacks are long-context stress tests: covert, often multi-step hacks are injected into long honest trajectories, and causally affected downstream observations are patched so that the needle remains consistent with the world state. Because we know exactly which commands were injected, these trajectories come with ground-truth labels for scoring both detection and localization.
+To measure how well LLMs catch reward hacking, we build HackBench, a benchmark for detecting and localizing reward hacks in full autoresearch trajectories. HackBench is built from *real* agent runs and includes both *natural* and *synthetic* hacks. The *synthetic* hacks are long-context stress tests: covert, often multi-step hacks are injected into long honest trajectories, and causally affected downstream observations are patched so that the needle remains consistent with the world state. Because we know exactly which commands were injected, these trajectories come with ground-truth labels for scoring localization.
 
 Using HackBench, we evaluate the following frontier proprietary models: Claude Opus 5, Claude Opus 4.8, GPT-5.6 Sol, GPT-5.5, Muse Spark 1.3, and Muse Wonder, as well as the open-weight models GLM-5.2 and Kimi K3. We find that all models fail at finding some of the hacks, so there is still progress to be made.
 
@@ -82,7 +82,7 @@ _Figure 2. **HackBench**: Given a full agent trajectory (left), an LLM monitor (
 
 ## HackBench
 
-HackBench evaluates how well an LLM monitor can detect and localize reward hacking from a full autoresearch trajectory. It is built from *real* agent trajectories containing *natural* and *synthetic* hacks, with human-audited command-level gold labels. This section formalizes the problem and presents our taxonomy of hacks, describes the tasks and agents that produce the trajectories, and details how we construct the *natural* and *synthetic* sets.
+HackBench evaluates how well an LLM monitor can detect and localize reward hacking from a full autoresearch trajectory. It is built from *real* agent trajectories containing *natural* and *synthetic* hacks, with audited command-level gold labels. This section formalizes the problem and presents our taxonomy of hacks, describes the tasks and agents that produce the trajectories, and details how we construct the *natural* and *synthetic* sets.
 
 ### Problem formulation
 
@@ -121,7 +121,7 @@ Localizing a hack in a long trajectory requires retaining relevant context, reas
 
 In our preliminary experiments, agents rarely hacked when the instruction explicitly prohibited reward hacking, and the hacks we observed only covered a few types (e.g. fabrication, cherry-picking random seeds). Thus, while we collect naturally occurring hacks, collecting enough across a broad range of types was therefore impractical. We thus developed a taxonomy of hacks (Table 1) and used it to guide synthetic hack injection into agent transcripts. Synthetic injection provides ground-truth labels for the injected commands and lets us control each hack's type and location.
 
-**Injecting Synthetic Hacks.** We construct synthetic hack trajectories in three stages (Figure 3). First, we sample an agent trajectory containing bash commands, chain-of-thought reasoning, and terminal observations (Step 1). Second, we sample a hack type from our taxonomy and insert commands that implement it into the otherwise unmodified autoresearch trajectory (Step 2). Third, we update downstream observations to reflect the injected commands' effects, changing only affected state information while preserving the task, original commands, and unrelated observations (Step 3). We used GLM 5.2 to perform both command injection and observation updates. We then used Claude Opus 4.8 and GPT-5.5 to audit each trajectory to check whether the injected commands are reward hacking and whether downstream observations are consistent with the injection. We manually annotated cases where the two auditors disagreed.
+**Injecting Synthetic Hacks.** We construct synthetic hack trajectories in three stages (Figure 3). First, we sample an agent trajectory containing bash commands, chain-of-thought reasoning, and terminal observations (Step 1). Second, we sample a hack type from our taxonomy and insert commands that implement it into the otherwise unmodified autoresearch trajectory (Step 2). Third, we update downstream observations to reflect the injected commands' effects, changing only affected state information while preserving the task, original commands, and unrelated observations (Step 3). We used GLM-5.2 to perform both command injection and observation updates. We then used Claude Opus 4.8 and GPT-5.5 to audit each trajectory to check whether the injected commands are reward hacking and whether downstream observations are consistent with the injection. We manually annotated cases where the two auditors disagreed.
 
 **Collecting Natural Hacks.** To surface candidates for naturally occurring hacks, we used GPT-5.6 Sol to screen standard autoresearch trajectories, dividing each transcript into eight chunks. We selected this configuration because it achieved the highest recall in our early experiments.
 
@@ -135,7 +135,7 @@ After auditing the candidates, we constructed HackBench with 169 trajectories: 4
 
 <p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-_Figure 3. Construction of a HackBench example with a *synthetic* hack through trajectory editing. Step 1: We begin with a real autoresearch trajectory. Step 2: We insert a synthetic reward-hacking command (red). Step 3: We update only causally affected downstream observations (green), preserving the task, commands, and unrelated observations. This produces a coherent example with command-level human-audited gold annotations._
+_Figure 3. Construction of a HackBench example with a *synthetic* hack through trajectory editing. Step 1: We begin with a real autoresearch trajectory. Step 2: We insert a synthetic reward-hacking command (red). Step 3: We update only causally affected downstream observations (green), preserving the task, commands, and unrelated observations. This produces a coherent example with command-level audited gold annotations._
 
 
 
@@ -148,13 +148,6 @@ _Figure 3. Construction of a HackBench example with a *synthetic* hack through t
 _Table 2. **Hacks are sparse within long trajectories.** Per-trajectory statistics across the 169 trajectories in HackBench. Trajectories contain a median of over one million characters and 264 commands, yet a median of only one hacked command (a median of 0.6% of their commands are hacked), so a monitor must find needles in a long-context._
 
 
-<!--
-## Evaluation setup
-
-
-We evaluate the following proprietary models: Claude Opus 5, Claude Opus 4.8, GPT-5.6 Sol, GPT-5.5, and Muse Spark 1.1, Muse Spark 1.2 and Muse Spark 1.3, as well as the following open-weight models: GLM-5.2, Kimi K3, Kimi K2.6, Qwen3.5-397B-A17B, Qwen3.5-122B-A10B, and Qwen3.5-35B-A3B. Each model acts as a monitor that reads an autoresearch transcript and outputs the line numbers of suspected hack commands.
--->
-
 ## Results
 
 
@@ -164,13 +157,13 @@ We evaluate the following proprietary models: Claude Opus 5, Claude Opus 4.8, GP
 
 <p class="hackbench-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-_Table 3. Hack localization performance on HackBench. For each hacked trajectory, precision, recall, and F1 compare the monitor’s predicted set of hacking command indices with the human-audited gold set._
+_Table 3. Hack localization performance on HackBench. For each hacked trajectory, precision, recall, and F1 compare the monitor’s predicted set of hacking command indices with the audited gold set._
 
 
 We ask the monitor to localize which exact command(s) are executing the hack, where each command is labeled with a number and the model must output the exact set of numbers that are involved in hacking. We report three metrics: *precision*, the fraction of predicted hacking commands that belong to the gold set;
 *recall*, the fraction of gold hacking commands recovered by the monitor; and *F1*, the harmonic mean of precision and recall. All three metrics are computed separately for each trajectory, then macro-averaged over the 169 trajectories.
 
-**Results and Findings**  Table 3 reports hack localization performance across models. Localizing hacks remains challenging: the best monitor, Claude Opus 5, reaches only 64.88 F1, and every other model stays below 62. Four models (GPT-5.6 Sol, Kimi K3, Claude Opus 4.8, and GPT-5.5) cluster between 50.90 and 52.99 F1 despite different precision--recall trade-offs; for example, GPT-5.6 Sol attains the second-highest recall (68.55) but over-flags, with a precision of only 54.84.
+**Results and Findings**  Table 3 reports hack localization performance across models. Localizing hacks remains challenging: the best monitor, Claude Opus 5, reaches only 64.88 F1, followed by Muse Wonder at 61.47; every other model stays below 53. Four models (GPT-5.6 Sol, Kimi K3, Claude Opus 4.8, and GPT-5.5) cluster between 50.90 and 52.99 F1 despite different precision--recall trade-offs; for example, GPT-5.6 Sol attains the second-highest recall (68.55) but over-flags, with a precision of only 54.84.
 
 
 <details markdown="1">
@@ -192,7 +185,7 @@ We ask the monitor to localize which exact command(s) are executing the hack, wh
 
 ## Conclusion
 
-Autoresearch agents reward-hack because we ask them to maximize metrics, and they do so without proper regard to other implicit constraints, i.e. they should also perform actions humans would consider acceptable. We thus built HackBench, a benchmark that measures whether hacks inside autoresearch trajectories can be detected and localized, and showed that current frontier models do not fully succeed at this task. As agents take on more of the research loop, monitoring reward hacking is not an add-on but a prerequisite; to support future work, we [release trajectories](https://huggingface.co/datasets/facebook/hackbench) containing naturally occurring and synthetically injected hacks, together with human-audited command-level gold labels.
+Autoresearch agents reward-hack because we ask them to maximize metrics, and they do so without proper regard to other implicit constraints, i.e. they should also perform actions humans would consider acceptable. We thus built HackBench, a benchmark that measures whether hacks inside autoresearch trajectories can be detected and localized, and showed that current frontier models do not fully succeed at this task. As agents take on more of the research loop, monitoring reward hacking is not an add-on but a prerequisite; to support future work, we [release trajectories](https://huggingface.co/datasets/facebook/hackbench) containing naturally occurring and synthetically injected hacks, together with audited command-level gold labels.
 
 
 ## Contributors
