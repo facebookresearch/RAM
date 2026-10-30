@@ -309,16 +309,18 @@ Our hope is that if AIs can be better communicators with humans, we can all bene
 Jason Weston, Ilia Kulikov, Swarnadeep Saha
 
 ## More details
-We plan to put a full technical report on arXiv soon.
+More details can be found in the [full technical report](https://arxiv.org/abs/2610.38882) (see section 4).
 
 ## Citation
-You can cite this blog (before the full paper is released) here:
+To reference the work in this blog post, please use the following BibTex entry:
 ```
-@article{weston2026unslop,
-  title   = "Towards RL for Superhuman Text: Unslopping AI",
-  author  = {Weston, Jason and Kulikov, Ilia and Saha, Swarnadeep},
-  year    = "2026",
-  month   = "September",
-  url     = "https://facebookresearch.github.io/RAM/blogs/unslop/"
+@misc{li2026aligningautoresearchcoimprovementagents,
+      title={Aligning Autoresearch: Co-Improvement between Agents and Humans}, 
+      author={Tianjian Li and Chuanyang Jin and Seungone Kim and Tong Chen and John Hoffman and Yoram Bachrach amd Pedro Rodriguez and Ping Yu and Eryk Helenowski and Swarnadeep Saha and Jack Lanchantin and Weizhe Yuan and Ilia Kulikov and Jason Weston},
+      year={2026},
+      eprint={2610.38882},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2610.38882}, 
 }
 ```
