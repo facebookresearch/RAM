@@ -293,17 +293,19 @@ We presented AutoInteract, a framework that aims to improve agent-human interact
 Chuanyang Jin, Seungone Kim, Tong Chen, John Hoffman, Eryk Helenowski. Ping Yu, Jason Weston, Swarnadeep Saha, Ilia Kulikov
 
 ## More details
-We plan to put a full technical report on arXiv soon.
+More details can be found in the [full technical report](https://arxiv.org/abs/2610.38882) (see section 3).
 
 ## Citation
-You can cite this blog (before the full paper is released) here:
+To reference the work in this blog post, please use the following BibTex entry:
 ```
-@misc{jin2026autointeract,
-  title   = "AutoInteract: Training agents to interact with humans",
-  author  = {Jin, Chuanyang and Kim, Seungone and Chen, Tong and Hoffman, John and  Helenowski, Eryk  and Yu, Ping and Weston, Jason and Saha, Swarnadeep and Kulikov, Ilia},
-  year    = "2026",
-  month   = "October",
-  url     = "https://facebookresearch.github.io/RAM/blogs/autointeract/"
+@misc{li2026aligningautoresearchcoimprovementagents,
+      title={Aligning Autoresearch: Co-Improvement between Agents and Humans}, 
+      author={Tianjian Li and Chuanyang Jin and Seungone Kim and Tong Chen and John Hoffman and Yoram Bachrach amd Pedro Rodriguez and Ping Yu and Eryk Helenowski and Swarnadeep Saha and Jack Lanchantin and Weizhe Yuan and Ilia Kulikov and Jason Weston},
+      year={2026},
+      eprint={2610.38882},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2610.38882}, 
 }
 ```
 
