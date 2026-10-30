@@ -180,17 +180,19 @@ Looking ahead, constructing high-quality challenging benchmarks is and will be c
 Seungone Kim, Chuanyang Jin, Tianjian Li, Chenxi Whitehouse, Jason Weston, Weizhe Yuan, Ilia Kulikov, Swarnadeep Saha, Jack Lanchantin
 
 ## More details
-We plan to put a full technical report on arXiv soon.
+More details can be found in the [full technical report](https://arxiv.org/abs/2610.38882) (see section 1).
 
 ## Citation
-You can cite this blog (before the full paper is released) here:
+To reference the work in this blog post, please use the following BibTex entry:
 ```
-@article{kim2026autobench,
-  title   = "AutoBenchmark: benchmark creation and the role of humans",
-  author  = {Kim, Seungone and Jin, Chuanyang and Li, Tianjian and Whitehouse, Chenxi and Weston, Jason and Yuan, Weizhe and Kulikov, Ilia and Saha, Swarnadeep and Lanchantin, Jack},
-  year    = "2026",
-  month   = "September",
-  url     = "https://facebookresearch.github.io/RAM/blogs/autobench/"
+@misc{li2026aligningautoresearchcoimprovementagents,
+      title={Aligning Autoresearch: Co-Improvement between Agents and Humans}, 
+      author={Tianjian Li and Chuanyang Jin and Seungone Kim and Tong Chen and John Hoffman and Yoram Bachrach amd Pedro Rodriguez and Ping Yu and Eryk Helenowski and Swarnadeep Saha and Jack Lanchantin and Weizhe Yuan and Ilia Kulikov and Jason Weston},
+      year={2026},
+      eprint={2610.38882},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2610.38882}, 
 }
 ```
 
