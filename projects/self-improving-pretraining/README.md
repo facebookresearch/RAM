@@ -166,7 +166,24 @@ $$
 
 The DPO term improves what the policy generates; the SFT term distills the teacher's evaluation process into the policy. Importantly, judgment labels must be balanced. As generations improve, most rollouts may become safe or correct. Training indiscriminately on that stream can collapse the self-judge into always predicting the majority label. We therefore supervise post-thinking only on pairs with contrasting verdicts.
 
-In domains with rule-verifiable answers, the teacher can eventually be removed. The policy samples post-thoughts and receives a reward when its verdict matches the known correctness of the answer it just judged. This lets the model improve its self-judgment directly with reinforcement learning.
+In domains with rule-verifiable answers, the teacher can eventually be removed. The policy samples post-thoughts, and each one receives a verdict-match reward based on the known correctness $r$ of the answer it just judged:
+
+$$
+R_{\text{match}} =
+\begin{cases}
+1 & \text{if the verdict agrees with } r, \\
+0 & \text{if the verdict is well formed but disagrees}, \\
+-\epsilon & \text{if no well-formed verdict is produced},
+\end{cases}
+$$
+
+where the small penalty $\epsilon$ (we use 0.1) keeps the policy from avoiding a decision. The answer keeps its usual correctness reward, so both the generation and the judgment are now improved with reinforcement learning:
+
+$$
+\mathcal{L}_{\text{total}}
+= \mathcal{L}_{\text{RL}}(\tau, \bar{x})
++ \omega_\psi\mathcal{L}_{\text{RL}}(\psi).
+$$
 
 ## Safety: a small policy learns to police its own generations
 
@@ -191,7 +208,11 @@ The policy learns this skill quickly: with sixteen training-time rollouts, agree
 
 ## Reasoning: solving and checking improve together
 
-Next, we combine post-thinking with the model produced by [Thinking Mid-training](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/). That model already reasons before answering; we teach it to judge the correctness of its completed solution afterward. We train in three consecutive stages: post-thinking SFT during mid-training, post-thinking SFT during math post-training, and post-thinking RL whose verdict is checked by a rule-based verifier.
+Next, we combine post-thinking with the model produced by [Thinking Mid-training](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/). That model already reasons before answering; we teach it to judge the correctness of its completed solution afterward, in three consecutive stages that differ in data and supervision:
+
+1. **Post-thinking SFT during mid-training** continues on the Thinking Mid-training corpus of web and math documents (DCLM and FineMath). A teacher judge (GPT-OSS-120B) rewards each continuation and supplies the target post-thought.
+2. **Post-thinking SFT during post-training** switches to competition math problems (DAPO-Math-14k). A rule-based verifier (Math-Verify) now rewards each final answer, while the post-thought is still supervised by the teacher.
+3. **Post-thinking RL during post-training** stays on the same math problems but removes the teacher: the post-thought is trained with the verdict-match reward above, scored against the verifier.
 
 **Learning to judge makes the model a better solver.** Average accuracy (Avg@8) rises at every stage, from 34.8 to 45.0 (Table 3). The fair comparison is the same starting model post-trained with RL but without post-thinking, which reaches 40.3: SPoT is 4.7 points ahead before its verdict is used at all. The training curves in Figure 3 show the two sides improving together rather than trading off.
 
