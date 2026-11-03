@@ -73,7 +73,7 @@ Our answer has three parts:
 2. **[Thinking Mid-training](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/)** inserts and optimizes reasoning before a continuation, teaching the model to plan before it answers.
 3. **Self-Improving Post-Thinking** teaches the model to reason after its answer and judge its own generation for safety, correctness, or confidence.
 
-This post focuses on the first and third parts: improving a model's generations early, then teaching the model to evaluate those generations itself.
+This post focuses on improving a model's generations early, then teaching the model to evaluate those generations itself.
 
 <div class="sip-figure" style="--figure-width: 97%; --mobile-width: 900px;">
   <a href="post_thinking.png"><img src="post_thinking.png" alt="Self-Improving Post-Thinking: the model reasons before an answer, generates the answer, then reasons after it to judge its own output" /></a>
