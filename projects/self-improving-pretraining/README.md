@@ -191,9 +191,9 @@ The policy learns this skill quickly: with sixteen training-time rollouts, agree
 
 ## Reasoning: solving and checking improve together
 
-Next, we combine post-thinking with the model produced by [Thinking Mid-training](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/). That model already reasons before answering; we teach it to judge the correctness of its completed solution afterward.
+Next, we combine post-thinking with the model produced by [Thinking Mid-training](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/). That model already reasons before answering; we teach it to judge the correctness of its completed solution afterward. We train in three consecutive stages: post-thinking SFT during mid-training, post-thinking SFT during math post-training, and post-thinking RL whose verdict is checked by a rule-based verifier.
 
-We train in three consecutive stages: post-thinking SFT during mid-training, post-thinking SFT during math post-training, and post-thinking RL whose verdict is checked by a rule-based verifier. Across all four mathematical benchmarks, average accuracy rises at every stage — by 7 to 15 points end to end. Learning to judge does not come at the expense of learning to solve.
+**Learning to judge makes the model a better solver.** Average accuracy (Avg@8) rises at every stage, from 34.8 to 45.0 (Table 3). The fair comparison is the same starting model post-trained with RL but without post-thinking, which reaches 40.3: SPoT is 4.7 points ahead before its verdict is used at all. The training curves in Figure 3 show the two sides improving together rather than trading off.
 
 <div class="sip-figure" style="--figure-width: 100%; --mobile-width: 1000px;">
   <a href="reasoning_training_dynamics.png"><img src="reasoning_training_dynamics.png" alt="Training dynamics for post-thinking SFT during mid-training, post-thinking SFT during post-training, and post-thinking RL during post-training" /></a>
@@ -203,9 +203,23 @@ We train in three consecutive stages: post-thinking SFT during mid-training, pos
 
 *Figure 3. **Solving and checking are learned together.** Training dynamics across three consecutive stages, each initialized from the previous one. Blue tracks the continuation or answer reward; orange tracks post-thought loss in the SFT stages and verdict-match reward in the RL stage. For most of training, the solve side and self-judgment side improve together rather than trading off.*
 
-The self-judgment is also useful at inference time. After the RL stage, selecting one of eight solutions using the model's verdict improves over random rollout selection by 8.6 points on MATH-500, 6.4 on AMC23, and 5.8 on OlympiadBench. Weighting majority votes by post-thinking judgments beats plain majority voting on all five evaluation tasks.
+**Post-thought verdicts improve both answer selection and voting.** Picking the solution that the model's own post-thought rates highest (PoT@8) raises average accuracy from 45.0 to 51.2. That single self-selected answer already beats the baseline's majority vote over all eight samples, 49.5. Weighting the vote by post-thought verdicts gives the best result in the table, 53.8 against 52.0 for plain voting, and it beats plain voting on all five benchmarks we evaluate.
 
-This ability has limits. A self-judge can repeat the same mistake as the solver, and transfer is weaker outside the domain covered by its verifier. On GPQA-Diamond, a judgment head trained on mathematical verification performs near chance. Post-thinking makes failures more detectable; it does not make self-evaluation infallible.
+**The gain from self-selection grows at every stage, most under RL.** The margin of PoT@8 over Avg@8 grows from 2.8 points after the first stage to 3.4 after the second and 6.2 after the third. The largest jump comes from RL, where the verdict is rewarded for agreeing with a verifier instead of for imitating a teacher.
+
+<div class="sip-table-wrap" markdown="1">
+
+| Math reasoning | Avg@8 | PoT@8 | majority@8 | PoT\_weighted\_majority@8 |
+|---|---:|---:|---:|---:|
+| Thinking Mid-training (init) | 34.8 | — | 46.8 | — |
+| + RL post-training | 40.3 | — | 49.5 | — |
+| + post-thinking SFT mid-training | 38.8 | 41.6 | 48.4 | 49.6 |
+| + post-thinking SFT post-training | 42.2 | 45.6 | 49.4 | 49.9 |
+| + post-thinking RL post-training (SPoT) | **45.0** | **51.2** | **52.0** | **53.8** |
+
+</div>
+
+*Table 3. Post-thinking improves both solving and selection for Llama 3.1 8B after Thinking Mid-training, averaged over MATH-500, GSM8K, AMC23, and OlympiadBench with eight samples per problem. Avg@8 is the accuracy of a single sample; PoT@8 picks the sample the model's own post-thought rates highest; majority@8 and PoT\_weighted\_majority@8 vote over the eight answers, unweighted and weighted by post-thought verdicts. The three post-thinking rows form a chain, each initialized from the one above; “+ RL post-training” branches from the same initialization without post-thinking. Rows without post-thinking produce no verdict, so their PoT columns are empty.*
 
 ## Confidence: knowing when not to answer
 
@@ -231,7 +245,7 @@ The resulting confidence enables **selective prediction**: accept an answer when
 
 </div>
 
-*Table 3. Confidence post-thinking results for Qwen3 4B, macro-averaged over MATH-500, GSM8K, AMC23, OlympiadBench, and GPQA-Diamond. Lower is better for Brier score and expected calibration error.*
+*Table 4. Confidence post-thinking results for Qwen3 4B, macro-averaged over MATH-500, GSM8K, AMC23, OlympiadBench, and GPQA-Diamond. Lower is better for Brier score and expected calibration error.*
 
 The confidence signal generalizes beyond the training setup. Although training uses answerable math problems, post-thinking becomes better at identifying unanswerable questions, including questions outside mathematics. The solve-time objective may still pressure the model to produce an answer, but the subsequent judgment can flag unsupported assumptions and assign low confidence.
 
