@@ -214,7 +214,15 @@ Next, we combine post-thinking with the model produced by [Thinking Mid-training
 2. **Post-thinking SFT during post-training** switches to competition math problems (DAPO-Math-14k). A rule-based verifier (Math-Verify) now rewards each final answer, while the post-thought is still supervised by the teacher.
 3. **Post-thinking RL during post-training** stays on the same math problems but removes the teacher: the post-thought is trained with the verdict-match reward above, scored against the verifier.
 
-**Learning to judge makes the model a better solver.** Average accuracy (Avg@8) rises at every stage, from 34.8 to 45.0 (Table 3). The fair comparison is the same starting model post-trained with RL but without post-thinking, which reaches 40.3: SPoT is 4.7 points ahead before its verdict is used at all. The training curves in Figure 3 show the two sides improving together rather than trading off.
+<div class="sip-figure" style="--figure-width: 100%; --mobile-width: 1000px;">
+  <a href="reasoning_pipeline.png"><img src="reasoning_pipeline.png" alt="Three-stage training pipeline: post-thinking SFT during mid-training, post-thinking SFT during post-training, and post-thinking RL during post-training" /></a>
+</div>
+
+<p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+
+*Figure 3. **Three-stage training for reasoning.** Each row is one stage, initialized from the one above. Mid-training uses web and math documents (DCLM and FineMath) with GPT-OSS-120B as the judge; both post-training stages use DAPO-Math-14k, where Math-Verify checks the answer A′ against the reference A\*. The two SFT stages imitate the teacher's post-thought (PoT); the RL stage instead rewards the policy's own post-thought for agreeing with Math-Verify.*
+
+**Learning to judge makes the model a better solver.** Average accuracy (Avg@8) rises at every stage, from 34.8 to 45.0 (Table 3). The fair comparison is the same starting model post-trained with RL but without post-thinking, which reaches 40.3: SPoT is 4.7 points ahead before its verdict is used at all. The training curves in Figure 4 show the two sides improving together rather than trading off.
 
 <div class="sip-figure" style="--figure-width: 100%; --mobile-width: 1000px;">
   <a href="reasoning_training_dynamics.png"><img src="reasoning_training_dynamics.png" alt="Training dynamics for post-thinking SFT during mid-training, post-thinking SFT during post-training, and post-thinking RL during post-training" /></a>
@@ -222,7 +230,7 @@ Next, we combine post-thinking with the model produced by [Thinking Mid-training
 
 <p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-*Figure 3. **Solving and checking are learned together.** Training dynamics across three consecutive stages, each initialized from the previous one. Blue tracks the continuation or answer reward; orange tracks post-thought loss in the SFT stages and verdict-match reward in the RL stage. For most of training, the solve side and self-judgment side improve together rather than trading off.*
+*Figure 4. **Solving and checking are learned together.** Training dynamics across three consecutive stages, each initialized from the previous one. Blue tracks the continuation or answer reward; orange tracks post-thought loss in the SFT stages and verdict-match reward in the RL stage. For most of training, the solve side and self-judgment side improve together rather than trading off.*
 
 **Post-thought verdicts improve both answer selection and voting.** Picking the solution that the model's own post-thought rates highest (PoT@8) raises average accuracy from 45.0 to 51.2. That single self-selected answer already beats the baseline's majority vote over all eight samples, 49.5. Weighting the vote by post-thought verdicts gives the best result in the table, 53.8 against 52.0 for plain voting, and it beats plain voting on all five benchmarks we evaluate.
 
