@@ -42,7 +42,7 @@ class RegressionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             output = str(Path(tmp) / 'outputs' / 'result.jsonl')
             args = ['generate.py', '--dataset', 'custom/holdout', '--output', output]
-            with patch.dict(sys.modules, modules), patch.object(sys, 'argv', args), contextlib.redirect_stdout(io.StringIO()):
+            with patch.dict(sys.modules, modules), patch.object(sys, 'argv', args), patch.object(sys, 'path', [str(ROOT), *sys.path]), contextlib.redirect_stdout(io.StringIO()):
                 runpy.run_path(str(ROOT / 'generate.py'), run_name='__main__')
             self.assertEqual(seen, ['custom/holdout'])
             self.assertTrue(Path(output).exists())
