@@ -157,4 +157,3 @@ print(f"To postprocess, run `otbench eval {OUTPUT_FILE} --model {MODEL_NAME}`")
 
 os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
 df.to_json(OUTPUT_FILE, orient="records", lines=True)
-

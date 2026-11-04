@@ -11,6 +11,7 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 
+
 class RegressionTests(unittest.TestCase):
     def test_generate_uses_requested_dataset(self):
         class Frame:
@@ -45,6 +46,7 @@ class RegressionTests(unittest.TestCase):
                 runpy.run_path(str(ROOT / 'generate.py'), run_name='__main__')
             self.assertEqual(seen, ['custom/holdout'])
             self.assertTrue(Path(output).exists())
+
 
 if __name__ == "__main__":
     unittest.main()
