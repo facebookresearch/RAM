@@ -36,7 +36,7 @@ parser.add_argument("--run_locally", action="store_true", default=False)
 args = parser.parse_args()
 
 
-df = load_from_disk(f"data/otb_full")
+df = load_from_disk(args.dataset)
 df = df["train"].to_pandas()
 
 MODEL_NAME = args.model
@@ -157,3 +157,4 @@ print(f"To postprocess, run `otbench eval {OUTPUT_FILE} --model {MODEL_NAME}`")
 
 os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
 df.to_json(OUTPUT_FILE, orient="records", lines=True)
+
