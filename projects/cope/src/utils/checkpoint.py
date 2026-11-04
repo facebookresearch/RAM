@@ -62,7 +62,7 @@ def save(
 
     path = cfg.checkpoint
     dirname = os.path.dirname(path)
-    if not os.path.exists(dirname):
+    if dirname and not os.path.exists(dirname):
         os.makedirs(dirname)
     logging.info(f"saving epoch {epoch_num} to {path}")
 
@@ -118,3 +118,4 @@ def load(cfg, model, optimizer, logger, tokenizer):
         f = torch.load(cfg.init_model_from, map_location=torch.device("cpu"))
         logging.info(f"loading model from {cfg.init_model_from}")
         load_model(f, model, strict=not cfg.init_model_no_strict)
+
