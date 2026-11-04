@@ -10,6 +10,8 @@ import argparse
 import os
 import sys
 
+from .paths import output_path
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -103,7 +105,9 @@ def build_parser() -> argparse.ArgumentParser:
         if ret != 0:
             return ret
         output = args.output if args.output else "final_outputs/otbench/{{model}}.jsonl"
-        output = output.replace("{{model}}", args.model.replace("/", "-"))
+        output = output_path(
+            output, args.model, args.enable_nothink, args.temperature, args.num_gens
+        )
         return cmd_eval(argparse.Namespace(input=output, model=args.model))
 
     p_runall = sub.add_parser("run")
