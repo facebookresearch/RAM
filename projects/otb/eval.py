@@ -34,12 +34,12 @@ def main():
     all_rows = []
     for _, row in df.iterrows():
         subset = row.get("subset", "")
-        if subset == "overthinking-bench" or "overthinking" in subset:
+        if "math" in subset:
+            acc = eval_math(row, tokenizer, model_name)
+        elif subset == "overthinking-bench" or "overthinking" in subset:
             acc = eval_overthink(row)
         elif subset == "underthinking-bench" or "underthinking" in subset:
             acc = eval_underthink(row)
-        elif "math" in subset:
-            acc = eval_math(row, tokenizer, model_name)
         else:
             acc = eval_math(row, tokenizer, model_name)
 
