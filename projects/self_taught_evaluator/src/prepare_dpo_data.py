@@ -106,7 +106,7 @@ def prepare_dpo_data(
             except Exception as e:
                 continue
             output = response["vllm_output"]["output"].strip()
-            judgement = extract_winner_llm_judge_pairv2(output)
+            judgement = parse_judgement(output)
             model_judgements[input_key].append((output, judgement))
             if input_key not in gold_labels.keys():
                 if response["metadata"]["ranks"][0] < response["metadata"]["ranks"][1]:
@@ -149,7 +149,7 @@ def prepare_dpo_data(
                 except Exception as e:
                     continue
                 output = response["vllm_output"]["output"].strip()
-                judgement = extract_winner_llm_judge_pairv2(output)
+                judgement = parse_judgement(output)
                 total_samples += 1
                 if judgement == gold_labels[input_key]:
                     continue
