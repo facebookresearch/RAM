@@ -118,17 +118,22 @@ It can be introduced during continual pretraining, midtraining, or during post-t
 
 ## How Self-Improving Post-Thinking is trained
 
-When a strong teacher judge is available, it produces a target post-thought $\psi^*$ that explains and labels the quality of a policy continuation. We jointly optimize the continuation and the judgment:
+We consider several settings.
+
+### Non-verifiable setting with strong teacher
+
+In a non-verifiable setting when a strong teacher judge is available, it produces a target post-thought $\psi^*$ that explains and labels the quality of a policy continuation. We jointly optimize the continuation and the judgment:
 
 $$
-\mathcal{L}_{\text{total}}
-= \mathcal{L}_{\text{DPO}}(\bar{x})
-+ \omega\mathcal{L}_{\text{SFT}}(\psi^*).
+\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{RL}}(\bar{x}) + \omega\mathcal{L}_{\text{SFT}}(\psi^*)
 $$
 
-The DPO term improves what the policy generates; the SFT term distills the teacher's evaluation process into the policy. Importantly, judgment labels must be balanced. As generations improve, most rollouts may become safe or correct. Training indiscriminately on that stream can collapse the self-judge into always predicting the majority label. We therefore supervise post-thinking only on pairs with contrasting verdicts.
+The RL term improves what the policy generates, in our experiments we use online DPO; the SFT term distills the teacher's evaluation process into the policy. Importantly, judgment labels must be balanced. For example for safety verdicts, as generations improve, most rollouts may become safe or correct. Training indiscriminately on that stream can collapse the self-judge into always predicting the majority label. We therefore supervise post-thinking only on pairs with contrasting verdicts, which we find fixes the issue.
 
-In domains with rule-verifiable answers, the teacher can eventually be removed. The policy samples post-thoughts, and each one receives a verdict-match reward based on the known correctness $r$ of the answer it just judged:
+### Verifiable setting
+
+In domains with rule-verifiable answers, the teacher can removed (perhaps after an SFT stage). 
+The policy samples post-thoughts, and each one receives a verdict-match reward based on the known correctness $r$ of the answer it just judged:
 
 $$
 R_{\text{match}} =
@@ -141,17 +146,15 @@ $$
 
 where the small penalty $\epsilon$ (we use 0.1) keeps the policy from avoiding a decision. The answer keeps its usual correctness reward, so both the generation and the judgment are now improved with reinforcement learning:
 
-$$
-\mathcal{L}_{\text{total}}
-= \mathcal{L}_{\text{RL}}(\tau, \bar{x})
-+ \omega_\psi\mathcal{L}_{\text{RL}}(\psi).
-$$
+$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{RL}}(\tau, \bar{x}) + \omega_\psi\mathcal{L}_{\text{RL}}(\psi)$$
 
-## Safety: a small policy learns to police its own generations
+## Experiments
 
-We first combine post-thinking with continual pretraining for safety. A 1.4B policy learns to generate a safety judgment after each continuation while it simultaneously learns to generate safer text.
+### Safety: a policy learns to police its own generations
 
-The post-thinking objective improves the continuation itself even before its verdict is used: greedy safety rises from 91.1% for Self-Improving Pretraining to 94.6% with SPoT. At inference time, the policy can sample several candidates and use its own post-thoughts to select among them, raising average safety to **98.2%**. This is within 1.2 points of selection by the external GPT-OSS-120B oracle, despite the policy being roughly 86 times smaller.
+We first combine post-thinking with continual pretraining for safety. A Llama 1.4B policy learns to generate a safety judgment after each continuation while it simultaneously learns to generate safer text. For policy training we use the [self-improving pretraining]() (SIP) technique whereby a strong judge is used to reinforcement-learn the text continuations for safety and quality -- which already substantially outperforms next token prediction.
+
+We find that the post-thinking objective improves the continuation the baselines, even before its verdict is used: greedy safety rises from 91.1% for Self-Improving Pretraining to 94.6% with SPoT. At inference time, the policy can sample several candidates and use its own post-thoughts to select among them, further raising average safety to **98.2%**. This is within 1.2 points of selection by the external GPT-OSS-120B ``oracle'' used to measure safety in our experiments, despite the policy being roughly 86 times smaller.
 
 <div class="sip-table-wrap" markdown="1">
 
