@@ -86,11 +86,11 @@ answer, and post-thoughts) simultaneously through reinforcement learning.*
 
 
 
-We apply post-thinking to both mid-training and post-training, teaching models to produce post-thoughts 
+We apply post-thinking to continual pretraining, mid-training and post-training, teaching models to produce post-thoughts 
 that assess their own safety, correctness, and confidence, while also improving the generations themselves.
 
-Mid-training with post-thinking improves safety by 21.3% on average across five safety benchmarks over the same model without
-mid-training, at no cost to generation quality. Mid-training and post-training with post-thinking
+Continual pretraining with post-thinking improves safety by 21.3% on average across five safety benchmarks over the same model without
+post-thoughts, at no cost to generation quality. Mid-training and post-training with post-thinking
 improve mathematical reasoning across four benchmarks over post-training without post-thinking,
 so learning to judge also makes the model a better solver. Using those post-thoughts at inference
 to select among solutions brings further gains. 
