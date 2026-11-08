@@ -154,22 +154,21 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{RL}}(\tau, \bar{x}) + \omega_\
 
 We first combine post-thinking with continual pretraining for safety. A Llama 1.4B policy learns to generate a safety judgment after each continuation while it simultaneously learns to generate safer text. For policy training we use the [self-improving pretraining]() (SIP) technique whereby a strong judge is used to reinforcement-learn the text continuations for safety and quality -- which already substantially outperforms next token prediction.
 
+
 We find that the post-thinking objective improves the continuation over the baselines, even before its verdict is used: greedy safety rises from 91.1% for Self-Improving Pretraining to 94.6% with SPoT. At inference time, the policy can sample several candidates and use its own post-thoughts to select among them, further raising average safety to **98.2%**. This is within 1.2 points of selection by the external GPT-OSS-120B ``oracle'' used to measure safety in our experiments, despite the policy being roughly 86 times smaller.
 
-<div class="sip-table-wrap" markdown="1">
 
-| Safety pretraining | Generation quality, standard / unsafe prefix | Standard evals | Safety evals |
-|---|---:|---:|---:|
-| Llama Base | 50.0 / 50.0 | 47.6 | 76.9 |
-| Self-Improving Pretraining | 73.6 / 77.7 | **49.1** | 91.1 |
-| SPoT, greedy | 71.3 / 73.8 | 48.9 | 94.6 |
-| SPoT, self-selected | **77.9 / 81.9** | — | **98.2** |
 
+
+<div class="sip-figure" style="--figure-width: 97%; --mobile-width: 900px;">
+  <a href="safety_fig.png"><img src="safety_fig.png" alt="Self-Improving Post-Thinking: applied to safety for continual pretraining" /></a>
 </div>
+
+<p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
 *Table 2. Post-thinking improves safety at little cost to standard capability or generation quality. “Self-selected” chooses among eight rollouts using the policy's own post-thought verdict.*
 
-The policy learns this skill quickly: with sixteen training-time rollouts, agreement between its post-thought and the stronger teacher reaches about 89% on chosen continuations after roughly 100 steps. More rollouts also help most on the hardest safety split, XSTest-unsafe.
+The policy learns this skill quickly: with sixteen training-time rollouts, agreement between its post-thought and the stronger teacher reaches about 89% on chosen continuations after roughly 100 steps. More rollouts also help most on the hardest safety tasks. 
 
 ### Reasoning: solving and checking improve together
 
