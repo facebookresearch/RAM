@@ -158,15 +158,16 @@ We first combine post-thinking with continual pretraining for safety. A Llama 1.
 We find that the post-thinking objective improves the continuation over the baselines, even before its verdict is used: greedy safety rises from 91.1% for Self-Improving Pretraining to 94.6% with SPoT. At inference time, the policy can sample several candidates and use its own post-thoughts to select among them, further raising average safety to **98.2%**. This is within 1.2 points of selection by the external GPT-OSS-120B ``oracle'' used to measure safety in our experiments, despite the policy being roughly 86 times smaller.
 
 
-
-
 <div class="sip-figure" style="--figure-width: 97%; --mobile-width: 900px;">
   <a href="safety_fig.png"><img src="safety_fig.png" alt="Self-Improving Post-Thinking: applied to safety for continual pretraining" /></a>
 </div>
 
 <p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-*Table 2. Post-thinking improves safety at little cost to standard capability or generation quality. “Self-selected” chooses among eight rollouts using the policy's own post-thought verdict.*
+*Table 2. **Self-Improving Post-thinking (SPoT) improves safety at little cost to standard capability or generation quality**, compared
+to standard next-token pretraining (Llama Base 1.4B) and the Self-Improving Pretraining (SIP) baseline.
+Baseline rows report greedy safety rates; Self-Improving Post-Thinking rows (SPoT) report both
+greedy and PoT@8 results, the latter is the rollout selected by the policy’s own post-thought verdict  (marked with an asterisk).*
 
 The policy learns this skill quickly: with sixteen training-time rollouts, agreement between its post-thought and the stronger teacher reaches about 89% on chosen continuations after roughly 100 steps. More rollouts also help most on the hardest safety tasks. 
 
