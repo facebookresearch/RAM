@@ -279,33 +279,37 @@ The confidence signal generalizes beyond the training setup. Although training u
 
 ## Conclusion
 
-These results suggest a broader way to organize model training:
 
-- use an existing post-trained model to **rewrite and judge** data for the next generation of pretraining;
-- teach the new model to **reason before** it generates through Thinking Mid-training; and
-- teach it to **reason after** it generates, so that evaluation becomes an internal capability rather than a permanently external service.
+We introduce Self-Improving Post-Thinking which teaches models to generate critical chain-of-thought *post-thinking* over the text it just generated. T
+hinking about generations after they are generated, trained jointly with the main generation objective, endows a model with judging abilities, in a way making them self-aware of their own failures and successes. 
 
-Across quality, factuality, safety, reasoning, and confidence, the same pattern emerges. Training the judgment does not degrade the underlying generation task. Often, it improves the generation itself. At inference time, the learned judgment can select a better candidate, weight a vote, or decide to abstain.
+We apply post-thinking to three domains: safety, reasoning and confidence judgment.
+Across safety, reasoning and confidence applications, we observed the same high-level pattern: the post-thinking objective can give gains rather than costing generation quality or ability to solve problems --  and the post-thinking judgments are useful at inference time (e.g., for selecting the best rollouts candidate or deciding to abstain in the confidence application).
+When applied to confidence prediction, post-thinking judgments improve calibration and provide signal for meaningfully improving selective prediction, both at the solution level and problem level.
 
-Self-improvement here does not mean that a model trains without an external signal. It means that knowledge acquired late in one training cycle—a strong post-trained model's ability to rewrite, evaluate, and reason—can be moved earlier in the next cycle and gradually distilled into the policy itself.
+Together, our results support that teaching models pre-thinking and post-thinking during midtraining and post-training is a strong approach for improving generation quality, reasoning, and self-judgment.
+
 
 ## Contributors
 
-Ellen Xiaoqing Tan\*, Jack Lanchantin\*, Zichun Yu\*, Polina Kirichenko\*, Shehzaad Dhuliawala, Danwei Li, Thao Nguyen, Jing Xu, Ping Yu, Ilia Kulikov, Sainbayar Sukhbaatar, Jason Weston, Xian Li\*, and Olga Golovneva.
+
+Zichun Yu\*, Polina Kirichenko\*, Sainbayar Sukhbaatar, Jason Weston and Olga Golovneva.
 
 \* Equal contribution.
 
 ## More details
 
-See the [full technical report](https://arxiv.org/abs/2601.21343) for complete experimental details. The companion [Thinking Mid-training blog](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/) covers Chapter 2.
+See the [full technical report](https://arxiv.org/abs/2601.21343) Chapter 3 for complete experimental details. 
+
+The companion [Thinking Mid-training blog](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/) covers the previous chapter.
 
 ## Citation
 
 To reference this work, please use:
 
 ```bibtex
-@misc{tan2026selfimprovingpretrainingusingposttrained,
-      title={Self-Improving Pretraining: using post-trained models to pretrain better models},
+@misc{tan2026selfimprovingtrainingandthinking,
+      title={Self-Improving Training & Thinking},
       author={Ellen Xiaoqing Tan, Jack Lanchantin, Zichun Yu, Polina Kirichenko, Shehzaad Dhuliawala, Danwei Li, Thao Nguyen, Jing Xu, Ping Yu, Ilia Kulikov, Sainbayar Sukhbaatar, Jason Weston, Xian Li, Olga Golovneva},
       year={2026},
       eprint={2601.21343},
