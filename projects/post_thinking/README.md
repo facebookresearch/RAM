@@ -201,6 +201,22 @@ Next, we combine post-thinking with training both pre-thinking and answering wit
 *Figure 3. **Three-stage training for reasoning.** Each row is one stage, initialized from the one above. Mid-training uses web and math documents (DCLM and FineMath) with GPT-OSS-120B as the judge; both post-training stages use DAPO-Math-14k, where Math-Verify checks the answer A′ against the reference A\*. The two SFT stages imitate the teacher's post-thought (PoT); the RL stage instead rewards the policy's own post-thought for agreeing with Math-Verify.*
 -->
 
+
+<div class="sip-figure" style="--figure-width: 87%; --mobile-width: 900px;">
+  <a href="reasoning_fig.png"><img src="reasoning_fig.png" alt="Self-Improving Post-Thinking: applied to math reasoning" /></a>
+</div>
+
+<p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+
+*Table 4. **Reasoning Post-Thinking for Math and Science.** Each prompt is answered 8 times; Avg@8 averages
+results, majority@8 takes the majority answer (after clustering by equivalence), PoT@8 picks the rollout the model’s
+own post-thinking self-judge scores highest, and PoT_weighted_majority@8 weights each cluster by its summed
+self-judge score. The three post-thinking rows form a training pipeline, each initialised from the one above; + RL
+post-training is a sibling branch off the same initialisation (separate baseline). Neither of the first two rows has been
+trained to post-think, so neither produces a usable verdict and their self-judge cells are left empty. Post-thinking
+brings gains across all datasets and metrics.*
+
+
 **Learning to judge makes the model a better solver.** Average accuracy (Avg@8) rises at every stage, from 34.8 to 45.0 (Table 3). The fair comparison is the same starting model post-trained with RL but without post-thinking, which reaches 40.3: SPoT is 4.7 points ahead before its verdict is used at all. The training curves in Figure 4 show the two sides improving together rather than trading off.
 
 <div class="sip-figure" style="--figure-width: 100%; --mobile-width: 1000px;">
