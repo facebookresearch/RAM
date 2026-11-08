@@ -154,7 +154,7 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{RL}}(\tau, \bar{x}) + \omega_\
 
 We first combine post-thinking with continual pretraining for safety. A Llama 1.4B policy learns to generate a safety judgment after each continuation while it simultaneously learns to generate safer text. For policy training we use the [self-improving pretraining]() (SIP) technique whereby a strong judge is used to reinforcement-learn the text continuations for safety and quality -- which already substantially outperforms next token prediction.
 
-We find that the post-thinking objective improves the continuation the baselines, even before its verdict is used: greedy safety rises from 91.1% for Self-Improving Pretraining to 94.6% with SPoT. At inference time, the policy can sample several candidates and use its own post-thoughts to select among them, further raising average safety to **98.2%**. This is within 1.2 points of selection by the external GPT-OSS-120B ``oracle'' used to measure safety in our experiments, despite the policy being roughly 86 times smaller.
+We find that the post-thinking objective improves the continuation over the baselines, even before its verdict is used: greedy safety rises from 91.1% for Self-Improving Pretraining to 94.6% with SPoT. At inference time, the policy can sample several candidates and use its own post-thoughts to select among them, further raising average safety to **98.2%**. This is within 1.2 points of selection by the external GPT-OSS-120B ``oracle'' used to measure safety in our experiments, despite the policy being roughly 86 times smaller.
 
 <div class="sip-table-wrap" markdown="1">
 
@@ -171,7 +171,7 @@ We find that the post-thinking objective improves the continuation the baselines
 
 The policy learns this skill quickly: with sixteen training-time rollouts, agreement between its post-thought and the stronger teacher reaches about 89% on chosen continuations after roughly 100 steps. More rollouts also help most on the hardest safety split, XSTest-unsafe.
 
-## Reasoning: solving and checking improve together
+### Reasoning: solving and checking improve together
 
 Next, we combine post-thinking with the model produced by [Thinking Mid-training](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/). That model already reasons before answering; we teach it to judge the correctness of its completed solution afterward, in three consecutive stages that differ in data and supervision:
 
@@ -215,7 +215,7 @@ Next, we combine post-thinking with the model produced by [Thinking Mid-training
 
 *Table 3. Post-thinking improves both solving and selection for Llama 3.1 8B after Thinking Mid-training, averaged over MATH-500, GSM8K, AMC23, and OlympiadBench with eight samples per problem. Avg@8 is the accuracy of a single sample; PoT@8 picks the sample the model's own post-thought rates highest; majority@8 and PoT\_weighted\_majority@8 vote over the eight answers, unweighted and weighted by post-thought verdicts. The three post-thinking rows form a chain, each initialized from the one above; “+ RL post-training” branches from the same initialization without post-thinking. Rows without post-thinking produce no verdict, so their PoT columns are empty.*
 
-## Confidence: knowing when not to answer
+### Confidence: learns to know when not to answer
 
 A binary correct/incorrect judgment is useful, but many applications need calibrated confidence. We therefore train Qwen3 4B to emit a numeric confidence estimate after its solution. The solution receives the usual correctness reward, while the post-thought receives a reward based on the Brier score:
 
@@ -243,7 +243,7 @@ The resulting confidence enables **selective prediction**: accept an answer when
 
 The confidence signal generalizes beyond the training setup. Although training uses answerable math problems, post-thinking becomes better at identifying unanswerable questions, including questions outside mathematics. The solve-time objective may still pressure the model to produce an answer, but the subsequent judgment can flag unsupported assumptions and assign low confidence.
 
-## A different training pipeline
+## Conclusion
 
 These results suggest a broader way to organize model training:
 
