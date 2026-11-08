@@ -103,14 +103,14 @@ self-judging which translates to safer, more accurate and reliable generations a
 
 ## Post-Thinking
 
-**post-thinking** is a reasoning phase generated after the answer allowing the model to be critical and ``self-aware'' of the quality of its own generations. 
-A complete generation has the form
+**Post-thinking** is a reasoning phase generated after the answer allowing the model to be critical and ``self-aware'' of the quality of its own generations. 
+In this setting, a complete generation has the form
 
 $$
 [\langle\text{pre}\rangle,\ \tau,\ \langle/\text{pre}\rangle,\ \bar{x},\ \langle\text{post}\rangle,\ \psi,\ \langle/\text{post}\rangle],
 $$
 
-where $\tau$ is the usual reasoning trace, $\bar{x}$ is the answer, and $\psi$ is a critical assessment ending in a structured verdict—for example, *Safe* or *Unsafe*, *Correct* or *Incorrect*, or a confidence value between 0 and 1.
+where $\tau$ is the usual chain-of-thought reasoning trace (which we call pre-thinking as it occurs before the answer), $\bar{x}$ is the answer, and $\psi$ is a critical assessment, which we call post-thinking, that occurs *after* the answer and ends in a structured verdict —for example, *Safe* or *Unsafe*, *Correct* or *Incorrect*, or a confidence value between 0 and 1.
 
 We train this model in combination with other recently introduced learning methods, and call the resulting training 
 recipe **Self-Improving Post-Thinking (SPoT)**. 
