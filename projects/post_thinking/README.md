@@ -63,15 +63,28 @@ MathJax = {
 # Self-Improving Post-Thinking
 
 
-Large language models routinely produce generations with unsafe outputs, flawed reasoning and
-overconfident mistakes. In this work, we argue that a crucial missing ingredient in LLMs is
-a built-in self-judging ability. We show that we can train models for self-judging, and obtain
+Large language models routinely produce generations with unsafe outputs, flawed reasoning and overconfident mistakes. In this work, we argue that a crucial missing ingredient in LLMs is a built-in self-judging ability. We show that we can train models for self-judging, and obtain
 models with the ability to judge their own generations and to know when they are likely to
 be wrong. 
 
 We thus introduce **Self-Improving Post-Thinking**: after generating a response, the model
 emits a critical chain-of-thought and a verdict over its own just-generated text, allowing it to
 judge the generation along any axis of interest. 
+
+
+<div class="sip-figure" style="--figure-width: 97%; --mobile-width: 900px;">
+  <a href="post_thinking.png"><img src="post_thinking.png" alt="Self-Improving Post-Thinking: the model reasons before an answer, generates the answer, then reasons after it to judge its own output" /></a>
+</div>
+
+<p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+
+*Figure 1. **Self-Improving Post-Thinking.** Given an input, the model generates both standard chain-of-thought
+reasoning (i.e., pre-thinking) followed by its response (answer), and then post-thinking reasoning that self-judges its own
+generation. Post-thinking judgments are then used to (i) steer away to aligned, calibrated and high quality answers;
+and (ii) distill self-evaluation abilities to the policy through fine-tuning. The model can learns all these abilities (pre-,
+answer, and post-thoughts) simultaneously through reinforcement learning.*
+
+
 
 We apply post-thinking to both mid-training and post-training, teaching models to produce post-thoughts 
 that assess their own safety, correctness, and confidence, while also improving the generations themselves.
@@ -88,77 +101,10 @@ e.g. improving selective accuracy by +5pp on average on out-of-distribution benc
 providing 90% coverage. These results show we can direct model’s reasoning capabilities into
 self-judging which translates to safer, more accurate and reliable generations at inference time.
 
-<div class="sip-figure" style="--figure-width: 97%; --mobile-width: 900px;">
-  <a href="post_thinking.png"><img src="post_thinking.png" alt="Self-Improving Post-Thinking: the model reasons before an answer, generates the answer, then reasons after it to judge its own output" /></a>
-</div>
+## Post-Thinking
 
-<p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
-
-*Figure 1. **Self-Improving Post-Thinking.** Given an input, the model first produces standard chain-of-thought reasoning (pre-thinking), then an answer, and finally post-thinking that judges the answer. The judgment can steer generation toward aligned, calibrated, high-quality answers and can be distilled back into the policy. All three abilities can be learned together with reinforcement learning.*
-
-
-## Part I: Reinventing pretraining as sequence learning
-
-Standard language-model pretraining rewards the exact next token found in the training corpus. But the text found on the web is not uniformly high quality, safe, or factual, and reproducing a flawed continuation exactly is not always what we want a deployed model to do.
-
-We instead formulate pretraining as a **sequence-generation task**. We split streaming documents into a prefix and a suffix, then train the policy to generate a high-quality suffix of length $N$ conditioned on the prefix:
-
-$$
-\bar{x}_j \sim \pi(\cdot \mid x_{1,\ldots,j-1}).
-$$
-
-The original suffix remains useful as a reference, but it is no longer treated as the only acceptable target. This opens the door to training on improved targets and to comparing complete candidate generations along the properties we care about.
-
-## A post-trained model becomes a rewriter and a judge
-
-The key resource in our setup is an existing strong, post-trained model. It has already learned from both pretraining and post-training data, so we use that knowledge to provide a better signal to the next policy model in two roles.
-
-**As a rewriter**, the teacher improves the original suffix. A quality rewrite can repair weak text; a safety rewrite can show how to steer away from an unsafe continuation while preserving the unsafe prefix as context; and other rewrites can introduce diversity, knowledge, or reasoning.
-
-**As a judge**, the teacher scores several possible continuations:
-
-- the original suffix from the pretraining document;
-- a rewritten suffix from the teacher; and
-- $K$ online rollouts from the current policy.
-
-The policy then learns from the highest- and lowest-scoring candidates. We study reward-filtered negative log-likelihood and online DPO. Online DPO is particularly useful here because it can compare off-policy sequences - the original and rewritten suffixes - with fresh policy rollouts.
-
-At the start of training, policy rollouts tend to be poor, so the original suffix and rewrite provide the strongest targets. Later, as the policy improves, the judge increasingly selects the policy's own generations. In this sense, the training signal becomes progressively more self-generated.
-
-<div class="sip-figure" style="--figure-width: 100%; --mobile-width: 900px;">
-  <a href="rollout_chosen_rate.png"><img src="rollout_chosen_rate.png" alt="Rollout chosen rate rises over the course of from-scratch and continual self-improving pretraining" /></a>
-</div>
-
-<p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
-
-*Figure 2. **The policy's own generations become useful training targets.** Rollout chosen rate on the training data during from-scratch pretraining (left) and continual pretraining (right). Initially, policy rollouts receive low rewards and the original or rewritten suffix is chosen more often. As the policy improves, the judge increasingly rewards its high-quality rollouts.*
-
-## Better generations from the ground up
-
-We apply the method to three objectives: overall generation quality, factuality, and safety. Experiments cover both continual pretraining from a Llama 2 1.4B checkpoint and training the same architecture from scratch.
-
-The headline result is that sequence-level reinforcement during pretraining improves the target behavior without sacrificing standard capabilities. In continual pretraining, the method reaches up to an **86.3% generation-quality win rate** over standard pretraining, alongside **36.2% relative improvement in factuality** and **18.5% relative improvement in safety**. In from-scratch training, it improves generation-quality win rate by 31.1 percentage points and safety by 14.4% relative.
-
-<div class="sip-table-wrap" markdown="1">
-
-| Pretraining objective | Baseline | Self-Improving Pretraining | What changes |
-|---|---:|---:|---|
-| Factuality, SlimPajama pointwise | 35.4 | **63.5** | +28.1 points |
-| Factuality, FActScore pairwise | 48.9 | **69.3** | +20.4 points |
-| Safety, RedPajama held-out | 67.4 | **93.4** | +26.0 points |
-| Safety, ToxiGen | 82.0 | **93.1** | +11.1 points |
-
-</div>
-
-*Table 1. Selected continual-pretraining results. The factuality baseline is standard continued pretraining on SlimPajama; the safety baseline is standard continued pretraining on RedPajama. Full results and evaluation details are in Chapter 1 of the paper.*
-
-The number of online rollouts matters. With more candidates, the judge has a better chance of finding a strong policy-generated continuation. In the safety setting, increasing from one to sixteen rollouts raises both generation quality and the average safety score. Rewrites are most useful early; multiple on-policy candidates become increasingly valuable as the model improves.
-
-## Part II: From generating better text to judging it
-
-Self-Improving Pretraining teaches a model to produce better continuations, and [Thinking Mid-training](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/) teaches it to reason before producing them. But one ability is still missing: after a model answers, can it recognize whether its answer is safe, correct, or trustworthy?
-
-We introduce **post-thinking**, a critical reasoning phase generated after the answer. A complete generation has the form
+**post-thinking** is a reasoning phase generated after the answer allowing the model to be critical and ``self-aware'' of the quality of its own generations. 
+A complete generation has the form
 
 $$
 [\langle\text{pre}\rangle,\ \tau,\ \langle/\text{pre}\rangle,\ \bar{x},\ \langle\text{post}\rangle,\ \psi,\ \langle/\text{post}\rangle],
@@ -166,7 +112,9 @@ $$
 
 where $\tau$ is the usual reasoning trace, $\bar{x}$ is the answer, and $\psi$ is a critical assessment ending in a structured verdict—for example, *Safe* or *Unsafe*, *Correct* or *Incorrect*, or a confidence value between 0 and 1.
 
-We call the resulting training recipe **Self-Improving Post-Thinking (SPoT)**. It can be introduced during continual pretraining, composed with Thinking Mid-training, or added during post-training.
+We train this model in combination with other recently introduced learning methods, and call the resulting training 
+recipe **Self-Improving Post-Thinking (SPoT)**. 
+It can be introduced during continual pretraining, midtraining, or during post-training.
 
 ## How Self-Improving Post-Thinking is trained
 
