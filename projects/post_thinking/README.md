@@ -217,8 +217,9 @@ trained to post-think, so neither produces a usable verdict and their self-judge
 brings gains across all datasets and metrics.*
 
 
-**Learning to judge makes the model a better solver.** Average accuracy (Avg@8) rises at every stage, from 34.8 to 45.0 (Table 3). The fair comparison is the same starting model post-trained with RL but without post-thinking, which reaches 40.3: SPoT is 4.7 points ahead before its verdict is used at all. The training curves in Figure 4 show the two sides improving together rather than trading off.
+**Learning to judge makes the model a better solver.** We find that average accuracy (Avg@8) rises at every stage, from 34.8 to 45.0. The fair comparison is the same starting model post-trained with RL but without post-thinking, which reaches 40.3: SPoT is 4.7 points ahead before its verdict is used at all. 
 
+<!--
 <div class="sip-figure" style="--figure-width: 100%; --mobile-width: 1000px;">
   <a href="reasoning_training_dynamics.png"><img src="reasoning_training_dynamics.png" alt="Training dynamics for post-thinking SFT during mid-training, post-thinking SFT during post-training, and post-thinking RL during post-training" /></a>
 </div>
@@ -226,11 +227,13 @@ brings gains across all datasets and metrics.*
 <p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
 *Figure 4. **Solving and checking are learned together.** Training dynamics across three consecutive stages, each initialized from the previous one. Blue tracks the continuation or answer reward; orange tracks post-thought loss in the SFT stages and verdict-match reward in the RL stage. For most of training, the solve side and self-judgment side improve together rather than trading off.*
+-->
 
 **Post-thought verdicts improve both answer selection and voting.** Picking the solution that the model's own post-thought rates highest (PoT@8) raises average accuracy from 45.0 to 51.2. That single self-selected answer already beats the baseline's majority vote over all eight samples, 49.5. Weighting the vote by post-thought verdicts gives the best result in the table, 53.8 against 52.0 for plain voting, and it beats plain voting on all five benchmarks we evaluate.
 
 **The gain from self-selection grows at every stage, most under RL.** The margin of PoT@8 over Avg@8 grows from 2.8 points after the first stage to 3.4 after the second and 6.2 after the third. The largest jump comes from RL, where the verdict is rewarded for agreeing with a verifier instead of for imitating a teacher.
 
+<!--
 <div class="sip-table-wrap" markdown="1">
 
 | Math reasoning | Avg@8 | PoT@8 | majority@8 | PoT\_weighted\_majority@8 |
@@ -244,6 +247,7 @@ brings gains across all datasets and metrics.*
 </div>
 
 *Table 3. Post-thinking improves both solving and selection for Llama 3.1 8B after Thinking Mid-training, averaged over MATH-500, GSM8K, AMC23, and OlympiadBench with eight samples per problem. Avg@8 is the accuracy of a single sample; PoT@8 picks the sample the model's own post-thought rates highest; majority@8 and PoT\_weighted\_majority@8 vote over the eight answers, unweighted and weighted by post-thought verdicts. The three post-thinking rows form a chain, each initialized from the one above; “+ RL post-training” branches from the same initialization without post-thinking. Rows without post-thinking produce no verdict, so their PoT columns are empty.*
+-->
 
 ### Confidence: learns to know when not to answer
 
