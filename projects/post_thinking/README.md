@@ -158,7 +158,7 @@ We first combine post-thinking with continual pretraining for safety. A Llama 1.
 We find that the post-thinking objective improves the continuation over the baselines, even before its verdict is used: greedy safety rises from 91.1% for Self-Improving Pretraining to 94.6% with SPoT. At inference time, the policy can sample several candidates and use its own post-thoughts to select among them, further raising average safety to **98.2%**. This is within 1.2 points of selection by the external GPT-OSS-120B ``oracle'' used to measure safety in our experiments, despite the policy being roughly 86 times smaller.
 
 
-<div class="sip-figure" style="--figure-width: 97%; --mobile-width: 900px;">
+<div class="sip-figure" style="--figure-width: 87%; --mobile-width: 900px;">
   <a href="safety_fig.png"><img src="safety_fig.png" alt="Self-Improving Post-Thinking: applied to safety for continual pretraining" /></a>
 </div>
 
@@ -166,19 +166,32 @@ We find that the post-thinking objective improves the continuation over the base
 
 *Table 2. **Self-Improving Post-thinking (SPoT) improves safety at little cost to standard capability or generation quality**, compared
 to standard next-token pretraining (Llama Base 1.4B) and the Self-Improving Pretraining (SIP) baseline.
-Baseline rows report greedy safety rates; Self-Improving Post-Thinking rows (SPoT) report both
+Baseline rows report greedy safety rates; Self-Improving Post-Thinking row (SPoT) reports both
 greedy and PoT@8 results, the latter is the rollout selected by the policy’s own post-thought verdict  (marked with an asterisk).*
 
 The policy learns this skill quickly: with sixteen training-time rollouts, agreement between its post-thought and the stronger teacher reaches about 89% on chosen continuations after roughly 100 steps. More rollouts also help most on the hardest safety tasks. 
 
+
+<div class="sip-figure" style="--figure-width: 87%; --mobile-width: 900px;">
+  <a href="safety2_fig.png"><img src="safety2_fig.png" alt="Self-Improving Post-Thinking: applied to safety for continual pretraining" /></a>
+</div>
+
+<p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+
+*Table 3. **Self-Improving Post-Thinking for safety varying the number of training-time rollouts and teacher judge.** 
+Llama Base and SIP use the greedy continuation (the model emits no
+post-thought verdict to select with), and SPoT uses PoT@8 — the rollout selected by the policy’s own post-thought
+verdict.*
+
 ### Reasoning: solving and checking improve together
 
-Next, we combine post-thinking with the model produced by [Thinking Mid-training](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/). That model already reasons before answering; we teach it to judge the correctness of its completed solution afterward, in three consecutive stages that differ in data and supervision:
+Next, we combine post-thinking with training both pre-thinking and answering with RL at midtraining time, an extension of [Thinking Mid-training](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/). That method already trains reasoning before answering with pretraining documents with RL; we teach it to also judge the correctness of its completed solution afterward. We consider three consecutive stages that differ in data and supervision:
 
 1. **Post-thinking SFT during mid-training** continues on the Thinking Mid-training corpus of web and math documents (DCLM and FineMath). A teacher judge (GPT-OSS-120B) rewards each continuation and supplies the target post-thought.
 2. **Post-thinking SFT during post-training** switches to competition math problems (DAPO-Math-14k). A rule-based verifier (Math-Verify) now rewards each final answer, while the post-thought is still supervised by the teacher.
 3. **Post-thinking RL during post-training** stays on the same math problems but removes the teacher: the post-thought is trained with the verdict-match reward above, scored against the verifier.
 
+<!--
 <div class="sip-figure" style="--figure-width: 100%; --mobile-width: 1000px;">
   <a href="reasoning_pipeline.png"><img src="reasoning_pipeline.png" alt="Three-stage training pipeline: post-thinking SFT during mid-training, post-thinking SFT during post-training, and post-thinking RL during post-training" /></a>
 </div>
@@ -186,6 +199,7 @@ Next, we combine post-thinking with the model produced by [Thinking Mid-training
 <p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
 *Figure 3. **Three-stage training for reasoning.** Each row is one stage, initialized from the one above. Mid-training uses web and math documents (DCLM and FineMath) with GPT-OSS-120B as the judge; both post-training stages use DAPO-Math-14k, where Math-Verify checks the answer A′ against the reference A\*. The two SFT stages imitate the teacher's post-thought (PoT); the RL stage instead rewards the policy's own post-thought for agreeing with Math-Verify.*
+-->
 
 **Learning to judge makes the model a better solver.** Average accuracy (Avg@8) rises at every stage, from 34.8 to 45.0 (Table 3). The fair comparison is the same starting model post-trained with RL but without post-thinking, which reaches 40.3: SPoT is 4.7 points ahead before its verdict is used at all. The training curves in Figure 4 show the two sides improving together rather than trading off.
 
