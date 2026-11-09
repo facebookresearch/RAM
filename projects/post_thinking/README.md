@@ -275,6 +275,9 @@ At a threshold of 0.5, confidence post-thinking improves macro-average selective
 <p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
 *Table 4. Confidence Post-Thinking (SPoT) results for Qwen3 4B, macro-averaged over MATH-500, GSM8K, AMC23, OlympiadBench, and GPQA-Diamond. SPoT improves macro-average selective accuracy while maintaining comparable (average) accuracy, i.e. can select correct answers when it is confident.*
+**Self-Improving Post-Thinking improves confidence estimation and translates to improvements in selective accuracy.**
+When abstaining on solution rollouts whose predicted confidence is below a threshold, across all metrics, post-thinking
+for confidence brings improvements in both accuracy and calibration metrics.*
 
 
 
