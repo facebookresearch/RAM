@@ -218,7 +218,7 @@ trained to post-think, so neither produces a usable verdict and their self-judge
 brings gains across all datasets and metrics.*
 
 
-**Learning to judge makes the model a better solver.** We find that average accuracy (Avg@8) rises at every stage, from 34.8 to 45.0. For comparison, the same starting model post-trained with RL but without post-thinking reaches 40.3: SPoT is 4.7 points ahead before its verdict is used at all. 
+**Learning to judge makes the model a better solver.** We find that average accuracy over all five benchmarks (Avg@8) rises at every stage, from 34.1 to 42.8. For comparison, the same starting model post-trained with RL but without post-thinking reaches 38.7: SPoT is about 4 points ahead before its verdict is used at all. 
 
 <!--
 <div class="sip-figure" style="--figure-width: 100%; --mobile-width: 1000px;">
@@ -230,9 +230,9 @@ brings gains across all datasets and metrics.*
 *Figure 4. **Solving and checking are learned together.** Training dynamics across three consecutive stages, each initialized from the previous one. Blue tracks the continuation or answer reward; orange tracks post-thought loss in the SFT stages and verdict-match reward in the RL stage. For most of training, the solve side and self-judgment side improve together rather than trading off.*
 -->
 
-**Post-thought verdicts improve both answer selection and voting.** Picking the solution that the model's own post-thought rates highest (PoT@8) raises average accuracy from 45.0 to 51.2. That single self-selected answer already beats the baseline's majority vote over all eight samples, 49.5. Weighting the vote by post-thought verdicts gives the best result in the table, 53.8 against 52.0 for plain voting, and it beats plain voting on all five benchmarks we evaluate.
+**Post-thought verdicts improve both answer selection and voting.** Picking the solution that the model's own post-thought rates highest (PoT@8) raises average accuracy from 42.8 to 48.2. That single self-selected answer already beats the baseline's majority vote over all eight samples, 47.2. Weighting the vote by post-thought verdicts gives the best average in the table, 51.1 against 49.4 for plain voting, and it beats plain voting on all five benchmarks we evaluate.
 
-**The gain from self-selection grows at every stage, most under RL.** The margin of PoT@8 over Avg@8 grows from 2.8 points after the first stage to 3.4 after the second and 6.2 after the third. The largest jump comes from RL, where the verdict is rewarded for agreeing with a verifier instead of for imitating a teacher.
+**The gain from self-selection grows at every stage, most under RL.** The margin of PoT@8 over Avg@8 grows from 2.1 points after the first stage to 3.6 after the second and 5.4 after the third. The largest jump comes from RL, where the verdict is rewarded for agreeing with a verifier instead of for imitating a teacher.
 
 <!--
 <div class="sip-table-wrap" markdown="1">
