@@ -136,8 +136,8 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 - **Thinking Mid-training: RL of Interleaved Reasoning** [[paper]](https://arxiv.org/abs/2601.21343) [[blog]](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/) [[tweet]](https://x.com/jaseweston/status/2041864833214095484)
   _An intermediate SFT+RL mid-training phase to teach models how to think._
 
-- **Self-Improving Pretraining** [[paper]](https://arxiv.org/abs/2601.21343) [[blog]](https://facebookresearch.github.io/RAM/blogs/self-improving-pretraining/) [[tweet]](https://x.com/jaseweston/status/2017071377866494226)
-  _Reinvents pretraining with sequence-based RL to improve safety, quality and factuality._
+- **Self-Improving Post-Thinking** [[paper]](https://arxiv.org/abs/2601.21343) [[blog]](https://facebookresearch.github.io/RAM/blogs/post_thinking/)
+  _Teaches models to judge the safety, correctness and confidence of their own generations after answering._
   
 - **Recycling the Web** [[paper]](https://arxiv.org/abs/2506.04689)
   _A method to create more high quality pretraining data via rewriting low quality documents._
