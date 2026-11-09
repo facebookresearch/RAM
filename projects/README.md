@@ -251,6 +251,9 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 #### _memory_
 
+- **Self-Improving Memory** [[blog]](https://facebookresearch.github.io/RAM/blogs/self_improving_memory/)
+  _We automate harness design and distill the learned behavior into model weights, so that one model manages its memory across tasks under a single generic harness._
+
 - **Reverse Training** [[paper]](https://arxiv.org/abs/2403.13799)
   _Method for pretraining that helps the reversal curse & improves performance._
 
