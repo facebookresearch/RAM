@@ -152,7 +152,7 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{RL}}(\tau, \bar{x}) + \omega_\
 
 ### Safety: a policy learns to police its own generations
 
-We first combine post-thinking with continual pretraining for safety. A Llama 1.4B policy learns to generate a safety judgment after each continuation while it simultaneously learns to generate safer text. For policy training we use the [self-improving pretraining]() (SIP) technique whereby a strong judge is used to reinforcement-learn the text continuations for safety and quality -- which already substantially outperforms next-token prediction.
+We first combine post-thinking with continual pretraining for safety. A Llama 1.4B policy learns to generate a safety judgment after each continuation while it simultaneously learns to generate safer text. For policy training we use the [self-improving pretraining](https://arxiv.org/abs/2601.21343) (SIP) technique whereby a strong judge is used to reinforcement-learn the text continuations for safety and quality -- which already substantially outperforms next-token prediction.
 
 
 We find that the post-thinking objective improves the continuation over the baselines, even before its verdict is used: greedy safety rises from 91.1% for Self-Improving Pretraining to 94.6% with SPoT. At inference time, the policy can sample several candidates and use its own post-thoughts to select among them (PoT@8 when choosing among eight candidates), further raising average safety to **98.2%**. This is within 1.2 points of selection by the external GPT-OSS-120B "oracle" used to measure safety in our experiments, despite the policy being roughly 86 times smaller.
@@ -164,7 +164,7 @@ We find that the post-thinking objective improves the continuation over the base
 
 <p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-*Table 2. **Self-Improving Post-Thinking (SPoT) improves safety at little cost to standard capability or generation quality**, compared
+*Table 1. **Self-Improving Post-Thinking (SPoT) improves safety at little cost to standard capability or generation quality**, compared
 to standard next-token pretraining (Llama Base 1.4B) and the Self-Improving Pretraining (SIP) baseline.
 Baseline rows report greedy safety rates; Self-Improving Post-Thinking row (SPoT) reports both
 greedy and PoT@8 results, the latter is the rollout selected by the policy's own post-thought verdict  (marked with an asterisk).*
@@ -178,7 +178,7 @@ The policy learns this skill quickly: with sixteen training-time rollouts, agree
 
 <p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-*Table 3. **Self-Improving Post-Thinking for safety varying the number of training-time rollouts and teacher judge.** 
+*Table 2. **Self-Improving Post-Thinking for safety varying the number of training-time rollouts and teacher judge.** 
 Llama Base and SIP use the greedy continuation (the model emits no
 post-thought verdict to select with), and SPoT uses PoT@8 — the rollout selected by the policy's own post-thought
 verdict.*
@@ -187,7 +187,7 @@ verdict.*
 
 Next, we combine post-thinking with training both pre-thinking and answering with RL at mid-training time, an extension of [Thinking Mid-training](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/). That method already uses RL to train reasoning before answering on pretraining documents; we teach it to also judge the correctness of its completed solution afterward. We consider three consecutive stages that differ in data and supervision:
 
-1. **Post-thinking SFT during mid-training** continues on the Thinking Mid-training corpus of web and math documents (DCLM and FineMath). A teacher judge (GPT-OSS-120B) rewards each continuation and supplies the target post-thought.
+1. **Post-thinking SFT during mid-training** trains Llama 3.1 8B and continues on the Thinking Mid-training corpus of web and math documents (DCLM and FineMath). A teacher judge (GPT-OSS-120B) rewards each continuation and supplies the target post-thought.
 2. **Post-thinking SFT during post-training** switches to competition math problems (DAPO-Math-14k). A rule-based verifier (Math-Verify) now rewards each final answer, while the post-thought is still supervised by the teacher.
 3. **Post-thinking RL during post-training** stays on the same math problems but removes the teacher: the post-thought is trained with the verdict-match reward above, scored against the verifier.
 
@@ -208,7 +208,7 @@ Next, we combine post-thinking with training both pre-thinking and answering wit
 
 <p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-*Table 4. **Reasoning Post-Thinking for Math and Science.** Each prompt is answered 8 times; Avg@8 averages
+*Table 3. **Reasoning Post-Thinking for Math and Science.** Each prompt is answered 8 times; Avg@8 averages
 results, majority@8 takes the majority answer (after clustering by equivalence), PoT@8 picks the rollout the model's
 own post-thinking self-judge scores highest, and PoT\_weighted\_majority@8 weights each cluster by its summed
 self-judge score. The three post-thinking rows form a training pipeline, each initialized from the one above; + RL
@@ -217,7 +217,7 @@ trained to post-think, so neither produces a usable verdict and their self-judge
 brings gains across all datasets and metrics.*
 
 
-**Learning to judge makes the model a better solver.** We find that average accuracy (Avg@8) rises at every stage, from 34.8 to 45.0. The fair comparison is the same starting model post-trained with RL but without post-thinking, which reaches 40.3: SPoT is 4.7 points ahead before its verdict is used at all. 
+**Learning to judge makes the model a better solver.** We find that average accuracy (Avg@8) rises at every stage, from 34.8 to 45.0. For comparison, the same starting model post-trained with RL but without post-thinking reaches 40.3: SPoT is 4.7 points ahead before its verdict is used at all. 
 
 <!--
 <div class="sip-figure" style="--figure-width: 100%; --mobile-width: 1000px;">
@@ -289,7 +289,7 @@ The confidence signal generalizes beyond the training setup. Although training u
 
 <p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-*Table 5. **Self-Improving Post-Thinking for confidence generalizes to abstention on unanswerable questions.** We report AUROC using predicted confidence values from each model as a signal to differentiate between (1) correct solutions for answerable problems, and (2) everything else (i.e., incorrect solutions for answerable problems or unanswerable problems). Post-thinking improves the AUROC for all benchmarks, although it was never explicitly trained to
+*Figure 2. **Self-Improving Post-Thinking for confidence generalizes to abstention on unanswerable questions.** We report AUROC using predicted confidence values from each model as a signal to differentiate between (1) correct solutions for answerable problems, and (2) everything else (i.e., incorrect solutions for answerable problems or unanswerable problems). Post-thinking improves the AUROC for all benchmarks, although it was never explicitly trained to
 detect unanswerable questions. Note that Math PreT (vanilla correctness RL) decreases AUROC compared to the initial checkpoint baseline on 2 out of 4 benchmarks.*
 
 
@@ -324,8 +324,8 @@ To reference this work, please use:
 
 ```bibtex
 @misc{tan2026selfimprovingtrainingandthinking,
-      title={Self-Improving Training & Thinking},
-      author={Ellen Xiaoqing Tan, Jack Lanchantin, Zichun Yu, Polina Kirichenko, Shehzaad Dhuliawala, Danwei Li, Thao Nguyen, Jing Xu, Ping Yu, Ilia Kulikov, Sainbayar Sukhbaatar, Jason Weston, Xian Li, Olga Golovneva},
+      title={Self-Improving Training \& Thinking},
+      author={Ellen Xiaoqing Tan and Jack Lanchantin and Zichun Yu and Polina Kirichenko and Shehzaad Dhuliawala and Danwei Li and Thao Nguyen and Jing Xu and Ping Yu and Ilia Kulikov and Sainbayar Sukhbaatar and Jason Weston and Xian Li and Olga Golovneva},
       year={2026},
       eprint={2601.21343},
       archivePrefix={arXiv},
