@@ -218,7 +218,7 @@ trained to post-think, so neither produces a usable verdict and their self-judge
 brings gains across all datasets and metrics.*
 
 
-**Learning to judge makes the model a better solver.** We find that average accuracy over all five benchmarks (Avg@8; all averages below are computed the same way) rises at every stage, from 34.1 to 42.8. For comparison, the same starting model post-trained with RL but without post-thinking reaches 38.7: SPoT is about 4 points ahead before its verdict is used at all. 
+**Learning to judge makes the model a better solver.** We find that average accuracy over all five benchmarks (Avg@8) rises at every stage, from 34.1 to 42.8. For comparison, the same starting model post-trained with RL but without post-thinking reaches 38.7: SPoT is about 4 points ahead before its verdict is used at all. 
 
 <!--
 <div class="sip-figure" style="--figure-width: 100%; --mobile-width: 1000px;">
