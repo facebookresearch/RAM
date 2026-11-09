@@ -264,7 +264,7 @@ We compare to baselines of (1) no confidence estimation at all (always predictin
 solution and final answer and instruct it to generate judgment and confidence in the second forward pass. 
 
 
-At a threshold of 0.5, confidence post-thinking improves macro-average selective accuracy from 67.56% (no confidence) 78.64% (prompted confidence) to **82.76%**, while maintaining comparable raw accuracy. It also improves self-judge AUROC from 0.610 to **0.836**.
+At a threshold of 0.5, confidence post-thinking improves macro-average selective accuracy from 67.56% (no confidence measure used) or 78.64% (prompted confidence) to **82.76%**, while maintaining comparable raw accuracy. It also improves self-judge AUROC from 0.610 to **0.836**.
 
 
 
@@ -289,13 +289,12 @@ The confidence signal generalizes beyond the training setup. Although training u
 
 <p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-*Table 5. **Self-Improving Post-Thinking for confidence generalizes to abstention on unanswerable questions.** We report AUROC using predicted confidence values from each model as a signal to differentiate between (1) correct solutions for answerable problems, and (2) everything else (i.e., incorrect solutions for answerable problems or unanswerable problems). Post-thinking improves the AUROC value for all benchmarks, although it was never explicitly trained to
+*Table 5. **Self-Improving Post-Thinking for confidence generalizes to abstention on unanswerable questions.** We report AUROC using predicted confidence values from each model as a signal to differentiate between (1) correct solutions for answerable problems, and (2) everything else (i.e., incorrect solutions for answerable problems or unanswerable problems). Post-thinking improves the AUROC for all benchmarks, although it was never explicitly trained to
 detect unanswerable questions. Note that Math PreT (vanilla correctness RL) decreases AUROC compared to the initial checkpoint baseline on 2 out of 4 benchmarks.*
 
 
 
 ## Conclusion
-
 
 We introduce Self-Improving Post-Thinking which teaches models to generate critical chain-of-thought *post-thinking* over the text it just generated. T
 hinking about generations after they are generated, trained jointly with the main generation objective, endows a model with judging abilities, in a way making them self-aware of their own failures and successes. 
