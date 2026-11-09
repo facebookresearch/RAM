@@ -80,8 +80,8 @@ judge the generation along any axis of interest.
 
 *Figure 1. **Self-Improving Post-Thinking.** Given an input, the model generates both standard chain-of-thought
 reasoning (i.e., pre-thinking) followed by its response (answer), and then post-thinking reasoning that self-judges its own
-generation. Post-thinking judgments are then used to (i) steer away to aligned, calibrated and high quality answers;
-and (ii) distill self-evaluation abilities to the policy through fine-tuning. The model can learns all these abilities (pre-,
+generation. Post-thinking judgments are then used to (i) steer toward aligned, calibrated and high quality answers;
+and (ii) distill self-evaluation abilities to the policy through fine-tuning. The model can learn all these abilities (pre-,
 answer, and post-thoughts) simultaneously through reinforcement learning.*
 
 
@@ -96,25 +96,25 @@ so learning to judge also makes the model a better solver. Using those post-thou
 to select among solutions brings further gains. 
 
 Finally, when applied to confidence estimation,
-post-thinking improves models’ calibration and provides meaningful signal for selective prediction,
+post-thinking improves models' calibration and provides meaningful signal for selective prediction,
 e.g. improving selective accuracy by +5pp on average on out-of-distribution benchmarks while
-providing 90% coverage. These results show we can direct model’s reasoning capabilities into
+providing 90% coverage. These results show we can direct models' reasoning capabilities into
 self-judging which translates to safer, more accurate and reliable generations at inference time.
 
 ## Post-Thinking
 
-**Post-thinking** is a reasoning phase generated after the answer allowing the model to be critical and ``self-aware'' of the quality of its own generations. 
+**Post-thinking** is a reasoning phase generated after the answer allowing the model to be critical and "self-aware" of the quality of its own generations. 
 In this setting, a complete generation has the form
 
 $$
 [\langle\text{pre}\rangle,\ \tau,\ \langle/\text{pre}\rangle,\ \bar{x},\ \langle\text{post}\rangle,\ \psi,\ \langle/\text{post}\rangle],
 $$
 
-where $\tau$ is the usual chain-of-thought reasoning trace (which we call pre-thinking as it occurs before the answer), $\bar{x}$ is the answer, and $\psi$ is a critical assessment, which we call post-thinking, that occurs *after* the answer and ends in a structured verdict —for example, *Safe* or *Unsafe*, *Correct* or *Incorrect*, or a confidence value between 0 and 1.
+where $\tau$ is the usual chain-of-thought reasoning trace (which we call pre-thinking as it occurs before the answer), $\bar{x}$ is the answer, and $\psi$ is a critical assessment, which we call post-thinking, that occurs *after* the answer and ends in a structured verdict — for example, *Safe* or *Unsafe*, *Correct* or *Incorrect*, or a confidence value between 0 and 1.
 
 We train this model in combination with other recently introduced learning methods, and call the resulting training 
 recipe **Self-Improving Post-Thinking (SPoT)**. 
-It can be introduced during continual pretraining, midtraining, or during post-training.
+It can be introduced during continual pretraining, mid-training, or during post-training.
 
 ## How Self-Improving Post-Thinking is trained
 
@@ -125,14 +125,14 @@ We consider several settings.
 In a non-verifiable setting when a strong teacher judge is available, it produces a target post-thought $\psi^*$ that explains and labels the quality of a policy continuation. We jointly optimize the continuation and the judgment:
 
 $$
-\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{RL}}(\bar{x}) + \omega\mathcal{L}_{\text{SFT}}(\psi^*)
+\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{RL}}(\bar{x}) + \omega_\psi\mathcal{L}_{\text{SFT}}(\psi^*)
 $$
 
-The RL term improves what the policy generates, in our experiments we use online DPO; the SFT term distills the teacher's evaluation process into the policy. Importantly, judgment labels must be balanced. For example for safety verdicts, as generations improve, most rollouts may become safe or correct. Training indiscriminately on that stream can collapse the self-judge into always predicting the majority label. We therefore supervise post-thinking only on pairs with contrasting verdicts, which we find fixes the issue.
+The RL term improves what the policy generates (in our experiments we use online DPO, which trains on chosen/rejected pairs of continuations); the SFT term distills the teacher's evaluation process into the policy. Importantly, judgment labels must be balanced. For example, for safety verdicts, as generations improve, most rollouts may become safe or correct. Training indiscriminately on that stream can collapse the self-judge into always predicting the majority label. We therefore supervise post-thinking only on pairs with contrasting verdicts, which we find fixes the issue.
 
 ### Verifiable setting
 
-In domains with rule-verifiable answers, the teacher can removed (perhaps after an SFT stage). 
+In domains with rule-verifiable answers, the teacher can be removed (perhaps after an SFT stage). 
 The policy samples post-thoughts, and each one receives a verdict-match reward based on the known correctness $r$ of the answer it just judged:
 
 $$
@@ -152,10 +152,10 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{RL}}(\tau, \bar{x}) + \omega_\
 
 ### Safety: a policy learns to police its own generations
 
-We first combine post-thinking with continual pretraining for safety. A Llama 1.4B policy learns to generate a safety judgment after each continuation while it simultaneously learns to generate safer text. For policy training we use the [self-improving pretraining]() (SIP) technique whereby a strong judge is used to reinforcement-learn the text continuations for safety and quality -- which already substantially outperforms next token prediction.
+We first combine post-thinking with continual pretraining for safety. A Llama 1.4B policy learns to generate a safety judgment after each continuation while it simultaneously learns to generate safer text. For policy training we use the [self-improving pretraining]() (SIP) technique whereby a strong judge is used to reinforcement-learn the text continuations for safety and quality -- which already substantially outperforms next-token prediction.
 
 
-We find that the post-thinking objective improves the continuation over the baselines, even before its verdict is used: greedy safety rises from 91.1% for Self-Improving Pretraining to 94.6% with SPoT. At inference time, the policy can sample several candidates and use its own post-thoughts to select among them, further raising average safety to **98.2%**. This is within 1.2 points of selection by the external GPT-OSS-120B ``oracle'' used to measure safety in our experiments, despite the policy being roughly 86 times smaller.
+We find that the post-thinking objective improves the continuation over the baselines, even before its verdict is used: greedy safety rises from 91.1% for Self-Improving Pretraining to 94.6% with SPoT. At inference time, the policy can sample several candidates and use its own post-thoughts to select among them (PoT@8 when choosing among eight candidates), further raising average safety to **98.2%**. This is within 1.2 points of selection by the external GPT-OSS-120B "oracle" used to measure safety in our experiments, despite the policy being roughly 86 times smaller.
 
 
 <div class="sip-figure" style="--figure-width: 87%; --mobile-width: 900px;">
@@ -164,10 +164,10 @@ We find that the post-thinking objective improves the continuation over the base
 
 <p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-*Table 2. **Self-Improving Post-thinking (SPoT) improves safety at little cost to standard capability or generation quality**, compared
+*Table 2. **Self-Improving Post-Thinking (SPoT) improves safety at little cost to standard capability or generation quality**, compared
 to standard next-token pretraining (Llama Base 1.4B) and the Self-Improving Pretraining (SIP) baseline.
 Baseline rows report greedy safety rates; Self-Improving Post-Thinking row (SPoT) reports both
-greedy and PoT@8 results, the latter is the rollout selected by the policy’s own post-thought verdict  (marked with an asterisk).*
+greedy and PoT@8 results, the latter is the rollout selected by the policy's own post-thought verdict  (marked with an asterisk).*
 
 The policy learns this skill quickly: with sixteen training-time rollouts, agreement between its post-thought and the stronger teacher reaches about 89% on chosen continuations after roughly 100 steps. More rollouts also help most on the hardest safety tasks. 
 
@@ -180,12 +180,12 @@ The policy learns this skill quickly: with sixteen training-time rollouts, agree
 
 *Table 3. **Self-Improving Post-Thinking for safety varying the number of training-time rollouts and teacher judge.** 
 Llama Base and SIP use the greedy continuation (the model emits no
-post-thought verdict to select with), and SPoT uses PoT@8 — the rollout selected by the policy’s own post-thought
+post-thought verdict to select with), and SPoT uses PoT@8 — the rollout selected by the policy's own post-thought
 verdict.*
 
 ### Reasoning: solving and checking improve together
 
-Next, we combine post-thinking with training both pre-thinking and answering with RL at midtraining time, an extension of [Thinking Mid-training](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/). That method already trains reasoning before answering with pretraining documents with RL; we teach it to also judge the correctness of its completed solution afterward. We consider three consecutive stages that differ in data and supervision:
+Next, we combine post-thinking with training both pre-thinking and answering with RL at mid-training time, an extension of [Thinking Mid-training](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/). That method already uses RL to train reasoning before answering on pretraining documents; we teach it to also judge the correctness of its completed solution afterward. We consider three consecutive stages that differ in data and supervision:
 
 1. **Post-thinking SFT during mid-training** continues on the Thinking Mid-training corpus of web and math documents (DCLM and FineMath). A teacher judge (GPT-OSS-120B) rewards each continuation and supplies the target post-thought.
 2. **Post-thinking SFT during post-training** switches to competition math problems (DAPO-Math-14k). A rule-based verifier (Math-Verify) now rewards each final answer, while the post-thought is still supervised by the teacher.
@@ -209,10 +209,10 @@ Next, we combine post-thinking with training both pre-thinking and answering wit
 <p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
 *Table 4. **Reasoning Post-Thinking for Math and Science.** Each prompt is answered 8 times; Avg@8 averages
-results, majority@8 takes the majority answer (after clustering by equivalence), PoT@8 picks the rollout the model’s
-own post-thinking self-judge scores highest, and PoT_weighted_majority@8 weights each cluster by its summed
-self-judge score. The three post-thinking rows form a training pipeline, each initialised from the one above; + RL
-post-training is a sibling branch off the same initialisation (separate baseline). Neither of the first two rows has been
+results, majority@8 takes the majority answer (after clustering by equivalence), PoT@8 picks the rollout the model's
+own post-thinking self-judge scores highest, and PoT\_weighted\_majority@8 weights each cluster by its summed
+self-judge score. The three post-thinking rows form a training pipeline, each initialized from the one above; + RL
+post-training is a sibling branch off the same initialization (separate baseline). Neither of the first two rows has been
 trained to post-think, so neither produces a usable verdict and their self-judge cells are left empty. Post-thinking
 brings gains across all datasets and metrics.*
 
@@ -249,7 +249,7 @@ brings gains across all datasets and metrics.*
 *Table 3. Post-thinking improves both solving and selection for Llama 3.1 8B after Thinking Mid-training, averaged over MATH-500, GSM8K, AMC23, and OlympiadBench with eight samples per problem. Avg@8 is the accuracy of a single sample; PoT@8 picks the sample the model's own post-thought rates highest; majority@8 and PoT\_weighted\_majority@8 vote over the eight answers, unweighted and weighted by post-thought verdicts. The three post-thinking rows form a chain, each initialized from the one above; “+ RL post-training” branches from the same initialization without post-thinking. Rows without post-thinking produce no verdict, so their PoT columns are empty.*
 -->
 
-### Confidence: learns to know when not to answer
+### Confidence: the model learns to know when not to answer
 
 A binary correct/incorrect judgment is useful, but many applications need calibrated confidence. We therefore train Qwen3 4B to emit a numeric confidence estimate after its solution. The solution receives the usual correctness reward, while the post-thought receives a reward based on the Brier score:
 
@@ -259,9 +259,9 @@ $$
 
 where $\hat{c}$ is predicted confidence and $r$ is the answer's ground-truth correctness.
 
-The resulting confidence enables **selective prediction**: accept an answer when confidence is above a chosen threshold and abstains otherwise. 
-We compare to baselines of (1) no confidence estimation at all (always predicting); and (2) prompted elicitation of confidence by first instructing them to produce a solution and a final answer in the first forward pass, and then we give the same model the problem, its previously generated
-solution and final answer and instruct it to generate judgment and confidence in the second forward pass. 
+The resulting confidence enables **selective prediction**: accept an answer when confidence is above a chosen threshold and abstain otherwise. 
+We compare to two baselines: (1) no confidence estimation at all (always predicting); and (2) prompted confidence elicitation over two forward passes. In the first pass, the model is instructed to produce a solution and a final answer. In the second pass, the same model is given the problem, its previously generated
+solution and final answer, and is instructed to generate a judgment and a confidence. 
 
 
 At a threshold of 0.5, confidence post-thinking improves macro-average selective accuracy from 67.56% (no confidence measure used) or 78.64% (prompted confidence) to **82.76%**, while maintaining comparable raw accuracy. It also improves self-judge AUROC from 0.610 to **0.836**.
@@ -296,14 +296,13 @@ detect unanswerable questions. Note that Math PreT (vanilla correctness RL) decr
 
 ## Conclusion
 
-We introduce Self-Improving Post-Thinking which teaches models to generate critical chain-of-thought *post-thinking* over the text it just generated. T
-hinking about generations after they are generated, trained jointly with the main generation objective, endows a model with judging abilities, in a way making them self-aware of their own failures and successes. 
+We introduce Self-Improving Post-Thinking which teaches models to generate critical chain-of-thought *post-thinking* over the text they just generated. Thinking about generations after they are generated, trained jointly with the main generation objective, endows a model with judging abilities, in a way making them self-aware of their own failures and successes. 
 
 We apply post-thinking to three domains: safety, reasoning and confidence judgment.
-Across safety, reasoning and confidence applications, we observed the same high-level pattern: the post-thinking objective can give gains rather than costing generation quality or ability to solve problems --  and the post-thinking judgments are useful at inference time (e.g., for selecting the best rollouts candidate or deciding to abstain in the confidence application).
+Across safety, reasoning and confidence applications, we observed the same high-level pattern: the post-thinking objective can give gains rather than costing generation quality or ability to solve problems -- and the post-thinking judgments are useful at inference time (e.g., for selecting the best rollout candidates or deciding to abstain in the confidence application).
 When applied to confidence prediction, post-thinking judgments improve calibration and provide signal for meaningfully improving selective prediction, both at the solution level and problem level.
 
-Together, our results support that teaching models pre-thinking and post-thinking during midtraining and post-training is a strong approach for improving generation quality, reasoning, and self-judgment.
+Together, our results support that teaching models pre-thinking and post-thinking during mid-training and post-training is a strong approach for improving generation quality, reasoning, and self-judgment.
 
 
 ## Contributors
