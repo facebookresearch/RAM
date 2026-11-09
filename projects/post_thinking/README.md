@@ -89,8 +89,8 @@ answer, and post-thoughts) simultaneously through reinforcement learning.*
 We apply post-thinking to continual pretraining, mid-training and post-training, teaching models to produce post-thoughts 
 that assess their own safety, correctness, and confidence, while also improving the generations themselves.
 
-Continual pretraining with post-thinking improves safety by 21.3% on average across five safety benchmarks over the same model without
-post-thoughts, at no cost to generation quality. Mid-training and post-training with post-thinking
+Continual pretraining with post-thinking improves safety by 21.3 points on average across five safety benchmarks over the same model without
+self-improving post-thinking, at no cost to generation quality. Mid-training and post-training with post-thinking
 improve mathematical reasoning across four benchmarks over post-training without post-thinking,
 so learning to judge also makes the model a better solver. Using those post-thoughts at inference
 to select among solutions brings further gains. 
@@ -264,7 +264,7 @@ We compare to two baselines: (1) no confidence estimation at all (always predict
 solution and final answer, and is instructed to generate a judgment and a confidence. 
 
 
-At a threshold of 0.5, confidence post-thinking improves macro-average selective accuracy from 67.56% (no confidence measure used) or 78.64% (prompted confidence) to **82.76%**, while maintaining comparable raw accuracy. It also improves self-judge AUROC from 0.610 to **0.836**.
+At a threshold of 0.5, confidence post-thinking improves macro-average selective accuracy from 65.03% (no confidence measure used) or 78.64% (prompted confidence) to **82.76%**, while maintaining comparable raw accuracy. It also improves self-judge AUROC from 0.610 to **0.836**.
 
 
 
