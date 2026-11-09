@@ -1,5 +1,6 @@
 ---
 title: "Self-Improving Post-Thinking"
+permalink: /blogs/post_thinking/
 ---
 
 <script>
