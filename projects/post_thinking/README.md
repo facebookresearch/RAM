@@ -259,23 +259,38 @@ $$
 
 where $\hat{c}$ is predicted confidence and $r$ is the answer's ground-truth correctness.
 
-The resulting confidence enables **selective prediction**: accept an answer when confidence is above a chosen threshold and abstain otherwise. At a threshold of 0.5, confidence post-thinking improves macro-average selective accuracy from 78.64% to **82.76%**, while maintaining comparable raw accuracy. It also improves self-judge AUROC from 0.610 to **0.836**, Brier score from 0.195 to **0.110**, and expected calibration error from 0.195 to **0.107**.
+The resulting confidence enables **selective prediction**: accept an answer when confidence is above a chosen threshold and abstains otherwise. 
+We compare to baselines of (1) no confidence estimation at all (always predicting); and (2) prompted elicitation of confidence by first instructing them to produce a solution and a final answer in the first forward pass, and then we give the same model the problem, its previously generated
+solution and final answer and instruct it to generate judgment and confidence in the second forward pass. 
 
-<div class="sip-table-wrap" markdown="1">
 
-| Macro-average metric | Math RL only | Math RL + confidence post-thinking |
-|---|---:|---:|
-| Average accuracy | 77.97 | **79.07** |
-| Selective accuracy at $c^*=0.5$ | 78.64 | **82.76** |
-| Self-judge AUROC | 0.610 | **0.836** |
-| Brier score ↓ | 0.195 | **0.110** |
-| Expected calibration error ↓ | 0.195 | **0.107** |
+At a threshold of 0.5, confidence post-thinking improves macro-average selective accuracy from 78.64% to **82.76%**, while maintaining comparable raw accuracy. It also improves self-judge AUROC from 0.610 to **0.836**.
 
+
+
+<div class="sip-figure" style="--figure-width: 97%; --mobile-width: 900px;">
+  <a href="conf1_fig.png"><img src="conf1_fig.png" alt="Self-Improving Post-Thinking: confidence experiments" /></a>
 </div>
 
-*Table 4. Confidence post-thinking results for Qwen3 4B, macro-averaged over MATH-500, GSM8K, AMC23, OlympiadBench, and GPQA-Diamond. Lower is better for Brier score and expected calibration error.*
+<p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+
+*Table 4. Confidence Post-Thinking (SPoT) results for Qwen3 4B, macro-averaged over MATH-500, GSM8K, AMC23, OlympiadBench, and GPQA-Diamond. SPoT improves macro-average selective accuracy while maintaining comparable (average) accuracy, i.e. can select correct answers when it is confident.*
+
+
 
 The confidence signal generalizes beyond the training setup. Although training uses answerable math problems, post-thinking becomes better at identifying unanswerable questions, including questions outside mathematics. The solve-time objective may still pressure the model to produce an answer, but the subsequent judgment can flag unsupported assumptions and assign low confidence.
+
+
+<div class="sip-figure" style="--figure-width: 97%; --mobile-width: 900px;">
+  <a href="conf2_fig.png"><img src="conf2_fig.png" alt="Self-Improving Post-Thinking: confidence experiments" /></a>
+</div>
+
+<p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+
+*Table 5. **Self-Improving Post-Thinking for confidence generalizes to abstention on unanswerable questions.** We report AUROC using predicted confidence values from each model as a signal to differentiate between (1) correct solutions for answerable problems, and (2) everything else (i.e., incorrect solutions for answerable problems or unanswerable problems). Post-thinking improves the AUROC value for all benchmarks, although it was never explicitly trained to
+detect unanswerable questions. Note that Math PreT (vanilla correctness RL) decreases AUROC compared to the initial checkpoint baseline on 2 out of 4 benchmarks.*
+
+
 
 ## Conclusion
 
