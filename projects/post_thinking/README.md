@@ -269,7 +269,7 @@ At a threshold of 0.5, confidence post-thinking improves macro-average selective
 
 
 <div class="sip-figure" style="--figure-width: 97%; --mobile-width: 900px;">
-  <a href="conf1_fig.png"><img src="conf1_fig.png" alt="Self-Improving Post-Thinking: confidence experiments" /></a>
+  <a href="conf_fig1.png"><img src="conf_fig1.png" alt="Self-Improving Post-Thinking: confidence experiments" /></a>
 </div>
 
 <p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
