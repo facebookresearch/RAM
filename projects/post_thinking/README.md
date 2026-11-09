@@ -264,7 +264,7 @@ We compare to baselines of (1) no confidence estimation at all (always predictin
 solution and final answer and instruct it to generate judgment and confidence in the second forward pass. 
 
 
-At a threshold of 0.5, confidence post-thinking improves macro-average selective accuracy from 78.64% to **82.76%**, while maintaining comparable raw accuracy. It also improves self-judge AUROC from 0.610 to **0.836**.
+At a threshold of 0.5, confidence post-thinking improves macro-average selective accuracy from 67.56% (no confidence) 78.64% (prompted confidence) to **82.76%**, while maintaining comparable raw accuracy. It also improves self-judge AUROC from 0.610 to **0.836**.
 
 
 
@@ -274,10 +274,9 @@ At a threshold of 0.5, confidence post-thinking improves macro-average selective
 
 <p class="sip-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
 
-*Table 4. Confidence Post-Thinking (SPoT) results for Qwen3 4B, macro-averaged over MATH-500, GSM8K, AMC23, OlympiadBench, and GPQA-Diamond. SPoT improves macro-average selective accuracy while maintaining comparable (average) accuracy, i.e. can select correct answers when it is confident.*
-**Self-Improving Post-Thinking improves confidence estimation and translates to improvements in selective accuracy.**
-When abstaining on solution rollouts whose predicted confidence is below a threshold, across all metrics, post-thinking
-for confidence brings improvements in both accuracy and calibration metrics.*
+*Table 4. **Self-Improving Post-Thinking improves confidence estimation and translates to improvements in selective accuracy.**
+When abstaining on solution rollouts whose predicted confidence is below a threshold, across all metrics post-thinking
+for confidence brings improvements in both accuracy and judge quality metrics.*
 
 
 
