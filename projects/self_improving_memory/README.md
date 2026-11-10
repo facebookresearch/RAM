@@ -86,43 +86,25 @@ MathJax = {
   <a href="fig1_teaser.png"><img src="fig1_teaser.png" alt="Figure 1: the Self-Improving Memory framework, harness optimization and harness distillation, with the results of each" /></a>
 </div>
 
-<p class="sim-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+<p class="sim-figure-hint">Swipe to explore the figure, or tap to open it at full size.</p>
 
-_Figure 1. **Self-Improving Memory.** Our framework includes harness optimization and harness distillation. With harness optimization, we reach an average test score of 56.0, compared with 44.6 for the best hand-written prompts and 36.1 for generic prompts. With harness distillation, the fine-tuned model reaches 43.1 using only generic prompts, compared with 37.6 for a model fine-tuned on its own generic-prompt runs._
+_Figure 1. **A model (Kimi-K2.6) teaches itself better memory capabilities.** It first rewrites its own memory prompts for each task, keeping the versions that score best (harness optimization). It then runs with those prompts, swaps them back to generic ones in the recorded runs, and is fine-tuned on the result, so part of what the prompts taught moves into its weights (harness distillation). On three Continual Learning Bench tasks, its optimized prompts beat the best hand-written ones (56.0 vs 44.6). After fine-tuning, it scores 43.1 with only generic prompts, compared with 37.6 when trained on its generic-prompt runs._
 
-## Overview
+## Motivation: Memory skills should be learned
 
-We want language models that get better at a task the longer they work on it.
-For an agent, this means managing memory well: what to write down, how to organize it, and when to read it back.
-Today these choices come from hand-written prompts, and no single prompt works best on every task.
-Self-Improving Memory lets the model discover these choices itself and then trains them into its weights.
-On three tasks from Continual Learning Bench, the prompts it discovers beat the best hand-written ones by 11.4 points (56.0 vs 44.6), and fine-tuning on runs with them gains 5.5 points over fine-tuning on the model's own generic runs (43.1 vs 37.6).
+**Agents can improve with experience.**
+An agent that works on related tasks can pick up reusable knowledge from earlier tasks and apply it to later ones.
+Persistent memory makes this possible by letting information pass beyond the boundary of a single task.
+In our setting, every subtask starts in a fresh session with an empty context, and the only thing that carries over is a persistent memory directory that the agent reads and writes with file tools.
 
-Self-Improving Memory works in two stages.
-In harness optimization, a meta agent reads the task agent's trajectories, finds where its memory use falls short, and rewrites the prompts that tell it how to use memory; each new prompt is evaluated, and the best ones are kept for further revision.
-In harness distillation, the task agent runs with the optimized prompts, we swap those prompts back to generic ones while keeping the agent's responses, and we fine-tune the model on the result.
-The meta agent and the task agent use the same model (Kimi-K2.6), so the model is trained on memory skills it discovered itself.
-Training carries part of the gain from better prompts into the model's weights.
+**No single memory design wins on every task.**
+We ran agents on three tasks from Continual Learning Bench 1.0 (database question answering, code repair, and spectrum monitoring) with several hand-written memory designs, each built around a different memory representation.
+Each design is a pair of prompts: one for offloading what the agent learned into memory after a task (a step also known as dreaming), and one for loading from memory before the next.
+Echoing the findings of Continual Learning Bench, no single design is best on all tasks (Figure 2).
 
-## Motivation: No single memory design wins all tasks
-
-**Memory helps agents learn from experience.**
-An agent working through a stream of related subtasks keeps running into the same things: the same database tables, the same kinds of bugs, the same transmitters on the radio band.
-If it writes down what it learns, later subtasks get easier.
-In our setting, every subtask starts in a fresh session with an empty context; the only thing that carries over from one session to the next is a persistent memory directory, which the agent reads and writes with file tools.
-
-**We tested this on three tasks from Continual Learning Bench (CL-Bench) 1.0.**
-In Database, the agent answers questions about a SQLite database it has never seen.
-In Codebase, it fixes bugs in Python repositories.
-In Spectrum, it works out which radio channels are occupied from noisy scans.
-
-**How the agent should use that directory is less clear.**
-We kept the scaffold (OpenCode) and the task agent (Kimi-K2.6) fixed and changed only two prompts: LOAD, shown before each subtask, and OFFLOAD, shown after it.
-Together they tell the agent what to write down, how to organize it, and when to read it back.
-We wrote four versions, each built around a different memory representation, and none of them wins on all three tasks (Figure 2).
-
-The right way to use memory depends on the task, and whoever writes the prompt has to guess it.
-Our goal is to teach the model to work this out itself: to learn, for each task, what to remember, how to organize it, and when to read it back.
+**So the model should learn its own memory design.**
+Rather than following a hand-written design, it should decide what to write, how to organize it, and what to recall.
+Self-Improving Memory does this in two stages, harness optimization and harness distillation, which we describe next.
 
 <a id="fig-tasks-vs-harness"></a>
 
@@ -130,14 +112,14 @@ Our goal is to teach the model to work this out itself: to learn, for each task,
   <a href="fig2_tasks_vs_harness.png"><img src="fig2_tasks_vs_harness.png" alt="Figure 2: the three tasks with example subtasks, and test scores of the generic and four human-written harnesses" /></a>
 </div>
 
-<p class="sim-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+<p class="sim-figure-hint">Swipe to explore the figure, or tap to open it at full size.</p>
 
-_Figure 2. **No single memory representation wins every task.** Left: the three tasks with an example subtask (input, intermediate tool calls, and the submitted answer or solution). Right: test scores of the generic harness and four human-written harnesses; a triangle marks the best of the five per task._
+_Figure 2. **No single memory representation wins every task.** Left: the three tasks, each with an example subtask (input, tool calls, answer). Right: test scores of the generic harness and four hand-written harnesses that differ only in their memory instructions. ▼ marks the best per task._
 
-## Self-Improving Memory
+## Method: Self-Improving Memory
 
 Our goal is to optimize a task model's weights for continual learning tasks under a fixed generic harness.
-To achieve this, we propose Self-Improving Memory, which follows a Discover-Demonstrate-Distill pipeline: a meta agent first discovers memory-management skills through harness optimization; the task agent then generates trajectories that demonstrate these skills; finally, we distill the demonstrated skills into model weights.
+To achieve this, we propose Self-Improving Memory, which follows a Discover-Demonstrate-Distill pipeline: a meta agent first discovers memory-management skills through harness optimization, the task agent then generates trajectories that demonstrate these skills, and finally we distill the demonstrated skills into model weights.
 Because the meta agent and the task agent use the same model, this process updates the task model's weights to internalize skills discovered by the model itself.
 
 ### The generic harness
@@ -158,9 +140,9 @@ As shown in Figure 3, files rather than a summary in the live context carry info
   <a href="fig3_method.png"><img src="fig3_method.png" alt="Figure 3: method overview" /></a>
 </div>
 
-<p class="sim-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+<p class="sim-figure-hint">Swipe to explore the figure, or tap to open it at full size.</p>
 
-_Figure 3. Self-Improving Memory learns memory-management behavior while keeping the generic harness fixed at deployment._
+_Figure 3. **The generic harness and the two stages.** Left: before and after each subtask, LOAD and OFFLOAD prompts make the task agent read and update a memory directory. The context is then cleared, so only the memory files carry over. Right: (1) a meta agent revises the prompts from trajectories and scores. (2a) The agent runs with the optimized prompts, which we then replace with the generic ones. (2b) We fine-tune on these trajectories, with the loss on the model's outputs (dark blocks)._
 
 ### Harness Optimization
 
@@ -206,7 +188,7 @@ $$
 $$
 
 Here $A_\tau$ indexes assistant tokens, including reasoning and tool calls, while instructions, task requests, and tool responses provide context and are masked from the loss.
-The count $N_k=\sum_{\tau\in\mathcal D_k}|A_\tau|$ is the number of supervised tokens for task $k$; normalization by $N_k$ and averaging over $K$ tasks give each task equal weight.
+The count $N_k=\sum_{\tau\in\mathcal D_k}|A_\tau|$ is the number of supervised tokens for task $k$. Normalization by $N_k$ and averaging over $K$ tasks give each task equal weight.
 This objective trains the model to internalize the demonstrated capabilities in its weights and reproduce them under generic memory instructions.
 
 
@@ -217,10 +199,10 @@ For each task, we initialize the search with four human-written seed harnesses: 
 We run four search generations on Database and Codebase and three on Spectrum, generating four new harnesses per generation and evaluating each candidate over five complete task runs.
 We finetune Kimi-K2.6 with LoRA applied to attention projections, using rank 8, scaling factor 16, and no dropout.
 
-We cut each CL-Bench task stream into train and test subtasks at an environment transition: Database moves to a migrated database, Codebase to new repositories, and Spectrum from wideband to narrowband activity.
-The meta agent analyzes only train trajectories and distillation trains only on them; test subtasks are used for scoring.
+We cut each Continual Learning Bench task stream into train and test subtasks at an environment transition: Database moves to a migrated database, Codebase to new repositories, and Spectrum from wideband to narrowband activity.
+The meta agent analyzes only train trajectories and distillation trains only on them. Test subtasks are used for scoring.
 
-We compare four settings to assess the effects of persistent memory and model finetuning. *No memory* clears the base model's context at each subtask boundary with neither a summary nor a memory directory, so no information carries over between subtasks. *Summary-based compaction* summarizes the base model's context at the boundary and passes the summary to the next subtask. Under the *Generic harness*, the base model uses the task-independent LOAD and OFFLOAD instructions defined above, with files carrying information across subtask boundaries. The *Generic harness with a finetuned model* compares supervised finetuning (SFT) on two sets of trajectories: *SFT on generic trajectories*, collected with the generic harness, and *SFT on optimized trajectories* (Harness Distillation), the Self-Improving Memory model trained on optimized-harness trajectories rewritten with generic instructions; both finetuned models use the same instructions and tools during evaluation, and the base model under the generic harness is the *No fine-tuning* reference.
+We compare four settings to assess the effects of persistent memory and model finetuning. *No memory* clears the base model's context at each subtask boundary with neither a summary nor a memory directory, so no information carries over between subtasks. *Summary-based compaction* summarizes the base model's context at the boundary and passes the summary to the next subtask. Under the *Generic harness*, the base model uses the task-independent LOAD and OFFLOAD instructions defined above, with files carrying information across subtask boundaries. The *Generic harness with a finetuned model* compares supervised finetuning (SFT) on two sets of trajectories: *SFT on generic trajectories*, collected with the generic harness, and *SFT on optimized trajectories* (Harness Distillation), the Self-Improving Memory model trained on optimized-harness trajectories rewritten with generic instructions. Both finetuned models use the same instructions and tools during evaluation, and the base model under the generic harness is the *No SFT* reference.
 
 ### Automatic harness optimization delivers substantial gains
 
@@ -236,9 +218,9 @@ Both the human-written seeds and optimized harnesses are selected by test score,
   <a href="fig4_harness_results.png"><img src="fig4_harness_results.png" alt="Figure 4: harness optimization results per task" /></a>
 </div>
 
-<p class="sim-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+<p class="sim-figure-hint">Swipe to explore the figure, or tap to open it at full size.</p>
 
-_Figure 4. **The optimized harnesses improve over the selected human-written seeds on all three tasks.** Harness optimization results. +N is the gain over the best human-written harness per task._
+_Figure 4. **Optimized harnesses beat the best hand-written harness on every task.** Error bars show 95% CIs. Best human-written is the best of the four hand-written harnesses for each task, and +N is the Optimized gain over it._
 
 ### Meta-optimization requires evaluation and selection
 
@@ -248,21 +230,20 @@ Progress therefore depends on evaluating proposals and retaining the best observ
 
 <a id="fig-learning-search"></a>
 
-<div class="sim-figure sim-figure--pair">
-  <a href="fig5a_subtask_curves.png"><img src="fig5a_subtask_curves.png" alt="Figure 5a: performance across subtasks" /></a>
-  <a href="fig5b_search_trace.png"><img src="fig5b_search_trace.png" alt="Figure 5b: progress of harness optimization" /></a>
+<div class="sim-figure" style="--figure-width: 100%; --mobile-width: 900px;">
+  <a href="fig5_learning_and_search.png"><img src="fig5_learning_and_search.png" alt="Figure 5: left, subtask scores across the task stream. Right, every harness evaluated during the search" /></a>
 </div>
 
-<p class="sim-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+<p class="sim-figure-hint">Swipe to explore the figure, or tap to open it at full size.</p>
 
-_Figure 5. Learning across subtasks and progress of harness optimization. (a) Performance across subtasks. Curves use the same runs as the bars in Figure 4 and are smoothed separately on each side of the train/test transition. (b) Progress of harness optimization. Each point is one evaluated harness; the step line shows the best observed score. Steps 0 and 1 denote Generic and human-written seeds; subsequent steps are search iterations._
+_Figure 5. **Learning across subtasks, and search progress.** Left: subtask scores for the runs in Figure 4, where the dashed line marks the train/test environment shift. Right: each dot is one evaluated harness (iteration 0: Generic, iteration 1: hand-written seeds, iterations 2 and later: harnesses proposed by the meta agent). The line tracks the best score so far._
 
 ### Case Study of Meta-Optimization
 
 Figure 6 illustrates how trajectory reports guide revisions of the Codebase memory harness.
-The Summary harness scores 34.3, barely above Generic at 33.5 and well below the best seed at 43.7; its report identifies growing monolithic notes and repeated repository discovery.
+The Summary harness scores 34.3, barely above Generic at 33.5 and well below the best seed at 43.7. Its report identifies growing monolithic notes and repeated repository discovery.
 A revision that reuses recorded paths and retains failure rules scores 52.2.
-The next report diagnoses an append-only file without an index mapping symptoms to fixes; a revision with a compact quickstart, an indexed registry, and separate fix files scores 55.7.
+The next report diagnoses an append-only file without an index mapping symptoms to fixes, and a revision with a compact quickstart, an indexed registry, and separate fix files scores 55.7.
 An alternative Summary revision that retains details of only the last two fixes scores 36.6.
 
 <a id="fig-case-meta-optimization"></a>
@@ -271,18 +252,18 @@ An alternative Summary revision that retains details of only the last two fixes 
   <a href="fig6_case_study.png"><img src="fig6_case_study.png" alt="Figure 6: revisions of the Codebase memory harness guided by trajectory reports" /></a>
 </div>
 
-<p class="sim-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+<p class="sim-figure-hint">Swipe to explore the figure, or tap to open it at full size.</p>
 
-_Figure 6. Revisions of the Codebase memory harness guided by trajectory reports. Reports identify repeated exploration and missing retrieval structure, motivating changes to LOAD and OFFLOAD._
+_Figure 6. **How the meta agent revises the Codebase harness.** Each box shows a harness's LOAD and OFFLOAD prompts and test score. Each report diagnoses that harness's trajectories and motivates the next revision. Underlines mark the key changes._
 
 ### Training internalizes part of these gains
 
 We finetune on demonstrations from train subtasks and evaluate generalization to test subtasks of the same tasks after domain shifts.
-We compare SFT on optimized trajectories (Harness Distillation), trained on optimized-harness trajectories rewritten with generic instructions, with SFT on generic trajectories, trained on generic-harness trajectories; both use the same LoRA recipe and are evaluated with the generic harness.
-Across ten matched evaluation seeds, Harness Distillation reaches an overall mean test score of 43.1 versus 37.6 for SFT on generic trajectories, a gain of 5.5 points (14.7%; Figure 7).
-Its 7.0-point gain over No fine-tuning (36.1, the same reference evaluation as Generic in Figure 4) is descriptive because the base model was evaluated separately.
+We compare SFT on optimized trajectories (Harness Distillation), trained on optimized-harness trajectories rewritten with generic instructions, with SFT on generic trajectories, trained on generic-harness trajectories. Both use the same LoRA recipe and are evaluated with the generic harness.
+Across ten matched evaluation seeds, Harness Distillation reaches an overall mean test score of 43.1 versus 37.6 for SFT on generic trajectories, a gain of 5.5 points (14.7%, Figure 7).
+Its 7.0-point gain over No SFT (36.1, the same reference evaluation as Generic in Figure 4) is descriptive because the base model was evaluated separately.
 The improved test scores show that the finetuned model generalizes within the same tasks under domain shift, using generic memory instructions.
-We hypothesize that the gain partly reflects improved memory organization and retrieval, alongside task-solving behavior; isolating this mechanism requires direct behavioral analysis.
+We hypothesize that the gain partly reflects improved memory organization and retrieval, alongside task-solving behavior, but isolating this mechanism requires direct behavioral analysis.
 
 <a id="fig-distillation-results"></a>
 
@@ -290,9 +271,9 @@ We hypothesize that the gain partly reflects improved memory organization and re
   <a href="fig7_distillation.png"><img src="fig7_distillation.png" alt="Figure 7: model distillation under generic instructions" /></a>
 </div>
 
-<p class="sim-figure-hint">Swipe to explore the figure; tap to open it at full size.</p>
+<p class="sim-figure-hint">Swipe to explore the figure, or tap to open it at full size.</p>
 
-_Figure 7. **The generic-trajectory control suggests that optimized harnesses produce more effective demonstrations for a model deployed with generic instructions.** Model distillation under generic instructions. All models are evaluated with the generic harness; SFT on optimized trajectories (Harness Distillation) finetunes on optimized-harness trajectories whose instructions are replaced with the generic ones. +N is the gain over No fine-tuning._
+_Figure 7. **Harness distillation moves part of the gain into the model's weights.** All models run with the generic harness. SFT on generic trajectories trains on generic-harness runs, and SFT on optimized trajectories trains on optimized-harness runs with the prompts swapped back to generic. Error bars show 95% CIs, and +N is the gain over No SFT._
 
 ## Conclusion
 
