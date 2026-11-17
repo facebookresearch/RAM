@@ -99,7 +99,7 @@ Self-Improving Memory lets the model discover these choices itself and then trai
 On three tasks from Continual Learning Bench, the prompts it discovers beat the best hand-written ones by 11.4 points (56.0 vs 44.6), and fine-tuning on runs with them gains 5.5 points over fine-tuning on the model's own generic runs (43.1 vs 37.6).
 
 Self-Improving Memory works in two stages.
-In harness optimization, a meta agent reads the task agent's trajectories, finds where its memory use falls short, and rewrites the prompts that tell it how to use memory; each new prompt is evaluated, and the best ones are kept for further revision.
+In harness optimization, a meta agent reads the task agent's trajectories, finds where its memory use falls short, and rewrites the prompts that tell it how to use memory. Each new prompt is evaluated, and the best ones are kept for further revision.
 In harness distillation, the task agent runs with the optimized prompts, we swap those prompts back to generic ones while keeping the agent's responses, and we fine-tune the model on the result.
 The meta agent and the task agent use the same model (Kimi-K2.6), so the model is trained on memory skills it discovered itself.
 Training carries part of the gain from better prompts into the model's weights.
@@ -113,9 +113,10 @@ Persistent memory makes this possible by letting information pass beyond the bou
 In our setting, every subtask starts in a fresh session with an empty context, and the only thing that carries over is a persistent memory directory that the agent reads and writes with file tools.
 
 **No single memory design wins on every task.**
-We ran agents on three tasks from Continual Learning Bench 1.0 (database question answering, code repair, and spectrum monitoring) with several hand-engineered memory designs, each built around a different memory representation.
-Each design is a pair of prompts: one for offloading what the agent learned into memory after a task (a step also known as dreaming), and one for loading from memory before the next.
-Echoing the findings of Continual Learning Bench, no single design is best on all tasks (Figure 2).
+Throughout this post, we use Continual Learning Bench as our evaluation framework, focusing on three of its tasks: Database, Codebase, and Spectrum.
+To motivate our approach, we conduct a small pilot study of several common, human-designed memory strategies.
+Each strategy is implemented through two prompts: one (OFFLOAD) that instructs the agent to offload what it has learned after completing a subtask (a process sometimes called dreaming), and another (LOAD) that instructs it to load relevant information before the next subtask.
+As Figure 2 shows, no single strategy performs best across all three tasks, consistent with the findings of Continual Learning Bench.
 
 **So the model should learn its own memory design.**
 Rather than following a hand-written design, it should decide what to write, how to organize it, and what to recall.
@@ -143,14 +144,13 @@ A *task agent* consists of a task model and a harness.
 We use a file system as persistent memory in our *generic harness*.
 The memory directory starts empty and persists throughout the task stream.
 The harness provides file-reading, writing, and editing tools, along with two task-independent instructions: LOAD and OFFLOAD.
-After each subtask is scored, an OFFLOAD prompt instructs the model to update its persistent memory based on the completed interaction.
+After each subtask is completed, an OFFLOAD prompt instructs the model to update its persistent memory based on the completed task interaction.
 The live context is then cleared.
-Before the next subtask begins, a LOAD prompt allows the model to retrieve relevant information from memory.
+Before the next subtask begins, a LOAD prompt allows the model to load and retrieve relevant information from memory.
 The model may read memory files immediately at the start of a subtask (e.g., README.md) or defer doing so until later in the problem-solving process.
+
 In the generic harness, the LOAD and OFFLOAD instructions are deliberately concise: they simply direct the model to manage its memory through file-tool calls while leaving the specific strategy to the model itself.
-These instructions can, however, be made more detailed and prescriptive.
-For example, by specifying when the agent should access memory or how information should be organized into tables, skill libraries, or entity inventories.
-We explore such designs in the next subsection.
+However, performance may improve when these prompts prescribe a more specific, task-appropriate strategy. We explore how to discover such strategies in the next subsection.
 
 <!-- As shown in Figure 3 (left), files rather than a summary in the live context carry information across the subtask boundary. -->
 
@@ -166,19 +166,18 @@ _Figure 3. **The generic harness and the two stages.** Left: before and after ea
 
 ### Harness Optimization
 
-Our method first discovers task-specific memory-management skills by optimizing the harness instructions.
-To learn effective memory designs, the agent needs guidance on what to extract from experience, how to organize it, and what to retrieve for later subtasks.
-We therefore make the instructions at the LOAD and OFFLOAD stages learnable, allowing the search to shape both how the agent uses memory and how it updates memory.
-We implement these instructions as two Markdown files that the harness supplies to the task model at the corresponding stages.
-Our meta-optimization loop analyzes task-agent trajectories and evaluates different memory designs to find LOAD and OFFLOAD instructions that maximize the task agent's mean score.
+Using persistent memory effectively requires deciding what information to retain, how to organize it, and when to retrieve it. Rather than requiring the task model to make all of these decisions independently, the LOAD and OFFLOAD prompts can provide explicit strategies. For example, they can specify when the agent should access memory or how it should organize information into tables, skill libraries, or entity inventories.
+
+We propose a harness-optimization procedure that automatically discovers task-specific memory-management strategies.
+Our meta-optimization loop analyzes task-agent trajectories and compares alternative memory designs to identify LOAD and OFFLOAD instructions that maximize the task agent's mean score (on a holdout set different from the train split that the meta agent can see).
 
 The meta-optimization loop consists of a *meta agent*, which analyzes trajectories and task scores from the train subtasks to propose revised harness instructions, and an *outer loop*, which evaluates the resulting harnesses and uses the resulting task scores to select promising designs for further revision.
 We implement this search as follows:
 
-- **Initialize the pool.** We start with four human-written harnesses representing summary, retrieval, skill-library, and hypothesis-tracking memory designs.
-- **Evaluate the harnesses.** For each unevaluated candidate, the task agent executes the full task stream five times, producing trajectories, subtask scores, and memory directories.
-- **Select promising designs.** We rank the pool by mean task score across the five runs and select the top four harnesses as parents for revision.
-- **Analyze experience and propose new designs.** For each parent, a meta agent receives the task-agent message lists, subtask scores, and final memory directories from the train subtasks. It identifies failures in how the task agent constructs or reuses memory and proposes instruction changes to address them. To analyze the long trajectories, it first summarizes each subtask, then analyzes each complete run, and finally consolidates evidence across runs into revised LOAD and OFFLOAD instructions. Each revised instruction pair enters the pool as a new candidate for evaluation.
+- **Initialize the pool.** We start with S human-written harnesses (i.e., pairs of LOAD and OFFLOAD prompts) representing summary, retrieval, skill-library, and hypothesis-tracking memory designs.
+- **Evaluate the harnesses.** For each unevaluated candidate, the task agent executes the full task stream N (e.g., 5) times, producing trajectories, subtask scores, and memory directories.
+- **Select promising designs.** We rank the pool by mean task score across the N runs and select the top P (e.g., 4) harnesses as parents for revision.
+- **Analyze experience and propose new designs.** For each parent, a meta agent analyzes the task agent's message histories, subtask scores, and final memory directories from the training split. It identifies recurring failures and proposes revisions to the harness instructions. To handle the length and volume of the trajectories, the meta agent first summarizes each subtask, then analyzes each complete run, and finally consolidates evidence across runs into revised LOAD and OFFLOAD instructions. The revised harness from each parent is added to the pool as a new candidate for evaluation.
 
 We repeat this procedure for a given number of iterations and select the highest-ranking surviving harness.
 
@@ -214,22 +213,18 @@ This objective trains the model to internalize the demonstrated capabilities in 
 
 ## Results
 
-We use Kimi-K2.6 for both the task agent and the meta agent, with OpenCode providing their harness and file read, write, edit, and bash tools.
-For each task, we initialize the search with four human-written seed harnesses: Summary, Retrieval, Skill, and Hypothesis.
-We run four search generations on Database and Codebase and three on Spectrum, generating four new harnesses per generation and evaluating each candidate over five complete task runs.
-We finetune Kimi-K2.6 with LoRA applied to attention projections, using rank 8, scaling factor 16, and no dropout.
+We use Kimi-K2.6 as both the task agent and the meta agent. Harness optimization begins with four human-written seed harnesses—Summary, Retrieval, Skill, and Hypothesis. We evaluate each harness over five repeated runs and select the top four harnesses for revision in each iteration. For harness distillation, we use LoRA with rank 64, applied to the attention projection layers. We use the first part of each Continual Learning Bench task stream as train subtasks and the later part as test subtasks. The split falls at a phase transition designed into Continual Learning Bench, so test results reflect generalization to new instances within the same task.
 
-We cut each Continual Learning Bench task stream into train and test subtasks at an environment transition: Database moves to a migrated database, Codebase to new repositories, and Spectrum from wideband to narrowband activity.
-The meta agent analyzes only train trajectories and distillation trains only on them. Test subtasks are used for scoring.
+We compare four baseline settings during harness optimization. **No Memory** clears the base model's context at each subtask boundary without retaining either a summary or a memory directory. Consequently, no information is carried across subtasks. **Summary-Based Compaction** summarizes the model's context at each boundary and passes the resulting summary to the next subtask. Under the **Generic** harness, the model follows the task-independent LOAD and OFFLOAD instructions defined above, with files carrying information across subtask boundaries. Finally, the **Human-Written** harnesses are the seed harnesses evaluated in the first optimization iteration.
 
-We compare four settings to assess the effects of persistent memory and model finetuning. *No memory* clears the base model's context at each subtask boundary with neither a summary nor a memory directory, so no information carries over between subtasks. *Summary-based compaction* summarizes the base model's context at the boundary and passes the summary to the next subtask. Under the *Generic harness*, the base model uses the task-independent LOAD and OFFLOAD instructions defined above, with files carrying information across subtask boundaries. The *Generic harness with a finetuned model* compares supervised finetuning (SFT) on two sets of trajectories: *SFT on generic trajectories*, collected with the generic harness, and *SFT on optimized trajectories* (Harness Distillation), the Self-Improving Memory model trained on optimized-harness trajectories rewritten with generic instructions. Both finetuned models use the same instructions and tools during evaluation, and the base model under the generic harness is the *No SFT* reference.
+For harness distillation, we compare supervised fine-tuning (SFT) on two trajectory sets: **SFT on Generic Trajectories**, collected using the generic harness, and **SFT on Optimized Trajectories**, collected using the optimized harness. To train the Self-Improving Memory model, we rewrite the optimized-harness trajectories using the generic instructions. Both fine-tuned models and the **No SFT** reference model use the same harness during evaluation.
 
 ### Automatic harness optimization delivers substantial gains
 
 We select the best observed optimized harness separately for each task.
 Averaging the three selected task scores gives a mean of 56.0, an improvement of 11.4 points over the human-written seeds selected for each task and 19.9 points over Generic (Figure 4).
 The optimized harnesses improve over the selected human-written seeds on all three tasks, with the largest gain on Codebase (20.6 points).
-On Spectrum, Generic and Optimized have nearly the same raw first-subtask score (21.7 and 21.9), but reach test means of 42.5 and 49.9 as experience accumulates (Figure 5a).
+On Spectrum, Generic and Optimized have nearly the same raw first-subtask score (21.7 and 21.9), but reach test means of 42.5 and 49.9 as experience accumulates (Figure 6a).
 Both the human-written seeds and optimized harnesses are selected by task score, so these are the best observed scores among evaluated candidates.
 
 <a id="fig-harness-results"></a>
@@ -242,25 +237,43 @@ Both the human-written seeds and optimized harnesses are selected by task score,
 
 _Figure 4. **Optimized harnesses beat the best hand-written harness on every task.** Error bars show 95% CIs. Best human-written is the best of the four hand-written harnesses for each task, and +N is the Optimized gain over it._
 
+### Training internalizes part of these gains
+
+We finetune on demonstrations from train subtasks and evaluate generalization to test subtasks of the same tasks after domain shifts.
+Across ten matched evaluation seeds, Harness Distillation reaches an overall mean test score of 43.1 versus 37.6 for SFT on generic trajectories, a gain of 5.5 points (14.6%, Figure 5).
+Its 7.0-point gain over No SFT (36.1, the same reference evaluation as Generic in Figure 4) is descriptive because the base model was evaluated separately.
+The improved test scores show that the finetuned model generalizes within the same tasks under domain shift, using generic memory instructions.
+We hypothesize that the gain partly reflects improved memory organization and retrieval, alongside task-solving behavior, but isolating this mechanism requires direct behavioral analysis.
+
+<a id="fig-distillation-results"></a>
+
+<div class="sim-figure" style="--figure-width: 100%; --mobile-width: 900px;">
+  <a href="fig5_distillation.png"><img src="fig5_distillation.png" alt="Figure 5: model distillation under generic instructions" /></a>
+</div>
+
+<p class="sim-figure-hint">Swipe to explore the figure, or tap to open it at full size.</p>
+
+_Figure 5. **Harness distillation moves part of the gain into the model's weights.** All models run with the generic harness. SFT on generic trajectories trains on generic-harness runs, and SFT on optimized trajectories trains on optimized-harness runs with the prompts swapped back to generic. Error bars show 95% CIs, and +N is the gain over No SFT._
+
 ### Meta-optimization requires evaluation and selection
 
-Across the completed searches (Figure 5b), 37 of 44 generated revisions fail to beat the best score from previous iterations.
+Across the completed searches (Figure 6b), 37 of 44 generated revisions fail to beat the best score from previous iterations.
 Database and Spectrum reach 53.8 and 49.9 in the first search generation and make no further gains, while Codebase improves through the fourth generation to 64.3.
 Progress therefore depends on evaluating proposals and retaining the best observed designs.
 
 <a id="fig-learning-search"></a>
 
 <div class="sim-figure" style="--figure-width: 100%; --mobile-width: 900px;">
-  <a href="fig5_learning_and_search.png"><img src="fig5_learning_and_search.png" alt="Figure 5: left, subtask scores across the task stream. Right, every harness evaluated during the search" /></a>
+  <a href="fig6_learning_and_search.png"><img src="fig6_learning_and_search.png" alt="Figure 6: left, subtask scores across the task stream. Right, every harness evaluated during the search" /></a>
 </div>
 
 <p class="sim-figure-hint">Swipe to explore the figure, or tap to open it at full size.</p>
 
-_Figure 5. **Learning across subtasks, and search progress.** Left: subtask scores for the runs in Figure 4, where the dashed line marks the train/test environment shift. Right: each dot is one evaluated harness (iteration 0: Generic, iteration 1: hand-written seeds, iterations 2 and later: harnesses proposed by the meta agent). The line tracks the best score so far._
+_Figure 6. **Learning across subtasks, and search progress.** Left: subtask scores for the runs in Figure 4, where the dashed line marks the train/test environment shift. Right: each dot is one evaluated harness (iteration 0: Generic, iteration 1: hand-written seeds, iterations 2 and later: harnesses proposed by the meta agent). The line tracks the best score so far._
 
 ### Case Study of Meta-Optimization
 
-Figure 6 illustrates how trajectory reports guide revisions of the Codebase memory harness.
+Figure 7 illustrates how trajectory reports guide revisions of the Codebase memory harness.
 The Summary harness scores 34.3, barely above Generic at 33.5 and well below the best seed at 43.7. Its report identifies growing monolithic notes and repeated repository discovery.
 A revision that reuses recorded paths and retains failure rules scores 52.2.
 The next report diagnoses an append-only file without an index mapping symptoms to fixes, and a revision with a compact quickstart, an indexed registry, and separate fix files scores 55.7.
@@ -269,31 +282,12 @@ An alternative Summary revision that retains details of only the last two fixes 
 <a id="fig-case-meta-optimization"></a>
 
 <div class="sim-figure" style="--figure-width: 100%; --mobile-width: 900px;">
-  <a href="fig6_case_study.png"><img src="fig6_case_study.png" alt="Figure 6: revisions of the Codebase memory harness guided by trajectory reports" /></a>
+  <a href="fig7_case_study.png"><img src="fig7_case_study.png" alt="Figure 7: revisions of the Codebase memory harness guided by trajectory reports" /></a>
 </div>
 
 <p class="sim-figure-hint">Swipe to explore the figure, or tap to open it at full size.</p>
 
-_Figure 6. **How the meta agent revises the Codebase harness.** Each box shows a harness's LOAD and OFFLOAD prompts and test score. Each report diagnoses that harness's trajectories and motivates the next revision. Underlines mark the key changes._
-
-### Training internalizes part of these gains
-
-We finetune on demonstrations from train subtasks and evaluate generalization to test subtasks of the same tasks after domain shifts.
-We compare SFT on optimized trajectories (Harness Distillation), trained on optimized-harness trajectories rewritten with generic instructions, with SFT on generic trajectories, trained on generic-harness trajectories. Both use the same LoRA recipe and are evaluated with the generic harness.
-Across ten matched evaluation seeds, Harness Distillation reaches an overall mean test score of 43.1 versus 37.6 for SFT on generic trajectories, a gain of 5.5 points (14.7%, Figure 7).
-Its 7.0-point gain over No SFT (36.1, the same reference evaluation as Generic in Figure 4) is descriptive because the base model was evaluated separately.
-The improved test scores show that the finetuned model generalizes within the same tasks under domain shift, using generic memory instructions.
-We hypothesize that the gain partly reflects improved memory organization and retrieval, alongside task-solving behavior, but isolating this mechanism requires direct behavioral analysis.
-
-<a id="fig-distillation-results"></a>
-
-<div class="sim-figure" style="--figure-width: 100%; --mobile-width: 900px;">
-  <a href="fig7_distillation.png"><img src="fig7_distillation.png" alt="Figure 7: model distillation under generic instructions" /></a>
-</div>
-
-<p class="sim-figure-hint">Swipe to explore the figure, or tap to open it at full size.</p>
-
-_Figure 7. **Harness distillation moves part of the gain into the model's weights.** All models run with the generic harness. SFT on generic trajectories trains on generic-harness runs, and SFT on optimized trajectories trains on optimized-harness runs with the prompts swapped back to generic. Error bars show 95% CIs, and +N is the gain over No SFT._
+_Figure 7. **How the meta agent revises the Codebase harness.** Each box shows a harness's LOAD and OFFLOAD prompts and test score. Each report diagnoses that harness's trajectories and motivates the next revision. Underlines mark the key changes._
 
 ## Conclusion
 
@@ -301,6 +295,36 @@ We present Self-Improving Memory, which improves a model's memory-management per
 We achieve this with a Discover-Demonstrate-Distill pipeline: the model discovers memory instructions tailored to each task, demonstrates them in its own trajectories, and is finetuned on those demonstrations so that it manages memory under a single generic harness.
 We observe that automatically optimized harnesses outperform human-written ones (56.0 versus 44.6 for the best human-written seed and 36.1 for Generic), and that distillation carries part of these gains into the model weights (43.1 versus 37.6 for training on generic-harness trajectories).
 We hope future work scales this approach to more agent capabilities beyond memory and to a wider range of tasks and models.
+
+<details markdown="1">
+<summary>See related work</summary>
+
+## Related Work
+
+**Meta-harness optimization.**
+An agent's performance depends on its harness as well as its weights, yet harnesses are still largely designed by hand ([Lee et al., 2026](https://arxiv.org/abs/2603.28052)).
+Early work used language models to optimize prompts from feedback, by searching over candidate instructions or evolving populations of prompts ([Zhou et al., 2022](https://arxiv.org/abs/2211.01910); [Yang et al., 2023](https://arxiv.org/abs/2309.03409); [Fernando et al., 2023](https://arxiv.org/abs/2309.16797); [Agrawal et al., 2025](https://arxiv.org/abs/2507.19457)).
+Later methods search over entire agent designs or let agents rewrite their own code ([Hu et al., 2024](https://arxiv.org/abs/2408.08435); [Zhang et al., 2024](https://arxiv.org/abs/2410.10762); [Zhang et al., 2025](https://arxiv.org/abs/2505.22954)).
+Recent systems optimize the harness itself, including coding-agent scaffolds, evolving playbooks, and skill harnesses ([Lee et al., 2026](https://arxiv.org/abs/2603.28052); [Lin et al., 2026](https://arxiv.org/abs/2604.25850); [Zhang et al., 2025](https://arxiv.org/abs/2510.04618); [Wei et al., 2026](https://arxiv.org/abs/2608.15071)), and ALMA and MemEvolve apply this search to memory designs ([Xiong et al., 2026](https://arxiv.org/abs/2602.07755); [Zhang et al., 2025](https://arxiv.org/abs/2512.18746)).
+The gains of an optimized harness, however, remain tied to that harness at deployment.
+Context distillation moves behavior induced by a prompt into the weights ([Snell et al., 2022](https://arxiv.org/abs/2209.15189); [Bhargava et al., 2024](https://arxiv.org/abs/2409.13697); [Ye et al., 2026](https://arxiv.org/abs/2602.12275)).
+WHALE and Co-Harness alternate harness search with fine-tuning ([Kim et al., 2026](https://arxiv.org/abs/2609.00196); [Chen et al., 2026](https://arxiv.org/abs/2607.22688)), and Harness-Zero distills an optimized harness into a model that runs under a fixed one, using a separate agent to correct the student's actions ([Ye et al., 2026](https://arxiv.org/abs/2609.24974)).
+Self-Improving Memory searches only the instructions that govern how the agent manages a memory directory across tasks.
+Because the optimized and generic harnesses differ only in these instructions, we distill by swapping the generic prompts back into the recorded trajectories, with no correction step.
+And because the meta agent and the task agent are the same model, the model learns memory skills that it discovered itself.
+
+**Memory and continual learning agents.**
+Continual learning classically studies how a model improves over a sequence of tasks by updating its weights without forgetting earlier ones ([Kirkpatrick et al., 2017](https://arxiv.org/abs/1612.00796); [Parisi et al., 2019](https://arxiv.org/abs/1802.07569)).
+Benchmarks for language agents recast this goal as using experience from earlier tasks to do better on later ones ([Wu et al., 2024](https://arxiv.org/abs/2406.08747); [Zheng et al., 2025](https://arxiv.org/abs/2505.11942); [Wei et al., 2025](https://arxiv.org/abs/2511.20857)).
+On Continual Learning Bench, which we use, agents often fail to reuse knowledge across instances, and dedicated memory systems do not fix this ([Asawa et al., 2026](https://arxiv.org/abs/2606.05661)).
+Memory systems either store records in an external database ([Park et al., 2023](https://arxiv.org/abs/2304.03442); [Packer et al., 2023](https://arxiv.org/abs/2310.08560); [Xu et al., 2025](https://arxiv.org/abs/2502.12110); [Chhikara et al., 2025](https://arxiv.org/abs/2504.19413)) or write experience as text, such as reflections, skills, insights, workflows, and reasoning strategies ([Shinn et al., 2023](https://arxiv.org/abs/2303.11366); [Wang et al., 2023](https://arxiv.org/abs/2305.16291); [Zhao et al., 2023](https://arxiv.org/abs/2308.10144); [Wang et al., 2024](https://arxiv.org/abs/2409.07429); [Suzgun et al., 2025](https://arxiv.org/abs/2504.07952); [Ouyang et al., 2025](https://arxiv.org/abs/2509.25140)).
+Deployed agents increasingly keep this memory as a directory of Markdown files that they edit with ordinary file tools ([Zhou et al., 2026](https://arxiv.org/abs/2607.26637)).
+In all of these systems, a human decides what to store and how to organize it.
+Yet no single memory-extraction prompt works best across task types ([Yang et al., 2026](https://arxiv.org/abs/2604.11610)), and memory that a language model keeps rewriting can become less useful than no memory at all ([Zhang et al., 2026](https://arxiv.org/abs/2605.12978)).
+Reinforcement learning can train memory managers, but mostly for question answering or within a single long task ([Yan et al., 2025](https://arxiv.org/abs/2508.19828); [Wang et al., 2025](https://arxiv.org/abs/2509.25911); [Zhou et al., 2025](https://arxiv.org/abs/2506.15841)), while Auto-Dreamer learns to consolidate memory offline across related tasks ([Ye et al., 2026](https://arxiv.org/abs/2605.20616)).
+Self-Improving Memory instead discovers the memory policy for each task, searching over LOAD and OFFLOAD instructions from four classic designs, and then distills that policy into the model's weights so that generic prompts suffice at deployment.
+
+</details>
 
 ## Contributors
 Tong Chen, Chuanyang Jin, Eryk Helenowski, Weizhe Yuan, Jason Weston, Ilia Kulikov, Xian Li, Swarnadeep Saha
