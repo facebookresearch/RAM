@@ -12,9 +12,7 @@ form of papers, public tasks and/or shared model code. Some of the projects are 
 [RAM repo](https://github.com/facebookresearch/RAM/tree/main/projects), others are maintained
 via external websites.
 
-See also the [RAM 2 Workshop at COLM 2025](https://facebookresearch.github.io/RAM/workshop/COLM_2025).
-
-**Jump to:** [2026](#2026) (15) · [2025](#2025) (28) · [2024](#2024) (20) · [2023](#2023) (9)
+**Jump to:** [2026](#2026) (15) · [2025](#2025) (29) · [2024](#2024) (20) · [2023](#2023) (9)
 
 ## 2026
 
@@ -70,6 +68,9 @@ See also the [RAM 2 Workshop at COLM 2025](https://facebookresearch.github.io/RA
 
 - **Experience Synthesis** [[paper]](https://arxiv.org/abs/2511.03773) [[tweets]](https://x.com/jaseweston/status/1986613046047846569)
   <em>Scaling training environments for RL by simulating them with reasoning LLMs.</em> <sub>[Agents](README.md#agents)</sub>
+
+- **RAM 2 Workshop at COLM 2025** [[website]](https://facebookresearch.github.io/RAM/workshop/COLM_2025/)
+  <em>Reasoning, Attention & Memory – 10 Years On: a retrospective on the decade since the first RAM workshop (NeurIPS 2015), and new directions for the next.</em> <sub>[Reasoning](README.md#reasoning) · [Memory & Architectures](README.md#memory--architectures)</sub>
 
 - **RESTRAIN** [[paper]](https://arxiv.org/abs/2510.02172) [[tweets]](https://x.com/jaseweston/status/1974000962219225271)
   <em>Self-training RL method that improves over other label-free / test-time training methods.</em> <sub>[Reasoning](README.md#reasoning)</sub>

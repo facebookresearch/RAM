@@ -12,8 +12,6 @@ form of papers, public tasks and/or shared model code. Some of the projects are 
 [RAM repo](https://github.com/facebookresearch/RAM/tree/main/projects), others are maintained
 via external websites.
 
-See also the [RAM 2 Workshop at COLM 2025](https://facebookresearch.github.io/RAM/workshop/COLM_2025).
-
 **Jump to:** [Autoresearch & Co-Improvement](#autoresearch--co-improvement) · [Agents](#agents) · [Reward Models & Evaluation](#reward-models--evaluation) · [(Self-)Alignment](#self-alignment) · [Synthetic Data](#synthetic-data) · [Pre- and Mid-Training](#pre--and-mid-training) · [Reasoning](#reasoning) · [Memory & Architectures](#memory--architectures)
 
 ## Autoresearch & Co-Improvement
@@ -238,6 +236,9 @@ See also the [RAM 2 Workshop at COLM 2025](https://facebookresearch.github.io/RA
 
 ## Reasoning
 
+- **RAM 2 Workshop at COLM 2025** [[website]](https://facebookresearch.github.io/RAM/workshop/COLM_2025/)
+  <em>Reasoning, Attention & Memory – 10 Years On: a retrospective on the decade since the first RAM workshop (NeurIPS 2015), and new directions for the next.</em>
+
 #### _CoT and RL_
 
 - **Principia** [[paper]](https://arxiv.org/abs/2603.18886) [[blog]](https://facebookresearch.github.io/RAM/blogs/principia) [[tweet]](https://x.com/jaseweston/status/2040062089725645039)
@@ -314,6 +315,9 @@ See also the [RAM 2 Workshop at COLM 2025](https://facebookresearch.github.io/RA
   <em>Reduces hallucination by LLM self-identifying and verifying generated facts.</em>
 
 ## Memory & Architectures
+
+- **RAM 2 Workshop at COLM 2025** [[website]](https://facebookresearch.github.io/RAM/workshop/COLM_2025/)
+  <em>Reasoning, Attention & Memory – 10 Years On: a retrospective on the decade since the first RAM workshop (NeurIPS 2015), and new directions for the next.</em>
 
 #### _memory_
 
