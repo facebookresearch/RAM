@@ -30,8 +30,6 @@ website:
     [RAM repo](https://github.com/facebookresearch/RAM/tree/main/projects), others are maintained
     via external websites.
 
-    See also the [RAM 2 Workshop at COLM 2025](https://facebookresearch.github.io/RAM/workshop/COLM_2025).
-
 # Order of sections and subsections in the topic view.
 # Autoresearch and Agents are pinned first; the rest are ordered most-recent-first
 # by the average date of each section's 5 newest projects (as of Nov 2026),
@@ -168,6 +166,15 @@ projects:
     blurb: "Position paper: rather than self-improving AI alone, target human-AI co-improvement as the path to safer co-superintelligence."
     topics:
       - "Autoresearch & Co-Improvement"
+
+  - name: "RAM 2 Workshop at COLM 2025"
+    date: "2025-10"
+    links:
+      website: https://facebookresearch.github.io/RAM/workshop/COLM_2025/
+    blurb: "Reasoning, Attention & Memory – 10 Years On: a retrospective on the decade since the first RAM workshop (NeurIPS 2015), and new directions for the next."
+    topics:
+      - "Reasoning"
+      - "Memory & Architectures"
 
   - name: "Principia"
     date: "2026-03"
