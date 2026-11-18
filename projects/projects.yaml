@@ -1,0 +1,680 @@
+# Source of truth for projects/README.md (by topic) and projects/BY_YEAR.md (by year).
+# Edit this file, then run:  python generate_readme.py
+#
+# Each project:
+#   name:   display name
+#   date:   "YYYY-MM" (first public release). Controls ordering in both views and the year grouping.
+#   links:  label: url   (rendered as [[label]](url), in the order given; relative paths are fine)
+#   blurb:  one-line description (rendered in italics)
+#   topics: one or more "Section" or "Section / subsection" entries, matching `sections` below.
+#           A project listed under several topics appears in each of them in the topic view,
+#           but only once in the year view.
+#
+# Within a month, projects appear in the order listed here, so add new projects at the top.
+
+title: "RAM Projects"
+intro: >-
+  Here we list projects undertaken in the RAM framework that are shared publicly, either in the
+  form of papers, public tasks and/or shared model code. This directory also contains subfolders
+  for some of the projects which are housed in the RAM repo, others are maintained via external websites.
+
+# Order of sections and subsections in the topic view.
+# Autoresearch and Agents are pinned first; the rest are ordered most-recent-first
+# by the average date of each section's 5 newest projects (as of Nov 2026),
+# except Synthetic Data (placed by hand after (Self-)Alignment) and
+# Memory & Architectures (placed by hand last).
+sections:
+  - title: "Autoresearch & Co-Improvement"
+  - title: "Agents"
+  - title: "Reward Models & Evaluation"
+  - title: "(Self-)Alignment"
+    subsections:
+      - "(self-)alignment optimization techniques"
+      - "(self-)alignment via other methods"
+      - "data curation"
+  - title: "Synthetic Data"
+    subsections:
+      - "synthetic data & data quality"
+      - "synthetic data for complex reasoning & tools"
+  - title: "Pre- and Mid-Training"
+  - title: "Reasoning"
+    subsections:
+      - "CoT and RL"
+      - "other algorithms"
+      - "inference"
+  - title: "Memory & Architectures"
+    subsections:
+      - "memory"
+      - "architectures"
+
+projects:
+  - name: "Self-Improving Memory"
+    date: "2026-11"
+    links:
+      blog: https://facebookresearch.github.io/RAM/blogs/self_improving_memory/
+      tweet: https://x.com/jaseweston/status/2122691693543817397
+    blurb: "The model discovers its own memory skills via meta-optimization, then distills them into its weights."
+    topics:
+      - "Memory & Architectures / memory"
+      - "Agents"
+
+  - name: "Self-Improving Post-Thinking"
+    date: "2026-11"
+    links:
+      paper: https://arxiv.org/abs/2601.21343
+      blog: https://facebookresearch.github.io/RAM/blogs/post_thinking/
+      tweet: https://x.com/jaseweston/status/2119885922699546932
+    blurb: "Teaches models to judge the safety, correctness and confidence of their own generations after answering."
+    topics:
+      - "Pre- and Mid-Training"
+
+  - name: "Aligning Autoresearch"
+    date: "2026-10"
+    links:
+      paper: https://arxiv.org/abs/2610.38882
+      tweet: https://x.com/jaseweston/status/2115992445930311714
+    blurb: "Humans & AI are better together: studies the human role in autoresearch, and how to evaluate & train aligned co-research agents."
+    topics:
+      - "Autoresearch & Co-Improvement"
+      - "Agents"
+
+  - name: "HackBench"
+    date: "2026-10"
+    links:
+      paper: https://arxiv.org/abs/2610.38882
+      blog: https://facebookresearch.github.io/RAM/blogs/hackbench/
+      dataset: https://huggingface.co/datasets/facebook/hackbench
+      tweet: https://x.com/jaseweston/status/2114709989826953719
+    blurb: "Benchmark for detecting & localizing reward hacking in autoresearch agents; frontier models fail."
+    topics:
+      - "Reward Models & Evaluation"
+      - "Autoresearch & Co-Improvement"
+
+  - name: "Self-Direction"
+    date: "2026-10"
+    links:
+      paper: https://arxiv.org/abs/2610.31846
+      project: https://self-direction.github.io/
+    blurb: "Agents turn each mistake into a small LoRA skill, so lessons from failures persist and get reused."
+    topics:
+      - "Memory & Architectures / memory"
+      - "Agents"
+
+  - name: "AutoInteract"
+    date: "2026-10"
+    links:
+      paper: https://arxiv.org/abs/2610.38882
+      blog: https://facebookresearch.github.io/RAM/blogs/autointeract/
+      tweet: https://x.com/jaseweston/status/2108176858520924594
+    blurb: "Trains AIs to be better collaborators via RL with simulated humans in challenging multi-turn interactions."
+    topics:
+      - "Autoresearch & Co-Improvement"
+      - "Agents"
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "AutoBenchmark"
+    date: "2026-09"
+    links:
+      paper: https://arxiv.org/abs/2610.38882
+      blog: https://facebookresearch.github.io/RAM/blogs/autobench/
+      tweet: https://x.com/jaseweston/status/2105305463784935791
+    blurb: "Agents create benchmarks automatically; human-agent collaboration gives big wins, especially in ideation."
+    topics:
+      - "Autoresearch & Co-Improvement"
+      - "Reward Models & Evaluation"
+
+  - name: "Unslopping AI"
+    date: "2026-09"
+    links:
+      paper: https://arxiv.org/abs/2610.38882
+      blog: https://facebookresearch.github.io/RAM/blogs/unslop/
+      tweet: https://x.com/jaseweston/status/2104564368792854860
+    blurb: "Removes AI slop via RL with rubrics learned from the gap between expert human and model writing (RL-XAR)."
+    topics:
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+      - "Reward Models & Evaluation"
+      - "Autoresearch & Co-Improvement"
+
+  - name: "Autodata"
+    date: "2026-06"
+    links:
+      paper: https://arxiv.org/abs/2606.25996
+      blog: https://facebookresearch.github.io/RAM/blogs/autodata/
+      tweet: https://x.com/jaseweston/status/2070117091521204521
+    blurb: "An agentic data scientist that creates high quality data, converting inference compute into better training."
+    topics:
+      - "Synthetic Data / synthetic data & data quality"
+      - "Autoresearch & Co-Improvement"
+
+  - name: "Principia"
+    date: "2026-03"
+    links:
+      paper: https://arxiv.org/abs/2603.18886
+      blog: https://facebookresearch.github.io/RAM/blogs/principia
+      tweet: https://x.com/jaseweston/status/2040062089725645039
+    blurb: "Reasoning over Mathematical Objects."
+    topics:
+      - "Reasoning / CoT and RL"
+
+  - name: "ParaGator"
+    date: "2026-03"
+    links:
+      paper: https://arxiv.org/abs/2603.18886
+      blog: https://facebookresearch.github.io/RAM/blogs/paragator/
+      tweet: https://x.com/jaseweston/status/2038609971160424748
+    blurb: "Train generation with pass@k, and aggregation with pass@1 on-policy, end-to-end for better results."
+    topics:
+      - "Reasoning / CoT and RL"
+
+  - name: "AggLM"
+    date: "2025-09"
+    links:
+      paper: https://arxiv.org/abs/2509.06870
+      tweets: https://x.com/jaseweston/status/1965233976949543194
+    blurb: "Uses RL to train an LLM solution aggregator, with strong results."
+    topics:
+      - "Reasoning / CoT and RL"
+
+  - name: "RESTRAIN"
+    date: "2025-10"
+    links:
+      paper: https://arxiv.org/abs/2510.02172
+      tweets: https://x.com/jaseweston/status/1974000962219225271
+    blurb: "Self-training RL method that improves over other label-free / test-time training methods."
+    topics:
+      - "Reasoning / CoT and RL"
+
+  - name: "StepWiser"
+    date: "2025-08"
+    links:
+      paper: https://arxiv.org/abs/2508.19229
+    blurb: "Stepwise Generative Judge trained with RL. SOTA on ProcessBench; gains when used at train/test time."
+    topics:
+      - "Reasoning / CoT and RL"
+      - "Reward Models & Evaluation"
+
+  - name: "OptimalThinkingBench"
+    date: "2025-08"
+    links:
+      project: otb
+      paper: https://arxiv.org/abs/2508.13141
+    blurb: "New benchmark measuring overthinking & underthinking of LLMs."
+    topics:
+      - "Reasoning / CoT and RL"
+
+  - name: "Reasoning for Factuality"
+    date: "2025-08"
+    links:
+      paper: https://www.arxiv.org/abs/2508.05618
+    blurb: "Shows how to learn CoTs that improve factuality via a new reward function."
+    topics:
+      - "Reasoning / CoT and RL"
+      - "Reward Models & Evaluation"
+
+  - name: "ASTRO"
+    date: "2025-07"
+    links:
+      paper: https://arxiv.org/abs/2507.00417
+    blurb: "Teaching LLMs to reason by reflecting and backtracking in-context."
+    topics:
+      - "Reasoning / CoT and RL"
+
+  - name: "NaturalThoughts"
+    date: "2025-07"
+    links:
+      paper: https://arxiv.org/abs/2507.01921
+    blurb: "Creates better CoT distillation emphasizing difficult and diverse reasoning."
+    topics:
+      - "Reasoning / CoT and RL"
+
+  - name: "Bridging Online and Offline RL"
+    date: "2025-06"
+    links:
+      paper: https://arxiv.org/abs/2506.21495
+    blurb: "Mix verifiable & non-verifiable tasks, comparing semi-online DPO & GRPO (similar results)."
+    topics:
+      - "Reasoning / CoT and RL"
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "Thinking LLMs"
+    date: "2024-10"
+    links:
+      paper: https://arxiv.org/abs/2410.10630
+    blurb: "Train LLMs to write down their internal thoughts before responding to general instructions (non-verifiable tasks)."
+    topics:
+      - "Reasoning / CoT and RL"
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "Iterative Reasoning Preference Optimization"
+    date: "2024-04"
+    links:
+      paper: https://arxiv.org/abs/2404.19733
+    blurb: "Shows how to use iterative DPO to train CoTs on verifiable reasoning tasks."
+    topics:
+      - "Reasoning / CoT and RL"
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "Coconut (Continuous Chain-of-Thought)"
+    date: "2024-12"
+    links:
+      project: https://github.com/facebookresearch/coconut
+    blurb: "Training LLMs to reason in continuous latent space (rather than using language)."
+    topics:
+      - "Reasoning / other algorithms"
+
+  - name: "Backtracking Improves Generation Safety"
+    date: "2024-09"
+    links:
+      paper: https://arxiv.org/abs/2409.14586
+    blurb: "Trains LLMs to generate a RESET token if the partial-generation is bad."
+    topics:
+      - "Reasoning / other algorithms"
+
+  - name: "System 2 Distillation"
+    date: "2024-07"
+    links:
+      paper: https://arxiv.org/abs/2407.06023
+    blurb: "Distilling reasoning traces (System 2) back into the Transformer (System 1)."
+    topics:
+      - "Reasoning / other algorithms"
+
+  - name: "Beyond A*"
+    date: "2024-02"
+    links:
+      paper: https://arxiv.org/abs/2402.14083
+    blurb: "Better Planning with Transformers via Search Dynamics Bootstrapping."
+    topics:
+      - "Reasoning / other algorithms"
+      - "Reasoning / inference"
+
+  - name: "SWEET-RL"
+    date: "2025-03"
+    links:
+      project: https://github.com/facebookresearch/sweet_rl
+    blurb: "Training Multi-Turn LLM Agents on Collaborative Reasoning Tasks."
+    topics:
+      - "Reasoning / other algorithms"
+      - "Agents"
+
+  - name: "From decoding to meta-generation"
+    date: "2024-06"
+    links:
+      paper: https://arxiv.org/abs/2406.16838
+    blurb: "Survey paper on reasoning methods."
+    topics:
+      - "Reasoning / inference"
+
+  - name: "System 2 Attention"
+    date: "2023-11"
+    links:
+      paper: https://arxiv.org/abs/2311.11829
+    blurb: "Make LLM plan what it attends to as a generative process, decreasing bias & increasing factuality."
+    topics:
+      - "Reasoning / inference"
+
+  - name: "Chain-of-Verification Reduces Hallucination"
+    date: "2023-09"
+    links:
+      paper: https://arxiv.org/abs/2309.11495
+    blurb: "Reduces hallucination by LLM self-identifying and verifying generated facts."
+    topics:
+      - "Reasoning / inference"
+
+  - name: "Ask, Refine, Trust"
+    date: "2023-11"
+    links:
+      paper: https://arxiv.org/abs/2311.07961
+    blurb: "Technique that uses critical questions to determine if an LLM generation needs refinement."
+    topics:
+      - "Reasoning / inference"
+
+  - name: "ToolVerifier"
+    date: "2024-02"
+    links:
+      paper: https://arxiv.org/abs/2402.14158
+    blurb: "Generalization to New Tools via Self-Verification."
+    topics:
+      - "Reasoning / inference"
+      - "Agents"
+      - "Synthetic Data / synthetic data for complex reasoning & tools"
+
+  - name: "RLLM"
+    date: "2026-03"
+    links:
+      paper: https://arxiv.org/abs/2603.18886
+      blog: https://facebookresearch.github.io/RAM/blogs/rllm/
+      tweet: https://x.com/jaseweston/status/2036119252214620513
+    blurb: "Unified Post-Training via On-Policy-Trained LM-as-RM."
+    topics:
+      - "Reward Models & Evaluation"
+
+  - name: "HERO"
+    date: "2025-10"
+    links:
+      paper: https://arxiv.org/abs/2510.07242
+      tweets: https://x.com/jaseweston/status/1977756142571864539
+    blurb: "Combines sparse verifiable and dense RMs into a hybrid reward to give better results."
+    topics:
+      - "Reward Models & Evaluation"
+
+  - name: "DARLING"
+    date: "2025-09"
+    links:
+      paper: https://arxiv.org/abs/2509.02534
+    blurb: "Method to optimize quality+diversity reward to give gains on each over conventional GRPO RL."
+    topics:
+      - "Reward Models & Evaluation"
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "J1"
+    date: "2025-05"
+    links:
+      paper: https://arxiv.org/abs/2505.10320
+    blurb: "Learns CoTs for LLM-as-a-Judge via GRPO, outperforms EvalPlanner & Distilled R1 models at 8B and 70B scale."
+    topics:
+      - "Reward Models & Evaluation"
+
+  - name: "Eval-Planner"
+    date: "2025-01"
+    links:
+      paper: https://arxiv.org/abs/2501.18099
+    blurb: "Learning powerful plan+execution CoTs for LLM-as-a-Judge critics, SOTA on RewardBench."
+    topics:
+      - "Reward Models & Evaluation"
+
+  - name: "Self-Taught Evaluators"
+    date: "2024-08"
+    links:
+      project: ./self_taught_evaluator
+    blurb: "Improving LLM-as-a-Judge using iteratively generated synthetic data only (no human annotation)."
+    topics:
+      - "Reward Models & Evaluation"
+
+  - name: "Branch-Solve-Merge"
+    date: "2023-10"
+    links:
+      paper: https://arxiv.org/abs/2310.15123
+    blurb: "Reasoning method to improve LLM Evaluation and Generation."
+    topics:
+      - "Reward Models & Evaluation"
+
+  - name: "Self-Rewarding LLMs"
+    date: "2024-01"
+    links:
+      paper: https://arxiv.org/abs/2401.10020
+    blurb: "Shows LLMs can judge themselves to self-improve without human feedback."
+    topics:
+      - "Reward Models & Evaluation"
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "Experience Synthesis"
+    date: "2025-11"
+    links:
+      paper: https://arxiv.org/abs/2511.03773
+      tweets: https://x.com/jaseweston/status/1986613046047846569
+    blurb: "Scaling training environments for RL by simulating them with reasoning LLMs."
+    topics:
+      - "Agents"
+
+  - name: "Early Experience"
+    date: "2025-10"
+    links:
+      paper: https://arxiv.org/abs/2510.08558
+      tweets: https://x.com/jaseweston/status/1979179944258265358
+    blurb: "SFT is sparse; RL on long-horizons is hard. EE provides new mid-training signals that help."
+    topics:
+      - "Agents"
+
+  - name: "Self-Challenging LLM Agents"
+    date: "2025-06"
+    links:
+      paper: https://arxiv.org/abs/2506.01716
+    blurb: "LLM creates own challenging agentic tool-use tasks, resulting in better agentic performance."
+    topics:
+      - "Agents"
+      - "Synthetic Data / synthetic data for complex reasoning & tools"
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "Thinking Mid-training: RL of Interleaved Reasoning"
+    date: "2026-01"
+    links:
+      paper: https://arxiv.org/abs/2601.21343
+      blog: https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/
+      tweet: https://x.com/jaseweston/status/2041864833214095484
+    blurb: "An intermediate SFT+RL mid-training phase to teach models how to think."
+    topics:
+      - "Pre- and Mid-Training"
+
+  - name: "Self-Improving Pretraining"
+    date: "2026-01"
+    links:
+      paper: https://arxiv.org/abs/2601.21343
+    blurb: "Uses a strong post-trained model to rewrite pretraining data & judge rollouts, building in safety, factuality & quality early."
+    topics:
+      - "Pre- and Mid-Training"
+
+  - name: "Recycling the Web"
+    date: "2025-06"
+    links:
+      paper: https://arxiv.org/abs/2506.04689
+    blurb: "A method to create more high quality pretraining data via rewriting low quality documents."
+    topics:
+      - "Pre- and Mid-Training"
+      - "Synthetic Data / synthetic data & data quality"
+
+  - name: "CoT-Self-Instruct"
+    date: "2025-07"
+    links:
+      paper: https://arxiv.org/abs/2507.23751
+    blurb: "Create synthetic data using reasoning followed by filtering for high quality, for large gains."
+    topics:
+      - "Synthetic Data / synthetic data & data quality"
+
+  - name: "RIP"
+    date: "2025-01"
+    links:
+      paper: https://arxiv.org/abs/2501.18578
+    blurb: "A method to *curate* high quality data, or *create* high quality synthetic data. Gives large improvements."
+    topics:
+      - "Synthetic Data / synthetic data & data quality"
+      - "(Self-)Alignment / data curation"
+
+  - name: "Instruction Back-and-Forth Translation"
+    date: "2024-08"
+    links:
+      paper: https://arxiv.org/abs/2408.04614
+    blurb: "Improves Instruction Backtranslation by rewriting the web document."
+    topics:
+      - "Synthetic Data / synthetic data & data quality"
+      - "(Self-)Alignment / (self-)alignment via other methods"
+
+  - name: "Instruction Backtranslation"
+    date: "2023-08"
+    links:
+      paper: https://arxiv.org/abs/2308.06259
+    blurb: "Self-Alignment method by predicting instructions for web documents."
+    topics:
+      - "Synthetic Data / synthetic data & data quality"
+      - "(Self-)Alignment / (self-)alignment via other methods"
+
+  - name: "SPICE"
+    date: "2025-10"
+    links:
+      paper: https://arxiv.org/abs/2510.24684
+      tweets: https://x.com/jaseweston/status/1983343787465150814
+    blurb: "Challenger creates tasks grounded on documents, Reasoner solves them in self-play, both trained by RL."
+    topics:
+      - "Synthetic Data / synthetic data for complex reasoning & tools"
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "NaturalReasoning: Reasoning in the Wild with 2.8M Challenging Questions"
+    date: "2025-02"
+    links:
+      paper: https://arxiv.org/abs/2502.13124
+    blurb: "Scaling reasoning capabilities with diverse and high-quality questions."
+    topics:
+      - "Synthetic Data / synthetic data for complex reasoning & tools"
+
+  - name: "Source2Synth"
+    date: "2024-09"
+    links:
+      paper: https://arxiv.org/abs/2409.08239
+    blurb: "Generating synthetic data from real sources to improve LLMs on complex reasoning tasks."
+    topics:
+      - "Synthetic Data / synthetic data for complex reasoning & tools"
+
+  - name: "CharacterFlywheel"
+    date: "2026-03"
+    links:
+      paper: https://arxiv.org/abs/2603.01973
+    blurb: "Continual learning in production (with humans-in-the-loop)."
+    topics:
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "WaltzRL"
+    date: "2025-10"
+    links:
+      paper: https://arxiv.org/abs/2510.08240
+      tweets: https://x.com/jaseweston/status/1978185306999341256
+    blurb: "Method to improve safety alignment through multi-agent RL."
+    topics:
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "RLHI"
+    date: "2025-09"
+    links:
+      paper: https://x.com/jaseweston/status/1972851921255051489
+      tweets: https://x.com/jaseweston/status/1972851921255051489
+    blurb: "Method to RL train from organic Human Interaction (aka RLHI) which helps."
+    topics:
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "Solve & Verify"
+    date: "2025-02"
+    links:
+      paper: https://arxiv.org/abs/2502.14948
+    blurb: "A self-play framework for LLMs to learn how to code by writing code & unit tests."
+    topics:
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "Diversity Preference Optimization"
+    date: "2025-01"
+    links:
+      paper: https://arxiv.org/abs/2501.18101
+    blurb: "SOTA LLMs have model collapse. DivPO training improves diversity with similar quality."
+    topics:
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "Self-Consistency Preference Optimization"
+    date: "2024-11"
+    links:
+      paper: https://arxiv.org/abs/2411.04109
+    blurb: "Self-training without human labels that matches supervised training performance."
+    topics:
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "Meta-Rewarding LLMs"
+    date: "2024-07"
+    links:
+      paper: https://arxiv.org/abs/2407.19594
+    blurb: "LLMs that can judge their own judgments to self-improve both acting & evaluating actions."
+    topics:
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "Length Following"
+    date: "2024-06"
+    links:
+      project: length_instruct
+    blurb: "Method to make LLMs follow length instructions much better & remove length bias in evaluations."
+    topics:
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "Iterative DPO & Cringe Loss"
+    date: "2023-12"
+    links:
+      paper: https://arxiv.org/abs/2312.16682
+    blurb: "Shows iterative learning improves alignment."
+    topics:
+      - "(Self-)Alignment / (self-)alignment optimization techniques"
+
+  - name: "Leveraging Implicit Feedback"
+    date: "2023-07"
+    links:
+      paper: https://arxiv.org/abs/2307.14117
+    blurb: "Method to learn from human feedback in dialogue deployment data to improve LLM."
+    topics:
+      - "(Self-)Alignment / (self-)alignment via other methods"
+
+  - name: "Reverse Training"
+    date: "2024-03"
+    links:
+      paper: https://arxiv.org/abs/2403.13799
+    blurb: "Method for pretraining that helps the reversal curse & improves performance."
+    topics:
+      - "Memory & Architectures / memory"
+
+  - name: "MemWalker"
+    date: "2023-10"
+    links:
+      paper: https://arxiv.org/abs/2310.05029
+    blurb: "Novel memory architecture: builds & navigates a tree (structured long-term memory) via LLM prompting."
+    topics:
+      - "Memory & Architectures / memory"
+
+  - name: "Self-Notes"
+    date: "2023-05"
+    links:
+      project: self_notes
+    blurb: "LLMs generate internal thoughts as they read text, enabling reasoning & memorization."
+    topics:
+      - "Memory & Architectures / memory"
+
+  - name: "Stochastic activations"
+    date: "2025-09"
+    links:
+      paper: https://arxiv.org/abs/2509.22358
+      tweets: https://x.com/jaseweston/status/1972649914233389062
+    blurb: "Select between several non-linear functions in the feed-forward layers of an LLM."
+    topics:
+      - "Memory & Architectures / architectures"
+
+  - name: "Multi-token attention"
+    date: "2025-04"
+    links:
+      project: mta
+      paper: https://arxiv.org/abs/2504.00927
+    blurb: "Attention mechanism that can focus on multiple tokens simultaneously."
+    topics:
+      - "Memory & Architectures / architectures"
+
+  - name: "Byte Latent Transformer"
+    date: "2024-12"
+    links:
+      paper: https://arxiv.org/abs/2412.09871
+    blurb: "New Byte-level LLM architecture that matches tokenization-based LLM performance at scale."
+    topics:
+      - "Memory & Architectures / architectures"
+
+  - name: "Adaptive Decoding via Latent Preference Optimization"
+    date: "2024-11"
+    links:
+      paper: https://arxiv.org/abs/2411.09661
+    blurb: "New layer that selects decoding params automatically *per token*."
+    topics:
+      - "Memory & Architectures / architectures"
+
+  - name: "Contextual Position Encoding"
+    date: "2024-05"
+    links:
+      project: cope
+    blurb: "New attention mechanism that fixes problems in copying & counting for Transformers."
+    topics:
+      - "Memory & Architectures / architectures"
+
+  - name: "Branch-Train-MiX"
+    date: "2024-03"
+    links:
+      paper: https://arxiv.org/abs/2403.07816
+    blurb: "Novel MoE architecture that is very efficient during training."
+    topics:
+      - "Memory & Architectures / architectures"
