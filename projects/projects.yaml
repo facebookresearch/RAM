@@ -146,6 +146,15 @@ projects:
       - "Synthetic Data / synthetic data & data quality"
       - "Autoresearch & Co-Improvement"
 
+  - name: "AI & Human Co-Improvement"
+    date: "2025-12"
+    links:
+      paper: https://arxiv.org/abs/2512.05356
+      tweet: https://x.com/jaseweston/status/1996773506114101473
+    blurb: "Position paper: rather than self-improving AI alone, target human-AI co-improvement as the path to safer co-superintelligence."
+    topics:
+      - "Autoresearch & Co-Improvement"
+
   - name: "Principia"
     date: "2026-03"
     links:
