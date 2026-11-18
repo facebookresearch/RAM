@@ -19,25 +19,29 @@ intro: >-
   for some of the projects which are housed in the RAM repo, others are maintained via external websites.
 
 # Order of sections and subsections in the topic view.
+# Autoresearch and Agents are pinned first; the rest are ordered most-recent-first
+# by the average date of each section's 5 newest projects (as of Nov 2026),
+# except Synthetic Data (placed by hand after (Self-)Alignment) and
+# Memory & Architectures (placed by hand last).
 sections:
-  - title: "Reasoning"
-    subsections:
-      - "CoT and RL"
-      - "other algorithms"
-      - "inference"
-  - title: "Reward Models & Evaluation"
-  - title: "Agents"
   - title: "Autoresearch & Co-Improvement"
-  - title: "Pre- and Mid-Training"
-  - title: "Synthetic Data"
-    subsections:
-      - "synthetic data & data quality"
-      - "synthetic data for complex reasoning & tools"
+  - title: "Agents"
+  - title: "Reward Models & Evaluation"
   - title: "(Self-)Alignment"
     subsections:
       - "(self-)alignment optimization techniques"
       - "(self-)alignment via other methods"
       - "data curation"
+  - title: "Synthetic Data"
+    subsections:
+      - "synthetic data & data quality"
+      - "synthetic data for complex reasoning & tools"
+  - title: "Pre- and Mid-Training"
+  - title: "Reasoning"
+    subsections:
+      - "CoT and RL"
+      - "other algorithms"
+      - "inference"
   - title: "Memory & Architectures"
     subsections:
       - "memory"
