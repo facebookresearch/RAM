@@ -27,6 +27,9 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 - **Autodata** [[paper]](https://arxiv.org/abs/2606.25996) [[blog]](https://facebookresearch.github.io/RAM/blogs/autodata/) [[tweet]](https://x.com/jaseweston/status/2070117091521204521)
   _An agentic data scientist that creates high quality data, converting inference compute into better training._
 
+- **AI & Human Co-Improvement** [[paper]](https://arxiv.org/abs/2512.05356) [[tweet]](https://x.com/jaseweston/status/1996773506114101473)
+  _Position paper: rather than self-improving AI alone, target human-AI co-improvement as the path to safer co-superintelligence._
+
 ## Agents
 
 - **Self-Improving Memory** [[blog]](https://facebookresearch.github.io/RAM/blogs/self_improving_memory/) [[tweet]](https://x.com/jaseweston/status/2122691693543817397)
