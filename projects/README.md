@@ -229,6 +229,9 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 ## Reasoning
 
+- **RAM 2 Workshop at COLM 2025** [[website]](https://facebookresearch.github.io/RAM/workshop/COLM_2025/)
+  _Reasoning, Attention & Memory – 10 Years On: a retrospective on the decade since the first RAM workshop (NeurIPS 2015), and new directions for the next._
+
 #### _CoT and RL_
 
 - **Principia** [[paper]](https://arxiv.org/abs/2603.18886) [[blog]](https://facebookresearch.github.io/RAM/blogs/principia) [[tweet]](https://x.com/jaseweston/status/2040062089725645039)
@@ -305,6 +308,9 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
   _Reduces hallucination by LLM self-identifying and verifying generated facts._
 
 ## Memory & Architectures
+
+- **RAM 2 Workshop at COLM 2025** [[website]](https://facebookresearch.github.io/RAM/workshop/COLM_2025/)
+  _Reasoning, Attention & Memory – 10 Years On: a retrospective on the decade since the first RAM workshop (NeurIPS 2015), and new directions for the next._
 
 #### _memory_
 

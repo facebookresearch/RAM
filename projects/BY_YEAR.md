@@ -5,7 +5,7 @@
 
 Here we list projects undertaken in the RAM framework that are shared publicly, either in the form of papers, public tasks and/or shared model code. This directory also contains subfolders for some of the projects which are housed in the RAM repo, others are maintained via external websites.
 
-**Jump to:** [2026](#2026) (15) · [2025](#2025) (28) · [2024](#2024) (20) · [2023](#2023) (9)
+**Jump to:** [2026](#2026) (15) · [2025](#2025) (29) · [2024](#2024) (20) · [2023](#2023) (9)
 
 ## 2026
 
@@ -61,6 +61,9 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 - **Experience Synthesis** [[paper]](https://arxiv.org/abs/2511.03773) [[tweets]](https://x.com/jaseweston/status/1986613046047846569)
   _Scaling training environments for RL by simulating them with reasoning LLMs._ <sub>[Agents](README.md#agents)</sub>
+
+- **RAM 2 Workshop at COLM 2025** [[website]](https://facebookresearch.github.io/RAM/workshop/COLM_2025/)
+  _Reasoning, Attention & Memory – 10 Years On: a retrospective on the decade since the first RAM workshop (NeurIPS 2015), and new directions for the next._ <sub>[Reasoning](README.md#reasoning) · [Memory & Architectures](README.md#memory--architectures)</sub>
 
 - **RESTRAIN** [[paper]](https://arxiv.org/abs/2510.02172) [[tweets]](https://x.com/jaseweston/status/1974000962219225271)
   _Self-training RL method that improves over other label-free / test-time training methods._ <sub>[Reasoning](README.md#reasoning)</sub>
