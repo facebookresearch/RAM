@@ -445,6 +445,14 @@ projects:
     topics:
       - "Pre- and Mid-Training"
 
+  - name: "Self-Improving Pretraining"
+    date: "2026-01"
+    links:
+      paper: https://arxiv.org/abs/2601.21343
+    blurb: "Uses a strong post-trained model to rewrite pretraining data & judge rollouts, building in safety, factuality & quality early."
+    topics:
+      - "Pre- and Mid-Training"
+
   - name: "Recycling the Web"
     date: "2025-06"
     links:

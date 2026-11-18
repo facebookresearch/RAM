@@ -5,7 +5,7 @@
 
 Here we list projects undertaken in the RAM framework that are shared publicly, either in the form of papers, public tasks and/or shared model code. This directory also contains subfolders for some of the projects which are housed in the RAM repo, others are maintained via external websites.
 
-**Jump to:** [2026](#2026) (14) · [2025](#2025) (27) · [2024](#2024) (20) · [2023](#2023) (9)
+**Jump to:** [2026](#2026) (15) · [2025](#2025) (27) · [2024](#2024) (20) · [2023](#2023) (9)
 
 ## 2026
 
@@ -50,6 +50,9 @@ Here we list projects undertaken in the RAM framework that are shared publicly, 
 
 - **Thinking Mid-training: RL of Interleaved Reasoning** [[paper]](https://arxiv.org/abs/2601.21343) [[blog]](https://facebookresearch.github.io/RAM/blogs/thinking_midtraining/) [[tweet]](https://x.com/jaseweston/status/2041864833214095484)
   _An intermediate SFT+RL mid-training phase to teach models how to think._ <sub>[Pre- and Mid-Training](README.md#pre--and-mid-training)</sub>
+
+- **Self-Improving Pretraining** [[paper]](https://arxiv.org/abs/2601.21343)
+  _Uses a strong post-trained model to rewrite pretraining data & judge rollouts, building in safety, factuality & quality early._ <sub>[Pre- and Mid-Training](README.md#pre--and-mid-training)</sub>
 
 ## 2025
 
