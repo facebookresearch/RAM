@@ -7,6 +7,7 @@ LICENSE file in the root directory of this source tree.
 """
 
 import argparse
+import json
 import sys
 
 import pandas as pd
@@ -37,7 +38,14 @@ def main():
         if subset == "overthinking-bench" or "overthinking" in subset:
             acc = eval_overthink(row)
         elif subset == "underthinking-bench" or "underthinking" in subset:
-            acc = eval_underthink(row)
+            metadata = json.loads(row["metadata"])
+            # UnderThinkingBench-Math rows (AIME/HMMT) carry `source` instead of
+            # `source_dataset`; grade them with math_verify rather than the
+            # reasoning_gym puzzle grader.
+            if metadata.get("source") in ("aime", "hmmt"):
+                acc = eval_math(row, tokenizer, model_name)
+            else:
+                acc = eval_underthink(row)
         elif "math" in subset:
             acc = eval_math(row, tokenizer, model_name)
         else:
