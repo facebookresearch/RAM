@@ -36,7 +36,7 @@ parser.add_argument("--run_locally", action="store_true", default=False)
 args = parser.parse_args()
 
 
-df = load_from_disk(f"data/otb_full")
+df = load_from_disk(args.dataset)
 df = df["train"].to_pandas()
 
 MODEL_NAME = args.model
