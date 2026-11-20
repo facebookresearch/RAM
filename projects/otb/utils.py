@@ -90,37 +90,40 @@ def model_to_tokenizer(model_name):
 
 
 def format_metrics(out_df):
-    overthink_general_acc = out_df[out_df["subset"].str.contains("overthinking")][
+    math_mask = out_df["subset"].str.contains("math")
+    overthink_general_mask = out_df["subset"].str.contains("overthinking") & ~math_mask
+    underthink_general_mask = out_df["subset"].str.contains("underthinking") & ~math_mask
+    overthink_general_acc = out_df[overthink_general_mask][
         "accuracy"
     ].mean()
     overthink_math_acc = out_df[out_df["subset"].str.contains("overthinking-math")][
         "accuracy"
     ].mean()
-    overthink_general_tokens = out_df[out_df["subset"].str.contains("overthinking")][
+    overthink_general_tokens = out_df[overthink_general_mask][
         "tokens"
     ].mean()
     overthink_math_tokens = out_df[out_df["subset"].str.contains("overthinking-math")][
         "tokens"
     ].mean()
-    overthink_general_score = out_df[out_df["subset"].str.contains("overthinking")][
+    overthink_general_score = out_df[overthink_general_mask][
         "score"
     ].mean()
     overthink_math_score = out_df[out_df["subset"].str.contains("overthinking-math")][
         "score"
     ].mean()
-    underthink_general_acc = out_df[out_df["subset"].str.contains("underthinking")][
+    underthink_general_acc = out_df[underthink_general_mask][
         "accuracy"
     ].mean()
     underthink_math_acc = out_df[out_df["subset"].str.contains("underthinking-math")][
         "accuracy"
     ].mean()
-    underthink_general_tokens = out_df[out_df["subset"].str.contains("underthinking")][
+    underthink_general_tokens = out_df[underthink_general_mask][
         "tokens"
     ].mean()
     underthink_math_tokens = out_df[
         out_df["subset"].str.contains("underthinking-math")
     ]["tokens"].mean()
-    underthink_general_score = out_df[out_df["subset"].str.contains("underthinking")][
+    underthink_general_score = out_df[underthink_general_mask][
         "score"
     ].mean()
     underthink_math_score = out_df[out_df["subset"].str.contains("underthinking-math")][
