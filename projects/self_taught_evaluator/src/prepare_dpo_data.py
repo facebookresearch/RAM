@@ -97,7 +97,7 @@ def prepare_dpo_data(
         y for x in os.walk(generation_dir) for y in glob(os.path.join(x[0], "*.jsonl"))
     ]
     for f in all_jsonl_files:
-        responses = load_from_jsonl(os.path.join(generation_dir, f))
+        responses = load_from_jsonl(f)
         for response_idx, response in enumerate(tqdm(responses)):
             try:
                 system_prompt, input_key = get_input_key(
@@ -142,7 +142,7 @@ def prepare_dpo_data(
         ]
         print("Loading negative examples")
         for f in negative_jsonl_files:
-            responses = load_from_jsonl(os.path.join(negative_generation_dir, f))
+            responses = load_from_jsonl(f)
             for response_idx, response in enumerate(tqdm(responses)):
                 try:
                     _, input_key = get_input_key(response)

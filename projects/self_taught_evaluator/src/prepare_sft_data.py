@@ -68,7 +68,7 @@ def prepare_positive_data(
         y for x in os.walk(generation_dir) for y in glob(os.path.join(x[0], "*.jsonl"))
     ]
     for f in all_jsonl_files:
-        responses = load_from_jsonl(os.path.join(generation_dir, f))
+        responses = load_from_jsonl(f)
         for response_idx, response in enumerate(tqdm(responses)):
             input_key, output, metadata = parse_response(response)
             if input_key is None or output is None or metadata is None:
