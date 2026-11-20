@@ -16,6 +16,7 @@ import requests
 from datasets import load_from_disk
 from tqdm import tqdm
 from utils import call_llm
+from otbench.paths import output_path
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model", type=str, default="gpt-4o")
@@ -138,19 +139,9 @@ df["response"] = all_responses
 df["tokens"] = all_tokens
 df["prompts_used"] = prompts_used
 
-if args.enable_nothink:
-    OUTPUT_FILE = OUTPUT.replace("{{model}}", MODEL_NAME.replace("/", "-")).replace(
-        ".jsonl", "-nothink.jsonl"
-    )
-else:
-    OUTPUT_FILE = OUTPUT.replace("{{model}}", MODEL_NAME.replace("/", "-"))
-
-if args.temperature != 0.6:
-    OUTPUT_FILE = OUTPUT_FILE.replace(".jsonl", f"-temp={args.temperature}.jsonl")
-
-if args.num_gens != 8:
-    OUTPUT_FILE = OUTPUT_FILE.replace(".jsonl", f"-num_gens={args.num_gens}.jsonl")
-
+OUTPUT_FILE = output_path(
+    OUTPUT, MODEL_NAME, args.enable_nothink, args.temperature, args.num_gens
+)
 
 print(f"Saving to {OUTPUT_FILE}")
 print(f"To postprocess, run `otbench eval {OUTPUT_FILE} --model {MODEL_NAME}`")
