@@ -62,7 +62,7 @@ def save(
 
     path = cfg.checkpoint
     dirname = os.path.dirname(path)
-    if not os.path.exists(dirname):
+    if dirname and not os.path.exists(dirname):
         os.makedirs(dirname)
     logging.info(f"saving epoch {epoch_num} to {path}")
 
